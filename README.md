@@ -1,19 +1,13 @@
-# Outlook Email App Redesign - Flutter Fully Responsive Design UI
+# XiuMusic App 
 
-## [Watch it on YouTube](https://youtu.be/0mp-Ok00WZE)
+juet beginning...don't use.
+
+1. open macos/Runner.xcworkspace with Xcode
+
+2. Runner-Runner-Resources-MainMenu.xib
+
+3. APP_NAME-Window
+
+4. Transparent Title Bar && Full Size Content View
 
 
- ### Flutter web work on beta make sure you change your channel, [Configure the flutter tool for web support](https://flutter.dev/docs/get-started/web)
-
-**Packages we are using:**
-
-- websafe_svg: [link](https://pub.dev/packages/websafe_svg)
-- flutter_staggered_grid_view: [link](https://pub.dev/packages/flutter_staggered_grid_view)
-
-We redesign the outlook app also make it responsive so that you can run it everywhere on your phone, tab, or web. In this flutter responsive video, we will show you the real power of flutter. Make mobile, web, and desktop app from a single codebase.
-
-### Outlook Email App Redesign Responsive Final UI
-
-![Preview](/gif.gif)
-
-![App UI](/ui.png)
