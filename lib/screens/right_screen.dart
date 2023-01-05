@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xiumusic/responsive.dart';
 
-import '../util/baseCSS.dart';
+import '../util/basecss.dart';
+import '../util/userprovider.dart';
+import 'components/roter.dart';
+import 'layout/settings.dart';
 import 'left_screen.dart';
 
 class RightScreen extends StatefulWidget {
   // Press "Command + ."
-  const RightScreen({
-    Key key,
-  }) : super(key: key);
+  const RightScreen({Key? key}) : super(key: key);
 
   @override
   _RightScreenState createState() => _RightScreenState();
@@ -16,6 +19,23 @@ class RightScreen extends StatefulWidget {
 
 class _RightScreenState extends State<RightScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isSave = false;
+
+  @override
+  initState() {
+    super.initState();
+    deleteServer();
+  }
+
+  deleteServer() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      if (sharedPreferences.getBool("isSave") != null) {
+        _isSave = sharedPreferences.getBool("isSave") ?? false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +58,9 @@ class _RightScreenState extends State<RightScreen> {
                       if (!Responsive.isDesktop(context))
                         IconButton(
                           icon: Icon(Icons.menu),
+                          color: kTextColor,
                           onPressed: () {
-                            _scaffoldKey.currentState.openDrawer();
+                            _scaffoldKey.currentState?.openDrawer();
                           },
                         ),
                       if (!Responsive.isDesktop(context)) SizedBox(width: 5),
@@ -55,7 +76,7 @@ class _RightScreenState extends State<RightScreen> {
                             size: 15,
                           ),
                           onPressed: () {
-                            _scaffoldKey.currentState.openDrawer();
+                            _scaffoldKey.currentState?.openDrawer();
                           },
                         ),
                       ),
@@ -67,7 +88,7 @@ class _RightScreenState extends State<RightScreen> {
                             size: 15,
                           ),
                           onPressed: () {
-                            _scaffoldKey.currentState.openDrawer();
+                            _scaffoldKey.currentState?.openDrawer();
                           },
                         ),
                       ),
@@ -76,10 +97,11 @@ class _RightScreenState extends State<RightScreen> {
                 ],
               ),
               Container(
-                //height: 500,
-                //width: 500,
-                color: bkColor,
-                child: Text("sss"),
+                child: _isSave
+                    ? Roter(
+                        roter: Provider.of<UserProvider>(context).index,
+                      )
+                    : Settings(),
               )
             ],
           ),

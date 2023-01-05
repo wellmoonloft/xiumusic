@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import '../util/baseCSS.dart';
-import 'components/left_menu_item.dart';
+import 'package:provider/provider.dart';
+import '../util/basecss.dart';
+import '../util/userprovider.dart';
+import 'components/text_icon_buttom.dart';
 
-class LeftScreen extends StatelessWidget {
-  const LeftScreen({
-    Key key,
-  }) : super(key: key);
+class LeftScreen extends StatefulWidget {
+  const LeftScreen({Key? key}) : super(key: key);
+  @override
+  _LeftScreenState createState() => _LeftScreenState();
+}
 
+class _LeftScreenState extends State<LeftScreen> {
   @override
   Widget build(BuildContext context) {
+    int _index = Provider.of<UserProvider>(context).index;
     return Container(
       height: double.infinity,
       padding: EdgeInsets.only(top: kIsWeb ? kDefaultPadding : 0),
@@ -21,76 +26,133 @@ class LeftScreen extends StatelessWidget {
             children: [
               SizedBox(height: kDefaultPadding),
               // Menu Items
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(0);
+                  //setState(() {
+                  _index = 0;
+                  //});
+                },
                 title: "首页",
                 icon: Icons.home,
-                isActive: true,
+                color: _index == 0 ? kTextColor : kGrayColor,
+                weight: _index == 0 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(1);
+                  setState(() {
+                    _index = 1;
+                  });
+                },
                 title: "正在播放",
                 icon: Icons.headphones,
-                isActive: false,
+                color: _index == 1 ? kTextColor : kGrayColor,
+                weight: _index == 1 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(2);
+                  setState(() {
+                    _index = 2;
+                  });
+                },
                 title: "播放列表",
                 icon: Icons.queue_music,
-                isActive: false,
+                color: _index == 2 ? kTextColor : kGrayColor,
+                weight: _index == 2 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(3);
+                  setState(() {
+                    _index = 3;
+                  });
+                },
                 title: "收藏",
                 icon: Icons.favorite,
-                isActive: false,
+                color: _index == 3 ? kTextColor : kGrayColor,
+                weight: _index == 3 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(4);
+                  setState(() {
+                    _index = 4;
+                  });
+                },
                 title: "专辑",
                 icon: Icons.album,
-                isActive: false,
+                color: _index == 4 ? kTextColor : kGrayColor,
+                weight: _index == 4 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(5);
+                  setState(() {
+                    _index = 5;
+                  });
+                },
                 title: "歌手",
                 icon: Icons.people_alt,
-                isActive: false,
+                color: _index == 5 ? kTextColor : kGrayColor,
+                weight: _index == 5 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(6);
+                  setState(() {
+                    _index = 6;
+                  });
+                },
                 title: "流派",
                 icon: Icons.public,
-                isActive: false,
+                color: _index == 6 ? kTextColor : kGrayColor,
+                weight: _index == 6 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(7);
+                  setState(() {
+                    _index = 7;
+                  });
+                },
                 title: "目录",
                 icon: Icons.folder,
-                isActive: false,
+                color: _index == 7 ? kTextColor : kGrayColor,
+                weight: _index == 7 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
-                press: () {},
+              TextIconButtom(
+                press: () {
+                  Provider.of<UserProvider>(context, listen: false)
+                      .setIndex2(8);
+                  setState(() {
+                    _index = 8;
+                  });
+                },
                 title: "配置",
                 icon: Icons.settings,
-                isActive: false,
+                color: _index == 8 ? kTextColor : kGrayColor,
+                weight: _index == 8 ? FontWeight.w400 : FontWeight.w100,
               ),
-              LeftMenuItem(
+              TextIconButtom(
                 press: () {},
                 title: "收回",
                 icon: Icons.compare_arrows,
-                isActive: false,
+                color: _index == 0 ? kTextColor : kGrayColor,
+                weight: _index == 0 ? FontWeight.w400 : FontWeight.w100,
               ),
               Container(
                   padding: EdgeInsets.only(bottom: 15, right: 5),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(color: borderColor, width: 0.3),
-                    ),
-                  )),
-
-              SizedBox(height: kDefaultPadding * 2),
-              // Tags
+                  decoration: lineBorder),
             ],
           ),
         ),

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import '../../util/basecss.dart';
 
-import '../../util/baseCSS.dart';
-
-class LeftMenuItem extends StatelessWidget {
-  const LeftMenuItem({
-    Key key,
-    this.isActive,
-    @required this.title,
-    @required this.icon,
-    @required this.press,
+class TextIconButtom extends StatelessWidget {
+  const TextIconButtom({
+    Key? key,
+    required this.title,
+    required this.icon,
+    required this.press,
+    required this.color,
+    required this.weight,
   }) : super(key: key);
 
-  final bool isActive;
   final String title;
   final IconData icon;
   final VoidCallback press;
+  final Color color;
+  final FontWeight weight;
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +34,11 @@ class LeftMenuItem extends StatelessWidget {
                     Icon(
                       icon,
                       size: 15,
-                      color: (isActive) ? kTextColor : kGrayColor,
+                      color: color,
                     ),
                     SizedBox(width: kDefaultPadding * 0.75),
                     Text(title,
-                        style: TextStyle(
-                            color: (isActive) ? kTextColor : kGrayColor,
-                            fontWeight: (isActive)
-                                ? FontWeight.w400
-                                : FontWeight.w100)),
+                        style: TextStyle(color: color, fontWeight: weight)),
                     Spacer(),
                   ],
                 ),

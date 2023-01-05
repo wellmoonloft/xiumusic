@@ -16,3 +16,26 @@ const borderColor = Colors.grey;
 const rightColor = Color.fromARGB(255, 16, 16, 16);
 
 const kDefaultPadding = 20.0;
+const titleText1 =
+    TextStyle(fontSize: 40, color: kTextColor, fontWeight: FontWeight.bold);
+
+const titleText2 = TextStyle(
+  fontSize: 20,
+  color: kTextColor,
+);
+
+const nomalText = TextStyle(fontSize: 14, color: kTextColor);
+
+const subText = TextStyle(fontSize: 14, color: kGrayColor);
+
+const lineBorder = BoxDecoration(
+  border: Border(
+    bottom: BorderSide(color: borderColor, width: 0.2),
+  ),
+);
+
+BoxDecoration circularBorder = BoxDecoration(
+    color: rightColor,
+    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+    //设置四周边框
+    border: Border.all(width: 0.2, color: borderColor));

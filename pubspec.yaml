@@ -6,12 +6,19 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
+  shared_preferences: ^2.0.15
+  just_audio: ^0.9.31
+  window_manager: ^0.2.8
+  dio: ^4.0.6
+  crypto: ^3.0.2
+  provider: ^6.0.5  
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -24,7 +31,7 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/Icons/
-    - assets/images/
+  #  assets:
+  #    - assets/Icons/
+   #   - assets/images/
 
