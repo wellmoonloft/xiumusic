@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class AlertDialog1 extends StatelessWidget {
-  const AlertDialog1();
+class MyAlertDialog extends StatelessWidget {
+  final String _titile;
+  final String _content;
+  const MyAlertDialog(this._titile, this._content);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('提示'),
-      content: const Text('请补充信息'),
+      title: Text(_titile),
+      content: Text(_content),
       actions: <Widget>[
         TextButton(
           style: TextButton.styleFrom(

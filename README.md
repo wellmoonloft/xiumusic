@@ -1,16 +1,3 @@
-# XiuMusic App 
-
-juet beginning...don't use.
-
-1. open macos/Runner.xcworkspace with Xcode
-
-2. Runner-Runner-Resources-MainMenu.xib
-
-3. APP_NAME-Window
-
-4. Transparent Title Bar && Full Size Content View
-
-
 
 # XiuMusic
 ![](https://img.shields.io/badge/Toolkit-Flutter-blue.svg)  ![](https://img.shields.io/badge/Language-Dart-orange.svg)  ![](https://img.shields.io/badge/license-MIT-green)  ![](https://img.shields.io/badge/Process-Developing-blueviolet.svg)
@@ -19,7 +6,7 @@ juet beginning...don't use.
 
 ## 简介
 
-[**刘一点儿**](https://www.douyu.com/7884070)是我近期经常看的一个音乐主播，她名字里有个Xiu字，所以就叫**XiuMusic**了。
+**Xiu**是我近期经常看的一个音乐主播，她名字里有个Xiu字，所以就叫**XiuMusic**了。
 
 最近在NAS上搭了好多东西，其中音乐的服务器用了Navidrome，客户端选了很多，但只有[Sonixd](https://github.com/jeffvli/sonixd)感觉不错，但是没有移动端，而且有个世纪难题，不支持歌词（[issues](https://github.com/jeffvli/sonixd/issues/332)上作者说要来一个大计划飞跃到v1.0，并解决歌词的问题，而且目前的一些repo说支持了，但是我尝试好几次都不成功）
 
@@ -67,7 +54,6 @@ juet beginning...don't use.
 - [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具，差1%就超过audioplayers了。
 - [dio: ^4.0.6](https://pub.dev/packages/dio) 及其简单的Restful请求工具。
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
-- [provider: ^6.0.5 ](https://pub.dev/packages/provider) 全局变量，都说少用，但是真方便。
 - 
 
 ## 进度

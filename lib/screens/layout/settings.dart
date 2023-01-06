@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../util/basecss.dart';
-import '../../util/httpclient.dart';
-
+import '../../models/myModel.dart';
+import '../../models/notifierValue.dart';
+import '../../util/baseCSS.dart';
+import '../../models/baseDB.dart';
+import '../../util/httpClient.dart';
 import '../../util/util.dart';
+import '../components/dialog.dart';
 import '../components/text_buttom.dart';
 
 class Settings extends StatefulWidget {
@@ -17,7 +18,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool _isSave = false;
+  //bool _isServer1 = false;
   final servercontroller = new TextEditingController();
   final usernamecontroller = new TextEditingController();
   final passwordcontroller = new TextEditingController();
@@ -29,50 +30,35 @@ class _SettingsState extends State<Settings> {
     return randomString;
   }
 
-  saveString() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  _saveServer() async {
     if (servercontroller.text != "" &&
         usernamecontroller.text != "" &&
         passwordcontroller.text != "") {
-      print(servercontroller.text);
+      //print(servercontroller.text);
       var status = await testServer(servercontroller.text,
           usernamecontroller.text, passwordcontroller.text);
 
       if (status) {
-        sharedPreferences.setString(
-            "baseurl", servercontroller.text.toString());
-        sharedPreferences.setString(
-            "username", usernamecontroller.text.toString());
-        sharedPreferences.setString(
-            "password", passwordcontroller.text.toString());
-        final randomNumber = generateRandomString();
-        final randomBytes =
-            utf8.encode(passwordcontroller.text.toString() + randomNumber);
-        final randomString = md5.convert(randomBytes).toString();
-        sharedPreferences.setString("salt", randomNumber);
-        sharedPreferences.setString("hash", randomString);
-        sharedPreferences.setBool("isSave", true);
+        final _randomNumber = generateRandomString();
+        final _randomBytes =
+            utf8.encode(passwordcontroller.text.toString() + _randomNumber);
+        final _randomString = md5.convert(_randomBytes).toString();
+
+        ServerInfo _serverInfo = ServerInfo(
+            baseurl: servercontroller.text.toString(),
+            username: usernamecontroller.text.toString(),
+            password: passwordcontroller.text.toString(),
+            salt: _randomNumber,
+            hash: _randomString);
+        await BaseDB.instance.addServerInfo(_serverInfo);
         setState(() {
-          _isSave = true;
+          isServers.value = true;
         });
       } else {
         showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
-              content: Text("服务器错误"),
-              actions: <Widget>[
-                TextButton(
-                  style: TextButton.styleFrom(
-                    textStyle: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  child: const Text('确定'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
+            return MyAlertDialog("提示", "服务器错误");
           },
         );
       }
@@ -81,48 +67,30 @@ class _SettingsState extends State<Settings> {
       showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            content: Text("填写内容"),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  textStyle: Theme.of(context).textTheme.labelLarge,
-                ),
-                child: const Text('确定'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
+          return MyAlertDialog("提示", "填写内容");
         },
       );
     }
   }
 
-  getServerStats() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      if (sharedPreferences.getBool("isSave") != null) {
-        _isSave = sharedPreferences.getBool("isSave") ?? false;
-
-        servercontroller.text = sharedPreferences.getString("baseurl")!;
-        usernamecontroller.text = sharedPreferences.getString("username")!;
-        passwordcontroller.text = sharedPreferences.getString("password")!;
-      }
-    });
+  _getServerInfo() async {
+    final _infoList = await BaseDB.instance.getServerInfo();
+    // ignore: unnecessary_null_comparison
+    if (_infoList != null) {
+      //ServerInfo _serverInfo = _infoList;
+      setState(() {
+        isServers.value = true;
+        servercontroller.text = _infoList.baseurl;
+        usernamecontroller.text = _infoList.username;
+        passwordcontroller.text = _infoList.password;
+      });
+    }
   }
 
-  deleteServer() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  _deleteServer() async {
+    await BaseDB.instance.deleteServerInfo(usernamecontroller.text);
     setState(() {
-      _isSave = false;
-      sharedPreferences.remove("isSave");
-      sharedPreferences.remove("baseurl");
-      sharedPreferences.remove("username");
-      sharedPreferences.remove("password");
-      sharedPreferences.remove("hash");
-      sharedPreferences.remove("hash");
+      isServers.value = false;
       servercontroller.text = "";
       usernamecontroller.text = "";
       passwordcontroller.text = "";
@@ -132,15 +100,13 @@ class _SettingsState extends State<Settings> {
   @override
   initState() {
     super.initState();
-    getServerStats();
+    _getServerInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        //height: 300,
-        padding: const EdgeInsets.all(20),
-        //color: Colors.blue,
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           children: [
             Row(
@@ -229,13 +195,17 @@ class _SettingsState extends State<Settings> {
                           "服务器",
                           style: titleText2,
                         ),
-                        TextButtom(
-                          press: () {
-                            _isSave ? deleteServer() : saveString();
-                          },
-                          title: _isSave ? "断开连接" : "保存",
-                          isActive: false,
-                        )
+                        ValueListenableBuilder<bool>(
+                            valueListenable: isServers,
+                            builder: ((context, _value, child) {
+                              return TextButtom(
+                                press: () {
+                                  _value ? _deleteServer() : _saveServer();
+                                },
+                                title: _value ? "断开连接" : "保存",
+                                isActive: false,
+                              );
+                            }))
                       ],
                     ),
                     SizedBox(

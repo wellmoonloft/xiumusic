@@ -1,16 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:xiumusic/responsive.dart';
-
-import '../util/basecss.dart';
-import '../util/userprovider.dart';
+import '../models/notifierValue.dart';
+import '../util/baseCSS.dart';
 import 'components/roter.dart';
 import 'layout/settings.dart';
 import 'left_screen.dart';
 
 class RightScreen extends StatefulWidget {
-  // Press "Command + ."
   const RightScreen({Key? key}) : super(key: key);
 
   @override
@@ -19,29 +15,22 @@ class RightScreen extends StatefulWidget {
 
 class _RightScreenState extends State<RightScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool _isSave = false;
 
   @override
   initState() {
     super.initState();
-    deleteServer();
-  }
-
-  deleteServer() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      if (sharedPreferences.getBool("isSave") != null) {
-        _isSave = sharedPreferences.getBool("isSave") ?? false;
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    bool _isMobile = true;
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      _isMobile = false;
+    }
     return Scaffold(
         key: _scaffoldKey,
         drawer: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 220),
+          constraints: BoxConstraints(maxWidth: 160),
           child: LeftScreen(),
         ),
         body: Container(
@@ -51,19 +40,21 @@ class _RightScreenState extends State<RightScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Once user click the menu icon the menu shows like drawer
-                  // Also we want to hide this menu icon on desktop
                   Row(
                     children: [
-                      if (!Responsive.isDesktop(context))
+                      if (_isMobile)
                         IconButton(
-                          icon: Icon(Icons.menu),
+                          icon: Icon(
+                            Icons.menu,
+                            color: kTextColor,
+                            size: 15,
+                          ),
                           color: kTextColor,
                           onPressed: () {
                             _scaffoldKey.currentState?.openDrawer();
                           },
                         ),
-                      if (!Responsive.isDesktop(context)) SizedBox(width: 5),
+                      if (_isMobile) SizedBox(width: 5),
                     ],
                   ),
                   Row(
@@ -96,13 +87,19 @@ class _RightScreenState extends State<RightScreen> {
                   ),
                 ],
               ),
-              Container(
-                child: _isSave
-                    ? Roter(
-                        roter: Provider.of<UserProvider>(context).index,
-                      )
-                    : Settings(),
-              )
+              ValueListenableBuilder<bool>(
+                  valueListenable: isServers,
+                  builder: ((context, _value, child) {
+                    return Container(
+                      child: _value
+                          ? ValueListenableBuilder<int>(
+                              valueListenable: indexValue,
+                              builder: ((context, value, child) {
+                                return Roter(roter: value);
+                              }))
+                          : Settings(),
+                    );
+                  }))
             ],
           ),
         ));

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:provider/provider.dart';
-import '../util/basecss.dart';
-import '../util/userprovider.dart';
+import '../models/notifierValue.dart';
+import '../util/baseCSS.dart';
 import 'components/text_icon_buttom.dart';
 
 class LeftScreen extends StatefulWidget {
@@ -12,12 +10,18 @@ class LeftScreen extends StatefulWidget {
 }
 
 class _LeftScreenState extends State<LeftScreen> {
+  int _index = 0;
   @override
   Widget build(BuildContext context) {
-    int _index = Provider.of<UserProvider>(context).index;
+    _setIndex(int _temp) {
+      indexValue.value = _temp;
+      setState(() {
+        _index = _temp;
+      });
+    }
+
     return Container(
       height: double.infinity,
-      padding: EdgeInsets.only(top: kIsWeb ? kDefaultPadding : 0),
       color: bkColor,
       child: SafeArea(
         child: SingleChildScrollView(
@@ -28,11 +32,7 @@ class _LeftScreenState extends State<LeftScreen> {
               // Menu Items
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(0);
-                  //setState(() {
-                  _index = 0;
-                  //});
+                  _setIndex(0);
                 },
                 title: "首页",
                 icon: Icons.home,
@@ -41,11 +41,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(1);
-                  setState(() {
-                    _index = 1;
-                  });
+                  _setIndex(1);
                 },
                 title: "正在播放",
                 icon: Icons.headphones,
@@ -54,11 +50,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(2);
-                  setState(() {
-                    _index = 2;
-                  });
+                  _setIndex(2);
                 },
                 title: "播放列表",
                 icon: Icons.queue_music,
@@ -67,11 +59,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(3);
-                  setState(() {
-                    _index = 3;
-                  });
+                  _setIndex(3);
                 },
                 title: "收藏",
                 icon: Icons.favorite,
@@ -80,11 +68,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(4);
-                  setState(() {
-                    _index = 4;
-                  });
+                  _setIndex(4);
                 },
                 title: "专辑",
                 icon: Icons.album,
@@ -93,11 +77,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(5);
-                  setState(() {
-                    _index = 5;
-                  });
+                  _setIndex(5);
                 },
                 title: "歌手",
                 icon: Icons.people_alt,
@@ -106,11 +86,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(6);
-                  setState(() {
-                    _index = 6;
-                  });
+                  _setIndex(6);
                 },
                 title: "流派",
                 icon: Icons.public,
@@ -119,11 +95,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(7);
-                  setState(() {
-                    _index = 7;
-                  });
+                  _setIndex(7);
                 },
                 title: "目录",
                 icon: Icons.folder,
@@ -132,23 +104,12 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
               TextIconButtom(
                 press: () {
-                  Provider.of<UserProvider>(context, listen: false)
-                      .setIndex2(8);
-                  setState(() {
-                    _index = 8;
-                  });
+                  _setIndex(8);
                 },
                 title: "配置",
                 icon: Icons.settings,
                 color: _index == 8 ? kTextColor : kGrayColor,
                 weight: _index == 8 ? FontWeight.w400 : FontWeight.w100,
-              ),
-              TextIconButtom(
-                press: () {},
-                title: "收回",
-                icon: Icons.compare_arrows,
-                color: _index == 0 ? kTextColor : kGrayColor,
-                weight: _index == 0 ? FontWeight.w400 : FontWeight.w100,
               ),
               Container(
                   padding: EdgeInsets.only(bottom: 15, right: 5),

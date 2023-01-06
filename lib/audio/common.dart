@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:xiumusic/util/basecss.dart';
+import 'package:xiumusic/util/baseCSS.dart';
+
+import '../util/util.dart';
 
 class SeekBar extends StatefulWidget {
   final Duration duration;
@@ -38,34 +40,50 @@ class SeekBarState extends State<SeekBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SliderTheme(
-      data: _sliderThemeData.copyWith(
-          activeTrackColor: kGrayColor,
-          inactiveTrackColor: kTextColor,
-          thumbColor: kTextColor,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
-          overlayShape: SliderComponentShape.noThumb),
-      child: Slider(
-        min: 0.0,
-        max: widget.duration.inMilliseconds.toDouble(),
-        value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
-            widget.duration.inMilliseconds.toDouble()),
-        onChanged: (value) {
-          setState(() {
-            _dragValue = value;
-          });
-          if (widget.onChanged != null) {
-            widget.onChanged!(Duration(milliseconds: value.round()));
-          }
-        },
-        onChangeEnd: (value) {
-          if (widget.onChangeEnd != null) {
-            widget.onChangeEnd!(Duration(milliseconds: value.round()));
-          }
-          _dragValue = null;
-        },
+    return Row(children: [
+      Text(
+        formatSongDuration(widget.position),
+        style: TextStyle(
+          color: kTextColor,
+        ),
       ),
-    );
+      SliderTheme(
+        data: _sliderThemeData.copyWith(
+            activeTrackColor: kGrayColor,
+            inactiveTrackColor: kTextColor,
+            thumbColor: kTextColor,
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
+            overlayShape: SliderComponentShape.noThumb),
+        child: Slider(
+          min: 0.0,
+          max: widget.duration.inMilliseconds.toDouble(),
+          value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
+              widget.duration.inMilliseconds.toDouble()),
+          onChanged: (value) {
+            setState(() {
+              _dragValue = value;
+            });
+            if (widget.onChanged != null) {
+              widget.onChanged!(Duration(milliseconds: value.round()));
+            }
+          },
+          onChangeEnd: (value) {
+            if (widget.onChangeEnd != null) {
+              widget.onChangeEnd!(Duration(milliseconds: value.round()));
+            }
+            _dragValue = null;
+            print(widget.duration);
+            print(widget.position);
+          },
+        ),
+      ),
+      Text(
+        formatSongDuration(widget.duration),
+        style: TextStyle(
+          color: kTextColor,
+        ),
+      )
+    ]);
   }
 
   Duration get _remaining => widget.duration - widget.position;
@@ -90,14 +108,6 @@ class HiddenThumbComponentShape extends SliderComponentShape {
     required double textScaleFactor,
     required Size sizeWithOverflow,
   }) {}
-}
-
-class PositionData {
-  final Duration position;
-  final Duration bufferedPosition;
-  final Duration duration;
-
-  PositionData(this.position, this.bufferedPosition, this.duration);
 }
 
 void showSliderDialog({

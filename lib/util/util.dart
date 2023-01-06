@@ -59,8 +59,27 @@ String generateRandomString() {
 // Define the function
 String formatDuration(int _duration) {
   Duration _dura = Duration(seconds: _duration);
-  String hours = _dura.inHours.toString().padLeft(0, '2');
-  String minutes = _dura.inMinutes.remainder(60).toString().padLeft(2, '0');
-  String seconds = _dura.inSeconds.remainder(60).toString().padLeft(2, '0');
-  return "$hours:$minutes:$seconds";
+  if (_dura.inHours != 0) {
+    String hours = _dura.inHours.toString().padLeft(0, '2');
+    String minutes = _dura.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds = _dura.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
+  } else {
+    String minutes = _dura.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds = _dura.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
+}
+
+String formatSongDuration(Duration _tmp) {
+  if (_tmp.inHours != 0) {
+    String hours = _tmp.inHours.toString().padLeft(0, '2');
+    String minutes = _tmp.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds = _tmp.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
+  } else {
+    String minutes = _tmp.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds = _tmp.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
 }

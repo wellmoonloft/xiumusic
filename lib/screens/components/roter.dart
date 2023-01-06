@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../layout/genres.dart';
+import '../layout/genresScreen.dart';
 import '../layout/library.dart';
 import '../layout/settings.dart';
 
@@ -10,12 +10,6 @@ class Roter extends StatelessWidget {
     Key? key,
     required this.roter,
   }) : super(key: key);
-
-  static bool isMobile(BuildContext context) =>
-      MediaQuery.of(context).size.width < 650;
-
-  static bool isDesktop(BuildContext context) =>
-      MediaQuery.of(context).size.width >= 650;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +29,7 @@ class Roter extends StatelessWidget {
           case 5: //歌手
             return Container();
           case 6: //流派
-            return Genres();
+            return GenresScreen();
           case 7: //目录
             return Library();
           case 8: //设置

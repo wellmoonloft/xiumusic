@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../util/basecss.dart';
+import '../../util/baseCSS.dart';
 
 class TextButtom extends StatelessWidget {
   const TextButtom({

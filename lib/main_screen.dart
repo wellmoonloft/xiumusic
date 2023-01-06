@@ -1,8 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:xiumusic/responsive.dart';
-import 'package:xiumusic/util/userprovider.dart';
-import 'util/basecss.dart';
+import 'util/baseCSS.dart';
 import 'screens/bottom_screen.dart';
 import 'screens/left_screen.dart';
 import 'screens/right_screen.dart';
@@ -11,12 +9,13 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
-
-    return ChangeNotifierProvider<UserProvider>.value(
-        value: UserProvider(7, ""),
-        child: Scaffold(
-          body: Responsive(
-              mobile: SafeArea(
+    bool _isMobile = true;
+    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+      _isMobile = false;
+    }
+    return Scaffold(
+        body: _isMobile
+            ? SafeArea(
                 child: Column(children: [
                   Container(
                     height: _size.height - 90,
@@ -30,8 +29,8 @@ class MainScreen extends StatelessWidget {
                     ),
                   )
                 ]),
-              ),
-              desktop: SafeArea(
+              )
+            : SafeArea(
                 child: Column(
                   children: [
                     Container(
@@ -40,11 +39,11 @@ class MainScreen extends StatelessWidget {
                         child: Row(
                           children: [
                             Container(
-                              width: 220,
+                              width: 160,
                               child: LeftScreen(),
                             ),
                             Container(
-                              width: _size.width - 220,
+                              width: _size.width - 160,
                               child: RightScreen(),
                             )
                           ],
@@ -60,7 +59,6 @@ class MainScreen extends StatelessWidget {
                     )
                   ],
                 ),
-              )),
-        ));
+              ));
   }
 }

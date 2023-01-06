@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../util/basecss.dart';
-import '../../util/httpclient.dart';
-import '../../util/userprovider.dart';
+import '../../models/notifierValue.dart';
+import '../../util/baseCSS.dart';
+import '../../util/httpClient.dart';
 import '../../util/util.dart';
 
 class Library extends StatefulWidget {
@@ -344,8 +343,7 @@ class _LibraryState extends State<Library> {
                     return ListTile(
                         title: InkWell(
                             onTap: () {
-                              Provider.of<UserProvider>(context, listen: false)
-                                  .setActiveMusic(_tem["id"]);
+                              activeSongValue.value = _tem["id"];
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

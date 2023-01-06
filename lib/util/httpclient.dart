@@ -26,7 +26,6 @@ testServer(String _baseUrl, String _username, String _password) async {
     } else {
       return false;
     }
-    //return response;
   } catch (e) {
     print(e);
     return false;
@@ -53,11 +52,13 @@ getGenres() async {
     if (response.statusCode == 200) {
       Map _value1 = response.data['subsonic-response'];
       Map genres = _value1['genres'];
+      List genresList = genres["genre"];
 
-      return genres;
+      return genresList;
     }
   } catch (e) {
     print(e);
+    return false;
   }
 }
 
