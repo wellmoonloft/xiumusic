@@ -1,41 +1,40 @@
 import 'package:flutter/material.dart';
 
-// All of our constant stuff
-
-const kPrimaryColor = Color(0xFF366CF6);
-const kSecondaryColor = Color(0xFFF5F6FC);
-const kBgLightColor = Color(0xFFF2F4FC);
-const kBgDarkColor = Color(0xFFEBEDFA);
-const kBadgeColor = Color(0xFFEE376E);
-const kGrayColor = Color.fromARGB(255, 181, 181, 181);
-const kTitleTextColor = Color(0xFF30384D);
-
+const badgeRed = Color.fromARGB(255, 209, 45, 49);
+const badgeDark = Color.fromARGB(255, 61, 63, 67);
+const kGrayColor = Color.fromARGB(255, 216, 216, 216);
+const rightColor = Color.fromARGB(255, 24, 24, 25);
+//const rightColor = Color.fromARGB(255, 11, 9, 8);
 const kTextColor = Colors.white;
 const bkColor = Colors.black;
 const borderColor = Colors.grey;
-const rightColor = Color.fromARGB(255, 16, 16, 16);
 
-const kDefaultPadding = 20.0;
+const updownPadding = EdgeInsets.symmetric(vertical: 15);
+const leftrightPadding = EdgeInsets.symmetric(horizontal: 15);
+const allPadding = EdgeInsets.all(15);
+
 const titleText1 =
-    TextStyle(fontSize: 40, color: kTextColor, fontWeight: FontWeight.bold);
-
+    TextStyle(fontSize: 40, color: kGrayColor, fontWeight: FontWeight.bold);
 const titleText2 = TextStyle(
   fontSize: 20,
   color: kTextColor,
 );
-
-const nomalText = TextStyle(fontSize: 14, color: kTextColor);
-
-const subText = TextStyle(fontSize: 14, color: kGrayColor);
+const activeText = TextStyle(color: badgeRed, fontSize: 14);
+const nomalText1 = TextStyle(color: kTextColor, fontSize: 14);
+const nomalGrayText = TextStyle(color: kGrayColor, fontSize: 14);
 
 const lineBorder = BoxDecoration(
   border: Border(
-    bottom: BorderSide(color: borderColor, width: 0.2),
+    top: BorderSide(color: borderColor, width: 0.2),
   ),
 );
 
 BoxDecoration circularBorder = BoxDecoration(
-    color: rightColor,
     borderRadius: BorderRadius.all(Radius.circular(5.0)),
     //设置四周边框
     border: Border.all(width: 0.2, color: borderColor));
+
+BoxDecoration backbadge = BoxDecoration(
+  color: badgeRed,
+  borderRadius: BorderRadius.circular(50.0),
+);

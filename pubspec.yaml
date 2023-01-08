@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  shared_preferences: ^2.0.15
   just_audio: ^0.9.31
   window_manager: ^0.2.8
   dio: ^4.0.6
@@ -32,7 +31,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  #  assets:
-  #    - assets/Icons/
-   #   - assets/images/
-
+  assets:
+    - assets/images/
+  fonts:
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/RobotoMono-Regular.ttf

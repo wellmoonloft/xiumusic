@@ -9,6 +9,7 @@ class SeekBar extends StatefulWidget {
   final Duration duration;
   final Duration position;
   final Duration bufferedPosition;
+  final double trackWidth;
   final ValueChanged<Duration>? onChanged;
   final ValueChanged<Duration>? onChangeEnd;
 
@@ -19,6 +20,7 @@ class SeekBar extends StatefulWidget {
     required this.bufferedPosition,
     this.onChanged,
     this.onChangeEnd,
+    required this.trackWidth,
   }) : super(key: key);
 
   @override
@@ -27,61 +29,64 @@ class SeekBar extends StatefulWidget {
 
 class SeekBarState extends State<SeekBar> {
   double? _dragValue;
-  late SliderThemeData _sliderThemeData;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    _sliderThemeData = SliderTheme.of(context).copyWith(
-      trackHeight: 2.0,
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Text(
         formatSongDuration(widget.position),
         style: TextStyle(
-          color: kTextColor,
-        ),
+            color: borderColor, fontFamily: 'RobotoMono', fontSize: 12),
+      ),
+      SizedBox(
+        width: 10,
       ),
       SliderTheme(
-        data: _sliderThemeData.copyWith(
+        data: SliderTheme.of(context).copyWith(
             activeTrackColor: kGrayColor,
-            inactiveTrackColor: kTextColor,
+            inactiveTrackColor: borderColor,
+            trackHeight: 3.0,
             thumbColor: kTextColor,
             thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
             overlayShape: SliderComponentShape.noThumb),
-        child: Slider(
-          min: 0.0,
-          max: widget.duration.inMilliseconds.toDouble(),
-          value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
-              widget.duration.inMilliseconds.toDouble()),
-          onChanged: (value) {
-            setState(() {
-              _dragValue = value;
-            });
-            if (widget.onChanged != null) {
-              widget.onChanged!(Duration(milliseconds: value.round()));
-            }
-          },
-          onChangeEnd: (value) {
-            if (widget.onChangeEnd != null) {
-              widget.onChangeEnd!(Duration(milliseconds: value.round()));
-            }
-            _dragValue = null;
-            print(widget.duration);
-            print(widget.position);
-          },
+        child: Container(
+          width: widget.trackWidth,
+          child: Slider(
+            min: 0.0,
+            max: widget.duration.inMilliseconds.toDouble(),
+            value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
+                widget.duration.inMilliseconds.toDouble()),
+            onChanged: (value) {
+              setState(() {
+                _dragValue = value;
+              });
+              if (widget.onChanged != null) {
+                widget.onChanged!(Duration(milliseconds: value.round()));
+              }
+            },
+            onChangeEnd: (value) {
+              if (widget.onChangeEnd != null) {
+                widget.onChangeEnd!(Duration(milliseconds: value.round()));
+              }
+              _dragValue = null;
+              print(widget.duration);
+              print(widget.position);
+            },
+          ),
         ),
+      ),
+      SizedBox(
+        width: 10,
       ),
       Text(
         formatSongDuration(widget.duration),
         style: TextStyle(
-          color: kTextColor,
-        ),
+            color: borderColor, fontFamily: 'RobotoMono', fontSize: 12),
       )
     ]);
   }

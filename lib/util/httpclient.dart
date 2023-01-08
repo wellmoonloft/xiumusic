@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../models/baseDB.dart';
 
 testServer(String _baseUrl, String _username, String _password) async {
   try {
@@ -32,23 +28,22 @@ testServer(String _baseUrl, String _username, String _password) async {
   }
 }
 
+_getServerInfo(String _api) async {
+  final _infoList = await BaseDB.instance.getServerInfo();
+  String _request = _infoList.baseurl +
+      'rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
+      _infoList.username +
+      '&s=' +
+      _infoList.salt +
+      '&t=' +
+      _infoList.hash;
+  return _request;
+}
+
 getGenres() async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
+  String _sql = await _getServerInfo("getGenres");
   try {
-    var response = await Dio().get(
-      _baseurl +
-          'rest/getGenres?v=0.0.1&c=xiumusic&f=json&u=' +
-          _username +
-          '&s=' +
-          _salt +
-          '&t=' +
-          _hash,
-    );
-    //print(response);
+    var response = await Dio().get(_sql);
     if (response.statusCode == 200) {
       Map _value1 = response.data['subsonic-response'];
       Map genres = _value1['genres'];
@@ -63,22 +58,9 @@ getGenres() async {
 }
 
 getMusicFolders() async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
+  String _sql = await _getServerInfo("getMusicFolders");
   try {
-    var response = await Dio().get(
-      _baseurl +
-          'rest/getMusicFolders?v=0.0.1&c=xiumusic&f=json&u=' +
-          _username +
-          '&s=' +
-          _salt +
-          '&t=' +
-          _hash,
-    );
-    //print(response);
+    var response = await Dio().get(_sql);
     if (response.statusCode == 200) {
       Map _value1 = response.data['subsonic-response'];
       Map genres = _value1['musicFolders'];
@@ -90,23 +72,59 @@ getMusicFolders() async {
   }
 }
 
-getIndexes() async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
+getArtists() async {
+  String _sql = await _getServerInfo("getArtists");
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _artists = _response['artists'];
+
+      return _artists;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+getAlbums(String _id) async {
+  String _sql = await _getServerInfo("getArtist");
   try {
     var response = await Dio().get(
-      _baseurl +
-          'rest/getIndexes?v=0.0.1&c=xiumusic&f=json&u=' +
-          _username +
-          '&s=' +
-          _salt +
-          '&t=' +
-          _hash,
+      _sql + '&id=' + _id,
     );
-    //print(response);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _artist = _response['artist'];
+//album
+      return _artist;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+getSongs(String _id) async {
+  String _sql = await _getServerInfo("getAlbum");
+  try {
+    var response = await Dio().get(
+      _sql + '&id=' + _id,
+    );
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _artist = _response['album'];
+//song
+      return _artist;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+getIndexes() async {
+  String _sql = await _getServerInfo("getIndexes");
+  try {
+    var response = await Dio().get(_sql);
     if (response.statusCode == 200) {
       Map _value1 = response.data['subsonic-response'];
       Map _indexs = _value1['indexes'];
@@ -119,24 +137,11 @@ getIndexes() async {
 }
 
 getMusicDirectory(String _id) async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
+  String _sql = await _getServerInfo("getMusicDirectory");
   try {
     var response = await Dio().get(
-      _baseurl +
-          'rest/getMusicDirectory?v=0.0.1&c=xiumusic&f=json&u=' +
-          _username +
-          '&s=' +
-          _salt +
-          '&t=' +
-          _hash +
-          '&id=' +
-          _id,
+      _sql + '&id=' + _id,
     );
-    //print(response);
     if (response.statusCode == 200) {
       Map _value1 = response.data['subsonic-response'];
       Map _musicdirectory = _value1['directory'];
@@ -149,22 +154,10 @@ getMusicDirectory(String _id) async {
 }
 
 getSong(String _id) async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
+  String _sql = await _getServerInfo("getSong");
   try {
     var response = await Dio().get(
-      _baseurl +
-          'rest/getSong?v=0.0.1&c=xiumusic&f=json&u=' +
-          _username +
-          '&s=' +
-          _salt +
-          '&t=' +
-          _hash +
-          '&id=' +
-          _id,
+      _sql + '&id=' + _id,
     );
     //print(response);
     if (response.statusCode == 200) {
@@ -179,42 +172,11 @@ getSong(String _id) async {
 }
 
 getCoverArt(String _id) async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
-  return _baseurl +
-      'rest/getCoverArt?v=0.0.1&c=xiumusic&f=json&u=' +
-      _username +
-      '&s=' +
-      _salt +
-      '&t=' +
-      _hash +
-      '&id=' +
-      _id;
+  String _sql = await _getServerInfo("getCoverArt");
+  return _sql + '&id=' + _id;
 }
 
 getSongStreamUrl(String _id) async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  String _baseurl = sharedPreferences.getString("baseurl")!;
-  String _username = sharedPreferences.getString("username")!;
-  String _salt = sharedPreferences.getString("salt")!;
-  String _hash = sharedPreferences.getString("hash")!;
-  return _baseurl +
-      'rest/stream?v=0.0.1&c=xiumusic&f=json&u=' +
-      _username +
-      '&s=' +
-      _salt +
-      '&t=' +
-      _hash +
-      '&id=' +
-      _id;
-}
-
-String md5RandomString(String _password) {
-  final randomNumber = Random().toString();
-  final randomBytes = utf8.encode(randomNumber + _password);
-  final randomString = md5.convert(randomBytes).toString();
-  return randomString;
+  String _sql = await _getServerInfo("stream");
+  return _sql + '&id=' + _id;
 }

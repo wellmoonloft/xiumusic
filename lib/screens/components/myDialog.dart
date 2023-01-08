@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MyAlertDialog extends StatelessWidget {
+import '../../util/localizations.dart';
+
+class MyDialog extends StatelessWidget {
   final String _titile;
   final String _content;
-  const MyAlertDialog(this._titile, this._content);
+  const MyDialog(this._titile, this._content);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,7 @@ class MyAlertDialog extends StatelessWidget {
           style: TextButton.styleFrom(
             textStyle: Theme.of(context).textTheme.labelLarge,
           ),
-          child: const Text('确定'),
+          child: Text(configLocal),
           onPressed: () {
             Navigator.of(context).pop();
           },

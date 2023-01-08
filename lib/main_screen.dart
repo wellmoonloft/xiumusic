@@ -23,7 +23,6 @@ class MainScreen extends StatelessWidget {
                   ),
                   Container(
                     height: 90,
-                    color: bkColor,
                     child: BottomScreen(
                       size: _size,
                     ),
@@ -34,8 +33,7 @@ class MainScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                        height: _size.height - 95.2,
-                        color: bkColor,
+                        height: _size.height - 95,
                         child: Row(
                           children: [
                             Container(
@@ -48,11 +46,15 @@ class MainScreen extends StatelessWidget {
                             )
                           ],
                         )),
-                    Container(decoration: lineBorder),
+                    //Container(decoration: lineBorder),
                     Container(
                       height: 95,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: borderColor, width: 0.1),
+                        ),
+                      ),
                       width: _size.width,
-                      color: bkColor,
                       child: BottomScreen(
                         size: _size,
                       ),

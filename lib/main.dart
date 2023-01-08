@@ -10,7 +10,7 @@ void main() async {
     // 必须加上这一行。
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = WindowOptions(
-      size: Size(800, 600),
+      size: Size(1024, 768),
       minimumSize: Size(800, 600),
       center: true,
       backgroundColor: Colors.transparent,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../util/baseCSS.dart';
+import '../components/rightHeader.dart';
 
 class TestAudio extends StatefulWidget {
   const TestAudio({Key? key}) : super(key: key);
@@ -15,27 +16,44 @@ class _GenresState extends State<TestAudio> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
+    return RightHeader(
+        top: 120,
+        headerWidget: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("流派", style: titleText1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("流派", style: titleText1),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "0",
+                        style: nomalGrayText,
+                      ),
+                    )
+                  ],
+                ),
                 Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "12",
-                    style: nomalText,
-                  ),
+                  padding: EdgeInsets.all(0),
+                  // child: TextButtom(
+                  //   press: () {
+                  //     _getFromNet();
+                  //   },
+                  //   title: "刷新",
+                  //   isActive: false,
+                  // ),
                 )
               ],
             ),
             SizedBox(
-              height: 15,
+              height: 44,
             ),
+            Container()
           ],
-        ));
+        ),
+        contentWidget: Container());
   }
 }

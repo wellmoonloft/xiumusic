@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'dart:math';
+
+import 'package:crypto/crypto.dart';
 
 class ColorsUtil {
   /// 十六进制颜色，
@@ -14,6 +17,13 @@ class ColorsUtil {
     return Color.fromRGBO((hex & 0xFF0000) >> 16, (hex & 0x00FF00) >> 8,
         (hex & 0x0000FF) >> 0, alpha);
   }
+}
+
+String md5RandomString(String _password) {
+  final randomNumber = Random().toString();
+  final randomBytes = utf8.encode(randomNumber + _password);
+  final randomString = md5.convert(randomBytes).toString();
+  return randomString;
 }
 
 DateTime timestampToDate(int timestamp) {

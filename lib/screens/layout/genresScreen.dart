@@ -3,7 +3,10 @@ import '../../models/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../util/baseCSS.dart';
 import '../../util/httpClient.dart';
-import '../components/text_buttom.dart';
+import '../../util/localizations.dart';
+import '../components/myBadge.dart';
+import '../components/rightHeader.dart';
+import '../components/textButtom.dart';
 
 class GenresScreen extends StatefulWidget {
   const GenresScreen({Key? key}) : super(key: key);
@@ -56,7 +59,7 @@ class _GenresScreenState extends State<GenresScreen> {
           child: Text(
             _tem.value,
             textDirection: TextDirection.ltr,
-            style: nomalText,
+            style: nomalGrayText,
           ),
         ),
         Expanded(
@@ -64,7 +67,7 @@ class _GenresScreenState extends State<GenresScreen> {
           child: Text(
             _tem.albumCount.toString(),
             textDirection: TextDirection.rtl,
-            style: nomalText,
+            style: nomalGrayText,
           ),
         ),
         Expanded(
@@ -72,7 +75,7 @@ class _GenresScreenState extends State<GenresScreen> {
           child: Text(
             _tem.songCount.toString(),
             textDirection: TextDirection.rtl,
-            style: nomalText,
+            style: nomalGrayText,
           ),
         )
       ],
@@ -87,30 +90,28 @@ class _GenresScreenState extends State<GenresScreen> {
         Expanded(
             flex: 1,
             child: Container(
-              padding: EdgeInsets.only(left: 15),
               child: Text(
-                "名称",
+                nameLocal,
                 textDirection: TextDirection.ltr,
-                style: nomalText,
+                style: nomalGrayText,
               ),
             )),
         Expanded(
           flex: 1,
           child: Text(
-            "专辑",
+            albumLocal,
             textDirection: TextDirection.rtl,
-            style: nomalText,
+            style: nomalGrayText,
           ),
         ),
         Expanded(
           flex: 1,
           child: Container(
-              padding: EdgeInsets.only(right: 15),
               child: Text(
-                "歌曲",
-                textDirection: TextDirection.rtl,
-                style: nomalText,
-              )),
+            songLocal,
+            textDirection: TextDirection.rtl,
+            style: nomalGrayText,
+          )),
         )
       ],
     );
@@ -118,67 +119,48 @@ class _GenresScreenState extends State<GenresScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size _size = MediaQuery.of(context).size;
-    return Container(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          children: [
-            Container(
-                height: 100,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("流派", style: titleText1),
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                (_genres != null)
-                                    ? _genres!.length.toString()
-                                    : "0",
-                                style: nomalText,
-                              ),
-                            )
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(0),
-                          child: TextButtom(
-                            press: () {
-                              _getFromNet();
-                            },
-                            title: "刷新",
-                            isActive: false,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    _buildHeaderWidget()
-                  ],
-                )),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                height: _size.height - 250.2,
-                child: _genres != null && _genres!.length > 0
-                    ? ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: _genres!.length,
-                        itemExtent: 50.0, //强制高度为50.0
-                        itemBuilder: (BuildContext context, int index) {
-                          return _itemBuildWidget(context, index, _genres!);
-                        })
-                    : Container())
-          ],
-        ));
+    return RightHeader(
+      top: 100.2,
+      headerWidget: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(genresLocal, style: titleText1),
+                  MyBadge((_genres != null) ? _genres!.length.toString() : "0"),
+                ],
+              ),
+              Container(
+                child: TextButtom(
+                  press: () {
+                    _getFromNet();
+                  },
+                  title: refreshLocal,
+                  isActive: false,
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          _buildHeaderWidget()
+        ],
+      ),
+      contentWidget: _genres != null && _genres!.length > 0
+          ? Container(
+              child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _genres!.length,
+                  itemExtent: 50.0, //强制高度为50.0
+                  itemBuilder: (BuildContext context, int index) {
+                    return _itemBuildWidget(context, index, _genres!);
+                  }))
+          : Container(),
+    );
   }
 }

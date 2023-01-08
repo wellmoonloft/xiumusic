@@ -18,7 +18,7 @@
 
 有了这四个需求，我决定自己撸一个APP给自己用
 
-![image-20230105120444277](https://s2.loli.net/2023/01/05/j3GFa9JYrn1U8CK.png)
+![](https://s2.loli.net/2023/01/08/s7qeYpOVcl4JtXM.jpg)
 
 ------------------------------
 
@@ -50,11 +50,12 @@
 
 ## 依赖
 
-- [shared_preferences: ^2.0.15](https://pub.flutter-io.cn/packages/shared_preferences) 数据持久化。
+- [sqflite: ^2.2.25](https://pub.flutter-io.cn/packages/sqflite) 数据持久化。
+- [path: ^1.8.2 ](https://pub.flutter-io.cn/packages/path) 数据持久化。
 - [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具，差1%就超过audioplayers了。
 - [dio: ^4.0.6](https://pub.dev/packages/dio) 及其简单的Restful请求工具。
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
-- 
+- [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化用的。
 
 ## 进度
 

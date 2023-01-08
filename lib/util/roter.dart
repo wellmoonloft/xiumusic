@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../layout/genresScreen.dart';
-import '../layout/library.dart';
-import '../layout/settings.dart';
+import '../screens/layout/albumDetailScreen.dart';
+import '../screens/layout/artistDetailScreen.dart';
+import '../screens/layout/artistsScreen.dart';
+import '../screens/layout/genresScreen.dart';
+import '../screens/layout/settings.dart';
 
 class Roter extends StatelessWidget {
   final int roter;
@@ -27,13 +29,17 @@ class Roter extends StatelessWidget {
           case 4: //专辑
             return Container();
           case 5: //歌手
-            return Container();
+            return ArtistsScreen();
           case 6: //流派
             return GenresScreen();
-          case 7: //目录
-            return Library();
-          case 8: //设置
+          case 7: //设置
             return Settings();
+
+          //不通过点击进入
+          case 8:
+            return AlbumDetailScreen();
+          case 9:
+            return ArtistDetailScreen();
 
           default:
             return Settings();

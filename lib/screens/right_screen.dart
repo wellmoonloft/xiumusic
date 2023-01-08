@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/notifierValue.dart';
 import '../util/baseCSS.dart';
-import 'components/roter.dart';
+import '../util/roter.dart';
 import 'layout/settings.dart';
 import 'left_screen.dart';
 
@@ -34,7 +34,7 @@ class _RightScreenState extends State<RightScreen> {
           child: LeftScreen(),
         ),
         body: Container(
-          color: rightColor,
+          color: bkColor,
           child: Column(
             children: [
               Row(
@@ -46,10 +46,10 @@ class _RightScreenState extends State<RightScreen> {
                         IconButton(
                           icon: Icon(
                             Icons.menu,
-                            color: kTextColor,
+                            color: kGrayColor,
                             size: 15,
                           ),
-                          color: kTextColor,
+                          color: kGrayColor,
                           onPressed: () {
                             _scaffoldKey.currentState?.openDrawer();
                           },
@@ -63,7 +63,7 @@ class _RightScreenState extends State<RightScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.search,
-                            color: kTextColor,
+                            color: kGrayColor,
                             size: 15,
                           ),
                           onPressed: () {
@@ -75,7 +75,7 @@ class _RightScreenState extends State<RightScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.settings,
-                            color: kTextColor,
+                            color: kGrayColor,
                             size: 15,
                           ),
                           onPressed: () {
