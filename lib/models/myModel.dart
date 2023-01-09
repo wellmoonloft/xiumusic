@@ -98,30 +98,36 @@ class Albums {
   late String artistId;
   late String title;
   late String artist;
+  late String genre;
   late int year;
   late int duration;
   late int playCount;
   late int songCount;
+  late String created;
 
   Albums(
       {required this.id,
       required this.artistId,
       required this.title,
       required this.artist,
+      required this.genre,
       required this.year,
       required this.duration,
       required this.playCount,
-      required this.songCount});
+      required this.songCount,
+      required this.created});
 
   Albums.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     artistId = json['artistId'];
     title = json['title'];
     artist = json['artist'];
+    genre = json['genre'];
     year = json['year'];
     duration = json['duration'];
     playCount = json['playCount'];
     songCount = json['songCount'];
+    created = json['created'];
   }
 
   Map<String, dynamic> toJson() {
@@ -130,10 +136,12 @@ class Albums {
     _data['artistId'] = this.artistId;
     _data['title'] = this.title;
     _data['artist'] = this.artist;
+    _data['genre'] = this.genre;
     _data['year'] = this.year;
     _data['duration'] = this.duration;
     _data['playCount'] = this.playCount;
     _data['songCount'] = this.songCount;
+    _data['created'] = this.created;
     return _data;
   }
 }
@@ -143,33 +151,39 @@ class Songs {
   late String title;
   late String album;
   late String artist;
+  late String genre;
   late String albumId;
   late int duration;
   late int bitRate;
   late String path;
   late int playCount;
+  late String created;
 
   Songs(
       {required this.id,
       required this.title,
       required this.album,
       required this.artist,
+      required this.genre,
       required this.albumId,
       required this.duration,
       required this.bitRate,
       required this.path,
-      required this.playCount});
+      required this.playCount,
+      required this.created});
 
   Songs.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     album = json['album'];
     artist = json['artist'];
+    genre = json['genre'];
     albumId = json['albumId'];
     duration = json['duration'];
     bitRate = json['bitRate'];
     path = json['path'];
     playCount = json['playCount'];
+    created = json['created'];
   }
 
   Map<String, dynamic> toJson() {
@@ -178,11 +192,13 @@ class Songs {
     _data['title'] = this.title;
     _data['album'] = this.album;
     _data['artist'] = this.artist;
+    _data['genre'] = this.genre;
     _data['albumId'] = this.albumId;
     _data['duration'] = this.duration;
     _data['bitRate'] = this.bitRate;
     _data['path'] = this.path;
     _data['playCount'] = this.playCount;
+    _data['created'] = this.created;
     return _data;
   }
 }

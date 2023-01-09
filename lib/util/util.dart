@@ -55,6 +55,17 @@ String timestampToDateStr(int timestamp, {onlyNeedDate = false}) {
   return dateTime;
 }
 
+String timeISOtoString(String time) {
+  DateTime y2k = DateTime.parse(time);
+  //获取当前时间的年
+  int year = y2k.year;
+  //获取当前时间的月
+  int month = y2k.month;
+  //获取当前时间的日
+  int day = y2k.day;
+  return "$year-$month-$day";
+}
+
 String generateRandomString() {
   final _random = Random();
   const _availableChars =

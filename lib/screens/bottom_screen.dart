@@ -19,6 +19,7 @@ class BottomScreen extends StatefulWidget {
 class _BottomScreenState extends State<BottomScreen> {
   final _player = AudioPlayer();
   Map _song = new Map();
+  double _activevolume = 1.0;
   @override
   initState() {
     super.initState();
@@ -47,8 +48,6 @@ class _BottomScreenState extends State<BottomScreen> {
       _ss = await getSong(_id);
       String _arturl = await getCoverArt(_id);
       _ss["arturl"] = _arturl;
-    } else {
-      _ss["arturl"] = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
     }
 
     return _ss;
@@ -101,24 +100,26 @@ class _BottomScreenState extends State<BottomScreen> {
                                     margin: leftrightPadding,
                                     height: 65,
                                     width: 65,
-                                    child: Image.network(
-                                      _song["arturl"],
-                                      fit: BoxFit.cover,
-                                      frameBuilder: (context, child, frame,
-                                          wasSynchronouslyLoaded) {
-                                        if (wasSynchronouslyLoaded) {
-                                          return child;
-                                        }
-                                        return AnimatedSwitcher(
-                                          child: frame != null
-                                              ? child
-                                              : Image.asset(
-                                                  "assets/images/logo.jpg"),
-                                          duration: const Duration(
-                                              milliseconds: 2000),
-                                        );
-                                      },
-                                    ),
+                                    child: (value == "1")
+                                        ? Image.asset("assets/images/logo.jpg")
+                                        : Image.network(
+                                            _song["arturl"],
+                                            fit: BoxFit.cover,
+                                            frameBuilder: (context, child,
+                                                frame, wasSynchronouslyLoaded) {
+                                              if (wasSynchronouslyLoaded) {
+                                                return child;
+                                              }
+                                              return AnimatedSwitcher(
+                                                child: frame != null
+                                                    ? child
+                                                    : Image.asset(
+                                                        "assets/images/logo.jpg"),
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                              );
+                                            },
+                                          ),
                                   ),
                                   Column(
                                     crossAxisAlignment:
@@ -204,10 +205,13 @@ class _BottomScreenState extends State<BottomScreen> {
                   if (!_isMobile)
                     Container(
                       width: widget.size.width / 4,
-                      //padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                      padding: EdgeInsets.only(right: 15),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          SizedBox(
+                            height: 15,
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -225,7 +229,7 @@ class _BottomScreenState extends State<BottomScreen> {
                               Container(
                                 child: IconButton(
                                   icon: Icon(
-                                    Icons.loop,
+                                    Icons.playlist_add,
                                     color: kTextColor,
                                     size: 16,
                                   ),
@@ -235,7 +239,7 @@ class _BottomScreenState extends State<BottomScreen> {
                               Container(
                                 child: IconButton(
                                   icon: Icon(
-                                    Icons.shuffle,
+                                    Icons.queue_music,
                                     color: kTextColor,
                                     size: 16,
                                   ),
@@ -244,33 +248,70 @@ class _BottomScreenState extends State<BottomScreen> {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 16,
-                                child: IconButton(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                  icon: Icon(
-                                    Icons.volume_up,
-                                    color: kTextColor,
-                                    size: 16,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                              Container(
-                                width: widget.size.width / 10,
-                                child: LinearProgressIndicator(
-                                    color: kTextColor,
-                                    backgroundColor: kGrayColor,
-                                    value: 0.7, // <-- SEE HERE
-                                    minHeight: 5),
-                              ),
-                            ],
-                          ),
+                          StreamBuilder<double>(
+                              stream: _player.volumeStream,
+                              builder: (context, snapshot) => Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 16,
+                                        child: _player.volume == 0.0
+                                            ? IconButton(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 10),
+                                                icon: Icon(
+                                                  Icons.volume_mute,
+                                                  color: kTextColor,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () {
+                                                  _player
+                                                      .setVolume(_activevolume);
+                                                },
+                                              )
+                                            : IconButton(
+                                                padding:
+                                                    EdgeInsets.only(bottom: 10),
+                                                icon: Icon(
+                                                  Icons.volume_up,
+                                                  color: kTextColor,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () {
+                                                  _activevolume =
+                                                      _player.volume;
+                                                  _player.setVolume(0.0);
+                                                },
+                                              ),
+                                      ),
+                                      SliderTheme(
+                                          data: SliderTheme.of(context)
+                                              .copyWith(
+                                                  activeTrackColor: kGrayColor,
+                                                  inactiveTrackColor:
+                                                      borderColor,
+                                                  trackHeight: 1.0,
+                                                  thumbColor: kTextColor,
+                                                  thumbShape:
+                                                      RoundSliderThumbShape(
+                                                          enabledThumbRadius:
+                                                              5),
+                                                  overlayShape:
+                                                      SliderComponentShape
+                                                          .noThumb),
+                                          child: Container(
+                                              width: widget.size.width / 8,
+                                              child: Slider(
+                                                divisions: 10,
+                                                min: 0.0,
+                                                max: 1.0,
+                                                value: _player.volume,
+                                                onChanged: _player.setVolume,
+                                              ))),
+                                    ],
+                                  )),
                         ],
                       ),
                     )

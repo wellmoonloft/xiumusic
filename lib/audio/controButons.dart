@@ -20,10 +20,7 @@ class _ControlButtonsState extends State<ControlButtons> {
         return Tooltip(
             message: "循环播放",
             child: IconButton(
-              icon: const Icon(
-                Icons.loop,
-                color: kTextColor,
-              ),
+              icon: const Icon(Icons.loop, color: kTextColor, size: 16),
               onPressed: () {
                 widget.player.setLoopMode(LoopMode.one);
                 setState(() {
@@ -35,10 +32,7 @@ class _ControlButtonsState extends State<ControlButtons> {
         return Tooltip(
             message: "全部循环",
             child: IconButton(
-              icon: const Icon(
-                Icons.loop,
-                color: badgeRed,
-              ),
+              icon: const Icon(Icons.loop, color: badgeRed, size: 16),
               onPressed: () {
                 widget.player.setLoopMode(LoopMode.all);
                 setState(() {
@@ -50,10 +44,7 @@ class _ControlButtonsState extends State<ControlButtons> {
         return Tooltip(
             message: "单曲循环",
             child: IconButton(
-              icon: const Icon(
-                Icons.restart_alt,
-                color: badgeRed,
-              ),
+              icon: const Icon(Icons.restart_alt, color: badgeRed, size: 16),
               onPressed: () {
                 widget.player.setLoopMode(LoopMode.off);
                 setState(() {
@@ -63,10 +54,7 @@ class _ControlButtonsState extends State<ControlButtons> {
             ));
       default:
         return IconButton(
-          icon: const Icon(
-            Icons.restart_alt,
-            color: kTextColor,
-          ),
+          icon: const Icon(Icons.restart_alt, color: kTextColor, size: 16),
           onPressed: () {
             widget.player.setLoopMode(LoopMode.one);
             setState(() {
@@ -104,11 +92,12 @@ class _ControlButtonsState extends State<ControlButtons> {
         // ),
         IconButton(
           icon: const Icon(
-            Icons.favorite_border,
+            Icons.shuffle,
             color: kTextColor,
+            size: 16,
           ),
           onPressed: () {
-            widget.player.setLoopMode(LoopMode.one);
+            widget.player.stop();
           },
         ),
         IconButton(
@@ -126,7 +115,8 @@ class _ControlButtonsState extends State<ControlButtons> {
             color: kTextColor,
           ),
           onPressed: () {
-            widget.player.setLoopMode(LoopMode.one);
+            widget.player
+                .seek(Duration(seconds: widget.player.position.inSeconds - 15));
           },
         ),
         StreamBuilder<PlayerState>(
@@ -171,7 +161,8 @@ class _ControlButtonsState extends State<ControlButtons> {
             color: kTextColor,
           ),
           onPressed: () {
-            widget.player.setLoopMode(LoopMode.one);
+            widget.player
+                .seek(Duration(seconds: widget.player.position.inSeconds + 15));
           },
         ),
         IconButton(
@@ -189,6 +180,7 @@ class _ControlButtonsState extends State<ControlButtons> {
   }
 }
 
+//收藏。加入列表。播放队列
 // Icons.skip_previous,
 // Icons.fast_rewind,
 // Icons.fast_forward,

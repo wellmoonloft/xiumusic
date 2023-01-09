@@ -18,7 +18,64 @@
 
 有了这四个需求，我决定自己撸一个APP给自己用
 
-![](https://s2.loli.net/2023/01/08/s7qeYpOVcl4JtXM.jpg)
+![1673160145872](https://s2.loli.net/2023/01/09/X8bglEody1kfmLN.jpg)
+
+## Todo List 
+
+### 页面  
+
+- [ ] 主页  
+  - [ ] 播放最多的top10，播放过的歌、播放过的专辑、正在播放、收藏的？如果有
+  
+- [ ] 正在播放  
+  - [ ] 正在播放页面，这个不一定做
+
+- [ ] 播放列表  
+  - [ ] 播放列表页面
+
+- [ ] 收藏  
+  - [ ] 收藏页面
+
+- [ ] 搜索  
+  - [ ] 搜索页面，这个用弹窗好还是做一个页面好？
+
+- [ ] 专辑  
+  - [ ] 专辑列表
+  - [x] 专辑详情
+  
+- [x] 歌手  
+  - [x] 歌手列表
+  - [x] 歌手主页
+  - [x] 专辑详情
+  
+- [x] 流派  
+  - [x] 页面展示
+  - [ ] 跳转到对应专辑
+  
+- [x] 配置  
+  - [x] 服务器配置：测试、连接、保存服务器及账号信息
+  - [ ] 个性化：没想好做不做
+  - [ ] 多语言：没想好做不做
+
+### 基础  
+
+- [x] 播放  
+  - [x] 流播放、播放控制、静音、单曲循环
+  - [ ] 播放列表、全部循环
+
+- [x] 网络  
+  - [x] Restful请求、服务器连接等
+
+- [x] 数据库  
+  - [x] 建表、增删改查、初始化(没做转转转)
+
+- [x] 自适应  
+  - [x] 理论支持IOS/安卓/macOS/Windows/Linux
+  - [ ] 目前用macOS开发，还未调试其他端
+
+
+
+![](https://s2.loli.net/2023/01/09/GmhW8pcNIDLqAdY.jpg)
 
 ------------------------------
 
@@ -42,7 +99,13 @@
 
 4. Transparent Title Bar && Full Size Content View
 
+添加苹果安全
 
+macos-Runner-DebugProfile.entitlements
+macos-Runner-Release.entitlements
+
+    <key>com.apple.security.network.client</key>
+    <true/>
 
 
 ## 参考
@@ -51,17 +114,9 @@
 ## 依赖
 
 - [sqflite: ^2.2.25](https://pub.flutter-io.cn/packages/sqflite) 数据持久化。
-- [path: ^1.8.2 ](https://pub.flutter-io.cn/packages/path) 数据持久化。
+- [path: ^1.8.2 ](https://pub.flutter-io.cn/packages/path) 给数据库找位置的，也可以用于图片缓存，但是还是base64香吧。
 - [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具，差1%就超过audioplayers了。
 - [dio: ^4.0.6](https://pub.dev/packages/dio) 及其简单的Restful请求工具。
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
 - [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化用的。
 
-## 进度
-
-距离完工还早，目前只实现了桌面端的部分功能
-
-
-## Todo List 
-
-- [ ] 

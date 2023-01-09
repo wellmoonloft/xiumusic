@@ -1,7 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'myModel.dart';
+import '../models/myModel.dart';
 
 class BaseDB {
   static final BaseDB instance = BaseDB._init();
@@ -68,10 +67,12 @@ class BaseDB {
                 artistId TEXT NOT NULL,
                 title TEXT NOT NULL,
                 artist TEXT NOT NULL,
+                genre TEXT,
                 year INTEGER,
                 duration INTEGER NOT NULL,
                 playCount INTEGER,
-                songCount INTEGER NOT NULL
+                songCount INTEGER NOT NULL,
+                created TEXT NOT NULL
               )
         ''');
     await _database.execute('''
@@ -81,11 +82,13 @@ class BaseDB {
                 title TEXT NOT NULL,                
                 album TEXT NOT NULL,
                 artist TEXT NOT NULL,
+                genre TEXT,
                 albumId TEXT NOT NULL,
                 duration INTEGER NOT NULL,
                 bitRate INTEGER NOT NULL,
                 path TEXT NOT NULL,
-                playCount INTEGER
+                playCount INTEGER,
+                created TEXT NOT NULL
               )
         ''');
   }
@@ -107,15 +110,10 @@ class BaseDB {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-
+      batch.delete(GenresTable);
+      await batch.commit(noResult: true);
       for (Genres element in _genres) {
-        var xx = await db
-            .query(GenresTable, where: "value = ?", whereArgs: [element.value]);
-        if (xx.length > 0) {
-          batch.update(GenresTable, element.toJson());
-        } else {
-          batch.insert(GenresTable, element.toJson());
-        }
+        batch.insert(GenresTable, element.toJson());
       }
       var res = await batch.commit(noResult: true);
       return res;
@@ -128,15 +126,10 @@ class BaseDB {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-
+      batch.delete(ArtistsTable);
+      await batch.commit(noResult: true);
       for (Artists element in _artists) {
-        var xx = await db
-            .query(ArtistsTable, where: "id = ?", whereArgs: [element.id]);
-        if (xx.length > 0) {
-          batch.update(ArtistsTable, element.toJson());
-        } else {
-          batch.insert(ArtistsTable, element.toJson());
-        }
+        batch.insert(ArtistsTable, element.toJson());
       }
       var res = await batch.commit(noResult: true);
       return res;
@@ -145,19 +138,14 @@ class BaseDB {
     }
   }
 
-  addAlbums(List<Albums> _albums) async {
+  addAlbums(List<Albums> _albums, String artistId) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-
+      batch.delete(AlbumsTable, where: "artistId = ?", whereArgs: [artistId]);
+      await batch.commit(noResult: true);
       for (Albums element in _albums) {
-        var xx = await db
-            .query(AlbumsTable, where: "id = ?", whereArgs: [element.id]);
-        if (xx.length > 0) {
-          batch.update(AlbumsTable, element.toJson());
-        } else {
-          batch.insert(AlbumsTable, element.toJson());
-        }
+        batch.insert(AlbumsTable, element.toJson());
       }
       var res = await batch.commit(noResult: true);
       return res;
@@ -166,19 +154,14 @@ class BaseDB {
     }
   }
 
-  addSongs(List<Songs> _songs) async {
+  addSongs(List<Songs> _songs, String albumId) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-
+      batch.delete(SongsTable, where: "albumId = ?", whereArgs: [albumId]);
+      await batch.commit(noResult: true);
       for (Songs element in _songs) {
-        var xx = await db
-            .query(SongsTable, where: "id = ?", whereArgs: [element.id]);
-        if (xx.length > 0) {
-          batch.update(SongsTable, element.toJson());
-        } else {
-          batch.insert(SongsTable, element.toJson());
-        }
+        batch.insert(SongsTable, element.toJson());
       }
       var res = await batch.commit(noResult: true);
       return res;

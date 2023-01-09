@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../models/baseDB.dart';
+import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../../util/util.dart';
 import '../components/rightHeader.dart';
 import '../components/textButtom.dart';
 
@@ -17,15 +16,8 @@ class ArtistsScreen extends StatefulWidget {
 
 class _ArtistsScreenState extends State<ArtistsScreen> {
   List? _artists;
-  List? _albums;
-  List? _songs;
-  int _dir = 0;
   int artistsnum = 0;
   int albumsnum = 0;
-  int songsnum = 0;
-  String _parent = "";
-  String _artilstname = "";
-  String _albumsname = "";
 
   _getArtistsFromNet() async {
     List<Artists> _list = [];
@@ -34,8 +26,11 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
     for (var _element in _genresList["index"]) {
       var _temp = _element["artist"];
       for (dynamic _element1 in _temp) {
+        if (_element1["artistImageUrl"] == null)
+          _element1["artistImageUrl"] = "1";
         Artists _tem = Artists.fromJson(_element1);
         _list.add(_tem);
+        albumsnum += _tem.albumCount;
       }
     }
     await BaseDB.instance.addArtists(_list);
@@ -45,27 +40,14 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
     });
   }
 
-  _getAlbumsFromNet(String artistId) async {
-    List<Albums> _list = [];
-    Map _genresList = await getAlbums(artistId);
-    for (dynamic _element in _genresList["album"]) {
-      if (_element["playCount"] == null) _element["playCount"] = 0;
-      if (_element["year"] == null) _element["year"] = 0;
-      Albums _tem = Albums.fromJson(_element);
-      _list.add(_tem);
-    }
-    await BaseDB.instance.addAlbums(_list);
-    setState(() {
-      _albums = _list;
-      albumsnum = _list.length;
-      _artilstname = _list[0].artist;
-    });
-  }
-
   _getArtists() async {
     if (_artists == null) {
       final _artistsList = await BaseDB.instance.getArtists();
       if (_artistsList != null) {
+        for (var element in _artistsList) {
+          Artists _xx = element;
+          albumsnum += _xx.albumCount;
+        }
         setState(() {
           _artists = _artistsList;
           artistsnum = _artistsList.length;
@@ -76,38 +58,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
     }
   }
 
-  _getAlbums(String artistId) async {
-    final _albumsList = await BaseDB.instance.getAlbums(artistId);
-    if (_albumsList != null) {
-      setState(() {
-        _albums = _albumsList;
-        albumsnum = _albumsList.length;
-        _artilstname = _albums![0].artist;
-      });
-    } else {
-      _getAlbumsFromNet(artistId);
-    }
-
-    setState(() {
-      _dir = 1;
-      _parent = artistId;
-    });
-  }
-
-  _setUPLevel(String _id) async {
-    if (_dir == 1) {
-      await _getArtists();
-      setState(() {
-        _dir = 0;
-      });
-    } else if (_dir == 2) {
-      await _getAlbums(_id);
-      setState(() {
-        _dir = 1;
-      });
-    }
-  }
-
   @override
   initState() {
     super.initState();
@@ -115,162 +65,119 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
   }
 
   Widget _buildHeaderWidget() {
-    switch (_dir) {
-      case 0:
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                flex: 1,
-                child: Container(
-                  child: Text(
-                    artistLocal,
-                    textDirection: TextDirection.ltr,
-                    style: nomalGrayText,
-                  ),
-                )),
-            Expanded(
-              flex: 1,
-              child: Container(
-                  child: Text(
-                albumLocal,
-                textDirection: TextDirection.rtl,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+            flex: 1,
+            child: Container(
+              child: Text(
+                artistLocal,
+                textDirection: TextDirection.ltr,
                 style: nomalGrayText,
-              )),
-            )
-          ],
-        );
-
-      default:
-        return Container();
-    }
+              ),
+            )),
+        Expanded(
+          flex: 1,
+          child: Container(
+              child: Text(
+            albumLocal,
+            textDirection: TextDirection.rtl,
+            style: nomalGrayText,
+          )),
+        )
+      ],
+    );
   }
 
   Widget _itemBuildWidget() {
-    switch (_dir) {
-      case 0:
-        return _artists != null && _artists!.length > 0
-            ? ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _artists!.length,
-                itemExtent: 50.0, //强制高度为50.0
-                itemBuilder: (BuildContext context, int index) {
-                  Artists _tem = _artists![index];
-                  return ListTile(
-                      title: InkWell(
-                          onTap: () {
-                            //_getAlbums(_tem.id);
-                            activeID.value = _tem.id;
-                            indexValue.value = 9;
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.name,
-                                  textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.albumCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                            ],
-                          )));
-                })
-            : Container();
-
-      default:
-        return Container();
-    }
+    return _artists != null && _artists!.length > 0
+        ? ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemCount: _artists!.length,
+            itemExtent: 50.0, //强制高度为50.0
+            itemBuilder: (BuildContext context, int index) {
+              Artists _tem = _artists![index];
+              return ListTile(
+                  title: InkWell(
+                      onTap: () {
+                        //_getAlbums(_tem.id);
+                        activeID.value = _tem.id;
+                        indexValue.value = 9;
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              _tem.name,
+                              textDirection: TextDirection.ltr,
+                              style: nomalGrayText,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              _tem.albumCount.toString(),
+                              textDirection: TextDirection.rtl,
+                              style: nomalGrayText,
+                            ),
+                          ),
+                        ],
+                      )));
+            })
+        : Container();
   }
 
   Widget _buildTopWidget() {
-    switch (_dir) {
-      case 0:
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Container(child: Text(artistLocal, style: titleText1)),
+        Row(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(artistLocal, style: titleText1),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    artistsnum.toString(),
-                    style: nomalGrayText,
-                  ),
-                )
-              ],
+            Text(
+              "艺人: " + artistsnum.toString(),
+              style: nomalGrayText,
             ),
-            Container(
-              child: TextButtom(
-                press: () {
-                  _getArtists();
-                },
-                title: refreshLocal,
-                isActive: false,
-              ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "$albumLocal: " + albumsnum.toString(),
+              style: nomalGrayText,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TextButtom(
+              press: () {
+                artistsnum = 0;
+                albumsnum = 0;
+                _getArtistsFromNet();
+              },
+              title: refreshLocal,
+              isActive: false,
             )
           ],
-        );
-
-      default:
-        return Container();
-    }
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return RightHeader(
-        top: 155,
+        top: 100,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: circularBorder,
-                    child: InkWell(
-                      onTap: () {
-                        if (_dir > 0) {
-                          _setUPLevel(_parent);
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.expand_less,
-                            size: 15,
-                            color: kGrayColor,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(upLocal, style: nomalGrayText),
-                        ],
-                      ),
-                    )),
-              ],
-            ),
-            SizedBox(
-              height: 24,
-            ),
+            SizedBox(height: 24),
             _buildHeaderWidget()
           ],
         ),

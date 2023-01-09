@@ -19,11 +19,12 @@ class TextButtom extends StatelessWidget {
     return InkWell(
       onTap: press,
       child: Container(
-        padding: EdgeInsets.only(right: 15),
+        //padding: EdgeInsets.only(right: 15),
         child: Text(title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
+                decoration: TextDecoration.underline,
                 color: (isActive) ? kTextColor : kGrayColor,
                 fontWeight: (isActive) ? FontWeight.w400 : FontWeight.w100)),
       ),

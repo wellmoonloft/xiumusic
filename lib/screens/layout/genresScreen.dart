@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../models/baseDB.dart';
+import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../util/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../components/myBadge.dart';
 import '../components/rightHeader.dart';
 import '../components/textButtom.dart';
 
@@ -16,6 +15,9 @@ class GenresScreen extends StatefulWidget {
 
 class _GenresScreenState extends State<GenresScreen> {
   List? _genres;
+  int albumsnum = 0;
+  int songsnum = 0;
+  int genresnum = 0;
 
   _getFromNet() async {
     final _genresList = await getGenres();
@@ -23,6 +25,9 @@ class _GenresScreenState extends State<GenresScreen> {
     for (dynamic element in _genresList) {
       Genres _tem = Genres.fromJson(element);
       _list.add(_tem);
+      songsnum += _tem.songCount;
+      albumsnum += _tem.albumCount;
+      genresnum++;
     }
     await BaseDB.instance.addGenres(_list);
     setState(() {
@@ -33,6 +38,12 @@ class _GenresScreenState extends State<GenresScreen> {
   _getGenres() async {
     final _genresList = await BaseDB.instance.getGenres();
     if (_genresList != null) {
+      for (var element in _genresList) {
+        Genres _tem = element;
+        songsnum += _tem.songCount;
+        albumsnum += _tem.albumCount;
+        genresnum++;
+      }
       setState(() {
         _genres = _genresList;
       });
@@ -117,36 +128,61 @@ class _GenresScreenState extends State<GenresScreen> {
     );
   }
 
+  Widget _buildTopWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Container(child: Text(genresLocal, style: titleText1)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              "$genresLocal: " + genresnum.toString(),
+              style: nomalGrayText,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "$albumLocal: " + albumsnum.toString(),
+              style: nomalGrayText,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "$songLocal: " + songsnum.toString(),
+              style: nomalGrayText,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            TextButtom(
+              press: () {
+                albumsnum = 0;
+                songsnum = 0;
+                genresnum = 0;
+                _getFromNet();
+              },
+              title: refreshLocal,
+              isActive: false,
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return RightHeader(
-      top: 100.2,
+      top: 100,
       headerWidget: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(genresLocal, style: titleText1),
-                  MyBadge((_genres != null) ? _genres!.length.toString() : "0"),
-                ],
-              ),
-              Container(
-                child: TextButtom(
-                  press: () {
-                    _getFromNet();
-                  },
-                  title: refreshLocal,
-                  isActive: false,
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 24,
-          ),
+          _buildTopWidget(),
+          SizedBox(height: 24),
           _buildHeaderWidget()
         ],
       ),

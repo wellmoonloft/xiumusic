@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/baseDB.dart';
+import 'baseDB.dart';
 
 testServer(String _baseUrl, String _username, String _password) async {
   try {

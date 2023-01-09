@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/baseDB.dart';
+import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseCSS.dart';
@@ -20,18 +20,29 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   String _artilstname = "";
   int _albumsnum = 0;
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
+  //增加歌曲数，专辑数还有总时长
+  int _songs = 0;
+  int _playCount = 0;
+  int _duration = 0;
 
   _getAlbums(String artistId) async {
     final _albumsList = await BaseDB.instance.getAlbums(artistId);
     if (_albumsList != null) {
-      String _xx = await getCoverArt(artistId);
-      final xx = await BaseDB.instance.getArtistsByID(artistId);
-      Artists _artist = xx[0];
+      String _artURL = await getCoverArt(artistId);
+      final _artistList = await BaseDB.instance.getArtistsByID(artistId);
+
+      for (var element in _albumsList) {
+        Albums _xx = element;
+        _playCount += _xx.playCount;
+        _duration += _xx.duration;
+        _songs += _xx.songCount;
+      }
       setState(() {
         _albums = _albumsList;
-        _albumsnum = _artist.albumCount;
-        _artilstname = _artist.name;
-        _arturl = _xx;
+        _albumsnum = _albumsList.length;
+        _artilstname = _artistList[0].name;
+
+        _arturl = _artURL;
       });
     } else {
       _getAlbumsFromNet(artistId);
@@ -45,10 +56,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     for (dynamic _element in _genresList["album"]) {
       if (_element["playCount"] == null) _element["playCount"] = 0;
       if (_element["year"] == null) _element["year"] = 0;
+      if (_element["genre"] == null) _element["genre"] = "0";
       Albums _tem = Albums.fromJson(_element);
       _list.add(_tem);
+      _playCount += _tem.playCount;
+      _duration += _tem.duration;
+      _songs += _tem.songCount;
     }
-    await BaseDB.instance.addAlbums(_list);
+    await BaseDB.instance.addAlbums(_list, artistId);
     setState(() {
       _albums = _list;
       _albumsnum = _list.length;
@@ -173,8 +188,18 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     padding: leftrightPadding,
                     child: Row(
                       children: [
+                        TextButtom(
+                          press: () {
+                            indexValue.value = 5;
+                          },
+                          title: "$artistLocal",
+                          isActive: false,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Text(
-                          "$artistLocal: " + _albumsnum.toString(),
+                          "$albumLocal: " + _albumsnum.toString(),
                           style: nomalGrayText,
                         ),
                       ],
@@ -188,12 +213,39 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     child: Row(
                       children: [
                         Text(
-                          "$songLocal: " + _albumsnum.toString(),
+                          "$songLocal: " + _songs.toString(),
                           style: nomalGrayText,
                         ),
                         SizedBox(
                           width: 10,
                         ),
+                        Text(
+                          "$drationLocal: " + formatDuration(_duration),
+                          style: nomalGrayText,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          "$playCountLocal: " + _playCount.toString(),
+                          style: nomalGrayText,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          width: 50,
+                          child: TextButtom(
+                            press: () {
+                              _songs = 0;
+                              _playCount = 0;
+                              _duration = 0;
+                              _getAlbumsFromNet(activeID.value);
+                            },
+                            title: refreshLocal,
+                            isActive: false,
+                          ),
+                        )
                       ],
                     ),
                   )
@@ -202,15 +254,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
             ),
           ],
         ),
-        Container(
-          child: TextButtom(
-            press: () {
-              // _getArtists();
-            },
-            title: refreshLocal,
-            isActive: false,
-          ),
-        )
       ],
     );
   }

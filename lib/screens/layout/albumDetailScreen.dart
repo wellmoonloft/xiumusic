@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xiumusic/models/myModel.dart';
-import '../../models/baseDB.dart';
+import '../../util/baseDB.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseCSS.dart';
 import '../../util/httpClient.dart';
@@ -24,6 +24,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   int _duration = 0;
   String _albumsname = "";
   String _artistID = "";
+  String _genre = "";
+  String _createDate = "2022-11-29T03:15:15.065292936Z";
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
   String _artist = "";
   int _year = 0;
@@ -44,6 +46,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
         _year = _albums.year;
         _artist = _albums.artist;
         _artistID = _albums.artistId;
+        _genre = _albums.genre;
+        _createDate = _albums.created;
         _arturl = _xx;
       });
     } else {
@@ -59,10 +63,11 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
     for (dynamic _element in _songsList["song"]) {
       if (_element["playCount"] == null) _element["playCount"] = 0;
       if (_element["year"] == null) _element["year"] = 0;
+      if (_element["genre"] == null) _element["genre"] = "0";
       Songs _tem = Songs.fromJson(_element);
       _list.add(_tem);
     }
-    await BaseDB.instance.addSongs(_list);
+    await BaseDB.instance.addSongs(_list, albumId);
     setState(() {
       _songs = _list;
       _songsnum = _songsList["songCount"];
@@ -77,7 +82,13 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       } else {
         _year = _songsList["year"];
       }
+      if (_songsList["genre"] == null) {
+        _genre = "0";
+      } else {
+        _genre = _songsList["genre"];
+      }
 
+      _createDate = _songsList["created"];
       _duration = _songsList["duration"];
       _artistID = _songsList["artistId"];
       _artist = _songsList["artist"];
@@ -86,6 +97,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   }
 
   Widget _buildTopWidget() {
+    Size _size = MediaQuery.of(context).size;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -123,15 +135,33 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                      width: _size.width - 400,
                       padding: EdgeInsets.all(10),
-                      child: Text(_albumsname, style: titleText1)),
+                      child: Text(_albumsname,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: titleText1)),
                   Container(
                     padding: leftrightPadding,
                     child: Row(
                       children: [
-                        Text(
-                          "$artistLocal: " + _artist,
-                          style: nomalGrayText,
+                        TextButtom(
+                          press: () {
+                            indexValue.value = 5;
+                          },
+                          title: "$artistLocal",
+                          isActive: false,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        TextButtom(
+                          press: () {
+                            activeID.value = _artistID;
+                            indexValue.value = 9;
+                          },
+                          title: _artist,
+                          isActive: false,
                         ),
                         SizedBox(
                           width: 10,
@@ -139,12 +169,35 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         Text(
                           "$yearLocal: " + _year.toString(),
                           style: nomalGrayText,
-                        )
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        TextButtom(
+                          press: () {},
+                          title: "$genresLocal",
+                          isActive: false,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        _genre == "0"
+                            ? Container()
+                            : TextButtom(
+                                press: () {},
+                                title: _genre,
+                                isActive: false,
+                              ),
+                        _genre == "0"
+                            ? Container()
+                            : SizedBox(
+                                width: 10,
+                              ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Container(
                     padding: leftrightPadding,
@@ -168,9 +221,39 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           "$playCountLocal: " + _playCount.toString(),
                           style: nomalGrayText,
                         ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: leftrightPadding,
+                    child: Row(
+                      children: [
+                        Text(
+                          "创建: " + timeISOtoString(_createDate),
+                          style: nomalGrayText,
+                        ),
                         SizedBox(
                           width: 10,
                         ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          width: 50,
+                          child: TextButtom(
+                            press: () {
+                              _songsnum = 0;
+                              _playCount = 0;
+                              _duration = 0;
+                              _getSongsFromNet(activeID.value);
+                            },
+                            title: refreshLocal,
+                            isActive: false,
+                          ),
+                        )
                       ],
                     ),
                   )
@@ -179,16 +262,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             )
           ],
         ),
-        Container(
-          child: TextButtom(
-            press: () {
-              activeID.value = _artistID;
-              indexValue.value = 9;
-            },
-            title: "向上",
-            isActive: false,
-          ),
-        )
       ],
     );
   }

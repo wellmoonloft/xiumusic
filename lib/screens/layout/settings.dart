@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseCSS.dart';
-import '../../models/baseDB.dart';
+import '../../util/baseDB.dart';
+import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
@@ -44,6 +45,9 @@ class _SettingsState extends State<Settings> {
             salt: _randomNumber,
             hash: _randomString);
         await BaseDB.instance.addServerInfo(_serverInfo);
+        //初始化服务器
+        await getFromNet();
+        await getArtistsFromNet();
         setState(() {
           isServers.value = true;
         });
@@ -101,6 +105,7 @@ class _SettingsState extends State<Settings> {
       headerWidget: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(settingsLocal, style: titleText1),
             TextButtom(
@@ -112,7 +117,7 @@ class _SettingsState extends State<Settings> {
                   },
                 );
               },
-              title: "占位",
+              title: versionLocal + "v0.01",
               isActive: false,
             )
           ],
@@ -137,6 +142,9 @@ class _SettingsState extends State<Settings> {
                   title: "回放",
                   isActive: false,
                 ),
+                SizedBox(
+                  width: 10,
+                ),
                 TextButtom(
                   press: () {
                     showDialog(
@@ -148,6 +156,9 @@ class _SettingsState extends State<Settings> {
                   },
                   title: "外观和风格",
                   isActive: false,
+                ),
+                SizedBox(
+                  width: 10,
                 ),
                 TextButtom(
                   press: () {
@@ -177,6 +188,9 @@ class _SettingsState extends State<Settings> {
                   title: scanLocal,
                   isActive: false,
                 ),
+                SizedBox(
+                  width: 10,
+                ),
                 TextButtom(
                   press: () {
                     showDialog(
@@ -188,6 +202,9 @@ class _SettingsState extends State<Settings> {
                   },
                   title: "恢复默认",
                   isActive: false,
+                ),
+                SizedBox(
+                  width: 10,
                 ),
                 TextButtom(
                   press: () {

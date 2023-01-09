@@ -1,0 +1,25 @@
+Target dependency graph (9 targets)
+FMDB in Pods, no dependencies
+FlutterMacOS in Pods, no dependencies
+audio_session in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+just_audio in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+path_provider_macos in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+screen_retriever in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+sqflite in Pods, depends on:
+FMDB in Pods (explicit)
+FlutterMacOS in Pods (explicit)
+window_manager in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+Pods-Runner in Pods, depends on:
+FMDB in Pods (explicit)
+FlutterMacOS in Pods (explicit)
+audio_session in Pods (explicit)
+just_audio in Pods (explicit)
+path_provider_macos in Pods (explicit)
+screen_retriever in Pods (explicit)
+sqflite in Pods (explicit)
+window_manager in Pods (explicit)
