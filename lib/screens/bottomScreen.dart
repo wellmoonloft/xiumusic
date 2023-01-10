@@ -44,6 +44,16 @@ class _BottomScreenState extends State<BottomScreen> {
     return _ss;
   }
 
+  Future<void> setAudioSource(String _id) async {
+    String _url = await getSongStreamUrl(_id);
+    try {
+      await _player.setAudioSource(AudioSource.uri(Uri.parse(_url)));
+      _player.play();
+    } catch (e) {
+      print("Error loading audio source: $e");
+    }
+  }
+
   Stream<PositionData> get _positionDataStream {
     return Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         _player.positionStream,
@@ -63,7 +73,7 @@ class _BottomScreenState extends State<BottomScreen> {
         valueListenable: activeSongValue,
         builder: ((context, value, child) {
           if (value != "1") {
-            setAudioSource(value, _player);
+            setAudioSource(value);
           }
 
           return Container(

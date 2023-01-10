@@ -107,15 +107,3 @@ String formatSongDuration(Duration _tmp) {
     return "$minutes:$seconds";
   }
 }
-
-Future<void> setAudioSource(String _id, AudioPlayer _player) async {
-  String _url = await getSongStreamUrl(_id);
-  try {
-    await _player.setAudioSource(AudioSource.uri(Uri.parse(_url)));
-    _player.play();
-  } catch (e) {
-    print("Error loading audio source: $e");
-  }
-}
-
-T? ambiguate<T>(T? value) => value;
