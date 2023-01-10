@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import '../util/httpClient.dart';
-import '../util/util.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import 'common/baseCSS.dart';
@@ -19,12 +18,12 @@ class BottomScreen extends StatefulWidget {
 
 class _BottomScreenState extends State<BottomScreen> {
   final _player = AudioPlayer();
-  Map _song = new Map();
   double _activevolume = 1.0;
   @override
   initState() {
     super.initState();
     //_init();
+    _listenForChangesInSequenceState();
   }
 
   @override
@@ -33,25 +32,62 @@ class _BottomScreenState extends State<BottomScreen> {
     super.dispose();
   }
 
-  Future<Map> _getSong(String _id) async {
-    Map _ss = new Map();
-    if (_id != "1") {
-      _ss = await getSong(_id);
-      String _arturl = await getCoverArt(_id);
-      _ss["arturl"] = _arturl;
-    }
+  void _listenForChangesInSequenceState() {
+    _player.sequenceStateStream.listen((sequenceState) async {
+      if (sequenceState == null) return;
 
-    return _ss;
+      // update current song title
+      final currentItem = sequenceState.currentSource;
+      final _title = currentItem?.tag as String?;
+      final _tem = await getSong(_title.toString());
+
+      activeSongValue.value = _title.toString();
+
+      //拼装当前歌曲
+      Map _activeSong = new Map();
+      String _url = await getCoverArt(_tem["id"]);
+      _activeSong["artist"] = _tem["artist"];
+      _activeSong["url"] = _url;
+      _activeSong["title"] = _tem["title"];
+      _activeSong["album"] = _tem["album"];
+      activeSong.value = _activeSong;
+
+      // update shuffle mode
+      // isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
+
+      final playlist = sequenceState.effectiveSequence;
+      //update previous and next buttons
+      if (playlist.isEmpty || currentItem == null) {
+        isFirstSongNotifier.value = true;
+        isLastSongNotifier.value = true;
+      } else {
+        isFirstSongNotifier.value = playlist.first == currentItem;
+        isLastSongNotifier.value = playlist.last == currentItem;
+      }
+    });
   }
 
-  Future<void> setAudioSource(String _id) async {
-    String _url = await getSongStreamUrl(_id);
-    try {
-      await _player.setAudioSource(AudioSource.uri(Uri.parse(_url)));
-      _player.play();
-    } catch (e) {
-      print("Error loading audio source: $e");
+  _getPlayList() async {
+    List<AudioSource> children = [];
+    List _songs = activeList.value;
+    for (var element in _songs) {
+      Songs _song = element;
+      String _url = await getSongStreamUrl(_song.id);
+      children.add(AudioSource.uri(Uri.parse(_url), tag: _song.id));
     }
+    return children;
+  }
+
+  Future<void> setAudioSource() async {
+    final playlist = ConcatenatingAudioSource(
+      useLazyPreparation: true,
+      shuffleOrder: DefaultShuffleOrder(),
+      children: await _getPlayList(),
+    );
+
+    await _player.setAudioSource(playlist,
+        initialIndex: activeIndex.value, initialPosition: Duration.zero);
+    _player.play();
   }
 
   Stream<PositionData> get _positionDataStream {
@@ -70,10 +106,11 @@ class _BottomScreenState extends State<BottomScreen> {
       _isMobile = false;
     }
     return ValueListenableBuilder<String>(
+        //
         valueListenable: activeSongValue,
         builder: ((context, value, child) {
           if (value != "1") {
-            setAudioSource(value);
+            setAudioSource();
           }
 
           return Container(
@@ -82,100 +119,81 @@ class _BottomScreenState extends State<BottomScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FutureBuilder(
-                      future: _getSong(value),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          if (snapshot.hasError) {
-                            // 请求失败，显示错误
-                            return Text("Error: ${snapshot.error}");
-                          } else {
-                            // 请求成功，显示数据
-
-                            _song = snapshot.data;
-                            return Container(
-                              width: widget.size.width / 4,
-                              child: Row(
+                  Container(
+                      width: widget.size.width / 4,
+                      child: ValueListenableBuilder<Map>(
+                        valueListenable: activeSong,
+                        builder: (context, _song, child) {
+                          return Row(
+                            children: [
+                              Container(
+                                margin: leftrightPadding,
+                                height: 65,
+                                width: 65,
+                                child: (_song.isEmpty)
+                                    ? Image.asset("assets/images/logo.jpg")
+                                    : Image.network(
+                                        _song["url"],
+                                        fit: BoxFit.cover,
+                                        frameBuilder: (context, child, frame,
+                                            wasSynchronouslyLoaded) {
+                                          if (wasSynchronouslyLoaded) {
+                                            return child;
+                                          }
+                                          return AnimatedSwitcher(
+                                            child: frame != null
+                                                ? child
+                                                : Image.asset(
+                                                    "assets/images/logo.jpg"),
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                          );
+                                        },
+                                      ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    margin: leftrightPadding,
-                                    height: 65,
-                                    width: 65,
-                                    child: (value == "1")
-                                        ? Image.asset("assets/images/logo.jpg")
-                                        : Image.network(
-                                            _song["arturl"],
-                                            fit: BoxFit.cover,
-                                            frameBuilder: (context, child,
-                                                frame, wasSynchronouslyLoaded) {
-                                              if (wasSynchronouslyLoaded) {
-                                                return child;
-                                              }
-                                              return AnimatedSwitcher(
-                                                child: frame != null
-                                                    ? child
-                                                    : Image.asset(
-                                                        "assets/images/logo.jpg"),
-                                                duration: const Duration(
-                                                    milliseconds: 500),
-                                              );
-                                            },
-                                          ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: widget.size.width / 4 - 95,
+                                      child: Text(
+                                          _song.isEmpty ? "" : _song["title"],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: nomalGrayText),
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: widget.size.width / 4 - 95,
-                                          child: Text(
-                                              _song["title"] == null
-                                                  ? ""
-                                                  : _song["title"],
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: nomalGrayText),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: widget.size.width / 4 - 95,
-                                          child: Text(
-                                              _song["artist"] == null
-                                                  ? ""
-                                                  : _song["artist"],
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: sublGrayText),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: widget.size.width / 4 - 95,
-                                          child: Text(
-                                              _song["album"] == null
-                                                  ? ""
-                                                  : _song["album"],
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: sublGrayText),
-                                        ),
-                                      )
-                                    ],
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: widget.size.width / 4 - 95,
+                                      child: Text(
+                                          _song.isEmpty ? "" : _song["artist"],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: sublGrayText),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: widget.size.width / 4 - 95,
+                                      child: Text(
+                                          _song.isEmpty ? "" : _song["album"],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: sublGrayText),
+                                    ),
                                   )
                                 ],
-                              ),
-                            );
-                          }
-                        } else {
-                          return Container();
-                        }
-                      }),
+                              )
+                            ],
+                          );
+                        },
+                      )),
                   Container(
                     width: (!_isMobile)
                         ? widget.size.width / 2

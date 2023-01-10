@@ -11,3 +11,21 @@ ValueNotifier<bool> isServers = ValueNotifier<bool>(false);
 
 //监听当前资源ID
 ValueNotifier<String> activeID = ValueNotifier<String>("1");
+
+//监听当前播放列表
+ValueNotifier<List> activeList = ValueNotifier<List>([]);
+
+//监听当前歌曲ID
+ValueNotifier<int> activeIndex = ValueNotifier<int>(0);
+
+//监听当前歌曲
+ValueNotifier<Map> activeSong = ValueNotifier<Map>(Map());
+
+//监听是否乱序
+ValueNotifier<bool> isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
+
+//监听是否乱序
+ValueNotifier<bool> isFirstSongNotifier = ValueNotifier<bool>(true);
+
+//监听是否乱序
+ValueNotifier<bool> isLastSongNotifier = ValueNotifier<bool>(true);

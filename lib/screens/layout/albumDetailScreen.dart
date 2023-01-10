@@ -321,8 +321,23 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
               Songs _tem = _songs![index];
               return ListTile(
                   title: InkWell(
-                      onTap: () {
+                      onTap: () async {
                         activeSongValue.value = _tem.id;
+
+                        //歌曲所在专辑歌曲List
+                        activeList.value = _songs!;
+
+                        //当前歌曲队列
+                        activeIndex.value = index;
+
+                        //拼装当前歌曲
+                        Map _activeSong = new Map();
+                        String _url = await getCoverArt(_tem.id);
+                        _activeSong["artist"] = _tem.artist;
+                        _activeSong["url"] = _url;
+                        _activeSong["title"] = _tem.title;
+                        _activeSong["album"] = _tem.album;
+                        activeSong.value = _activeSong;
                       },
                       child: ValueListenableBuilder<String>(
                           valueListenable: activeSongValue,

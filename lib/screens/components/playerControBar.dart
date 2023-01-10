@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-
+import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
 
 class PlayerControBar extends StatefulWidget {
@@ -30,7 +30,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
             ));
       case 1:
         return Tooltip(
-            message: "全部循环",
+            message: "单曲循环",
             child: IconButton(
               icon: const Icon(Icons.loop, color: badgeRed, size: 16),
               onPressed: () {
@@ -42,7 +42,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
             ));
       case 2:
         return Tooltip(
-            message: "单曲循环",
+            message: "全部循环",
             child: IconButton(
               icon: const Icon(Icons.restart_alt, color: badgeRed, size: 16),
               onPressed: () {
@@ -90,33 +90,57 @@ class _PlayerControBarState extends State<PlayerControBar> {
         //     widget.player.setLoopMode(LoopMode.one);
         //   },
         // ),
-        IconButton(
-          icon: const Icon(
-            Icons.shuffle,
-            color: kTextColor,
-            size: 16,
-          ),
-          onPressed: () {
-            widget.player.stop();
+        ValueListenableBuilder<bool>(
+          valueListenable: isShuffleModeEnabledNotifier,
+          builder: (context, isEnabled, child) {
+            return IconButton(
+              icon: (isEnabled)
+                  ? Icon(
+                      Icons.shuffle,
+                      color: badgeRed,
+                      size: 16,
+                    )
+                  : Icon(
+                      Icons.shuffle,
+                      color: kTextColor,
+                      size: 16,
+                    ),
+              onPressed: () {
+                if (isEnabled) {
+                  isShuffleModeEnabledNotifier.value = false;
+                  widget.player.setShuffleModeEnabled(false);
+                } else {
+                  isShuffleModeEnabledNotifier.value = true;
+                  widget.player.setShuffleModeEnabled(true);
+                  widget.player.shuffle();
+                }
+              },
+            );
           },
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.skip_previous,
-            color: kTextColor,
-          ),
-          onPressed: () {
-            widget.player.setLoopMode(LoopMode.one);
-          },
-        ),
+        ValueListenableBuilder<bool>(
+            valueListenable: isFirstSongNotifier,
+            builder: (_, isFirst, __) {
+              return IconButton(
+                icon: Icon(
+                  Icons.skip_previous,
+                  color: isFirst ? badgeDark : kTextColor,
+                ),
+                onPressed: () {
+                  (isFirst) ? null : widget.player.seekToPrevious();
+                },
+              );
+            }),
         IconButton(
           icon: const Icon(
             Icons.fast_rewind,
             color: kTextColor,
           ),
           onPressed: () {
-            widget.player
-                .seek(Duration(seconds: widget.player.position.inSeconds - 15));
+            if (widget.player.position.inSeconds - 15 > 0) {
+              widget.player.seek(
+                  Duration(seconds: widget.player.position.inSeconds - 15));
+            }
           },
         ),
         StreamBuilder<PlayerState>(
@@ -165,15 +189,19 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 .seek(Duration(seconds: widget.player.position.inSeconds + 15));
           },
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.skip_next,
-            color: kTextColor,
-          ),
-          onPressed: () {
-            widget.player.setLoopMode(LoopMode.one);
-          },
-        ),
+        ValueListenableBuilder<bool>(
+            valueListenable: isLastSongNotifier,
+            builder: (_, isLast, __) {
+              return IconButton(
+                icon: Icon(
+                  Icons.skip_next,
+                  color: isLast ? badgeDark : kTextColor,
+                ),
+                onPressed: () {
+                  (isLast) ? null : widget.player.seekToNext();
+                },
+              );
+            }),
         _buildLoopButtom(),
       ],
     );

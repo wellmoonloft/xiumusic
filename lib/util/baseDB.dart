@@ -287,6 +287,18 @@ class BaseDB {
     }
   }
 
+  getSong(String id) async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(SongsTable, where: "id = ?", whereArgs: [id]);
+      if (res.length == 0) return null;
+      List<Songs> lists = res.map((e) => Songs.fromJson(e)).toList();
+      return lists[0];
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   //fechar conexao com o banco de dados, funcao nao usada nesse app
   Future close() async {
     final db = await instance.db;
