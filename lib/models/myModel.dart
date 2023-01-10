@@ -9,21 +9,18 @@ class PositionData {
 class ServerInfo {
   late String baseurl;
   late String username;
-  late String password;
   late String salt;
   late String hash;
 
   ServerInfo(
       {required this.baseurl,
       required this.username,
-      required this.password,
       required this.salt,
       required this.hash});
 
   ServerInfo.fromJson(Map<String, dynamic> json) {
     baseurl = json['baseurl'];
     username = json['username'];
-    password = json['password'];
     salt = json['salt'];
     hash = json['hash'];
   }
@@ -32,7 +29,6 @@ class ServerInfo {
     final Map<String, dynamic> _data = new Map<String, dynamic>();
     _data['baseurl'] = this.baseurl;
     _data['username'] = this.username;
-    _data['password'] = this.password;
     _data['salt'] = this.salt;
     _data['hash'] = this.hash;
     return _data;

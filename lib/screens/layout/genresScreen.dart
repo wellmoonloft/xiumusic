@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
-import '../../util/baseCSS.dart';
+import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../components/rightHeader.dart';
-import '../components/textButtom.dart';
+import '../common/rightHeader.dart';
+import '../common/textButtom.dart';
 
 class GenresScreen extends StatefulWidget {
   const GenresScreen({Key? key}) : super(key: key);
@@ -104,7 +104,7 @@ class _GenresScreenState extends State<GenresScreen> {
               child: Text(
                 nameLocal,
                 textDirection: TextDirection.ltr,
-                style: nomalGrayText,
+                style: sublGrayText,
               ),
             )),
         Expanded(
@@ -112,7 +112,7 @@ class _GenresScreenState extends State<GenresScreen> {
           child: Text(
             albumLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           ),
         ),
         Expanded(
@@ -121,7 +121,7 @@ class _GenresScreenState extends State<GenresScreen> {
               child: Text(
             songLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         )
       ],
@@ -182,7 +182,7 @@ class _GenresScreenState extends State<GenresScreen> {
       headerWidget: Column(
         children: [
           _buildTopWidget(),
-          SizedBox(height: 24),
+          SizedBox(height: 25),
           _buildHeaderWidget()
         ],
       ),

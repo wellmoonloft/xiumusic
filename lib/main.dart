@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'XiuMusic',
+      theme: ThemeData(fontFamily: 'NotoSansSC'),
       home: MainScreen(),
     );
   }

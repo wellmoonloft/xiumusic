@@ -1,4 +1,5 @@
 //抽取所有文本条目，也许将来会国际化，省的到时候再整理
+final String version = "v0.0.3";
 
 final String configLocal = "确定";
 final String saveLocal = "保存";

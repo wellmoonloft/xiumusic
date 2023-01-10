@@ -38,7 +38,6 @@ class BaseDB {
                 uid INTEGER PRIMARY KEY AUTOINCREMENT,
                 baseurl TEXT NOT NULL,
                 username TEXT NOT NULL,
-                password TEXT NOT NULL,
                 salt TEXT NOT NULL,
                 hash TEXT NOT NULL
               )
@@ -255,6 +254,18 @@ class BaseDB {
       final db = await instance.db;
       var res =
           await db.query(AlbumsTable, where: "id = ?", whereArgs: [albumId]);
+      if (res.length == 0) return null;
+      List<Albums> lists = res.map((e) => Albums.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getAllAlbums() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(AlbumsTable);
       if (res.length == 0) return null;
       List<Albums> lists = res.map((e) => Albums.fromJson(e)).toList();
       return lists;

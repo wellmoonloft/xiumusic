@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseCSS.dart';
+import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../components/rightHeader.dart';
-import '../components/textButtom.dart';
+import '../common/rightHeader.dart';
+import '../common/textButtom.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
   const ArtistDetailScreen({Key? key}) : super(key: key);
@@ -269,7 +269,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               child: Text(
                 albumLocal,
                 textDirection: TextDirection.ltr,
-                style: nomalGrayText,
+                style: sublGrayText,
               ),
             )),
         Expanded(
@@ -278,7 +278,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               child: Text(
             yearLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         ),
         Expanded(
@@ -287,7 +287,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               child: Text(
             songLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         ),
         Expanded(
@@ -296,7 +296,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               child: Text(
             drationLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         ),
         Expanded(
@@ -305,7 +305,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               child: Text(
             playCountLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         )
       ],
@@ -315,7 +315,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return RightHeader(
-        top: 220,
+        top: 217,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

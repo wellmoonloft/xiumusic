@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseCSS.dart';
+import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../components/rightHeader.dart';
-import '../components/textButtom.dart';
+import '../common/rightHeader.dart';
+import '../common/textButtom.dart';
 
 class ArtistsScreen extends StatefulWidget {
   const ArtistsScreen({Key? key}) : super(key: key);
@@ -75,7 +75,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
               child: Text(
                 artistLocal,
                 textDirection: TextDirection.ltr,
-                style: nomalGrayText,
+                style: sublGrayText,
               ),
             )),
         Expanded(
@@ -84,7 +84,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
               child: Text(
             albumLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         )
       ],
@@ -177,7 +177,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
         headerWidget: Column(
           children: [
             _buildTopWidget(),
-            SizedBox(height: 24),
+            SizedBox(height: 25),
             _buildHeaderWidget()
           ],
         ),

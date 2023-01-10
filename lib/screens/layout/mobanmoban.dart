@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../util/baseCSS.dart';
-import '../components/rightHeader.dart';
+import '../common/baseCSS.dart';
+import '../common/rightHeader.dart';
 
 class TestAudio extends StatefulWidget {
   const TestAudio({Key? key}) : super(key: key);

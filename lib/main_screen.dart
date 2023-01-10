@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'util/baseCSS.dart';
-import 'screens/bottom_screen.dart';
-import 'screens/left_screen.dart';
-import 'screens/right_screen.dart';
+import 'screens/common/baseCSS.dart';
+import 'screens/bottomScreen.dart';
+import 'screens/leftScreen.dart';
+import 'screens/rightScreen.dart';
 
 class MainScreen extends StatelessWidget {
   @override

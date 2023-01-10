@@ -3,16 +3,16 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseCSS.dart';
+import '../common/baseCSS.dart';
 import '../../util/baseDB.dart';
 import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../components/myDialog.dart';
-import '../components/myTextInput.dart';
-import '../components/rightHeader.dart';
-import '../components/textButtom.dart';
+import '../common/myDialog.dart';
+import '../common/myTextInput.dart';
+import '../common/rightHeader.dart';
+import '../common/textButtom.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -41,7 +41,6 @@ class _SettingsState extends State<Settings> {
         ServerInfo _serverInfo = ServerInfo(
             baseurl: servercontroller.text.toString(),
             username: usernamecontroller.text.toString(),
-            password: passwordcontroller.text.toString(),
             salt: _randomNumber,
             hash: _randomString);
         await BaseDB.instance.addServerInfo(_serverInfo);
@@ -77,7 +76,7 @@ class _SettingsState extends State<Settings> {
         isServers.value = true;
         servercontroller.text = _infoList.baseurl;
         usernamecontroller.text = _infoList.username;
-        passwordcontroller.text = _infoList.password;
+        passwordcontroller.text = "******";
       });
     }
   }
@@ -101,7 +100,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return RightHeader(
-      top: 100,
+      top: 102,
       headerWidget: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,7 +116,7 @@ class _SettingsState extends State<Settings> {
                   },
                 );
               },
-              title: versionLocal + "v0.01",
+              title: versionLocal + version,
               isActive: false,
             )
           ],

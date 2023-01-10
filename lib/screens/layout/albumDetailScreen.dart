@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../util/baseDB.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseCSS.dart';
+import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../components/rightHeader.dart';
-import '../components/textButtom.dart';
+import '../common/rightHeader.dart';
+import '../common/textButtom.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
   const AlbumDetailScreen({
@@ -138,7 +138,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       width: _size.width - 400,
                       padding: EdgeInsets.all(10),
                       child: Text(_albumsname,
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: titleText1)),
                   Container(
@@ -173,25 +173,24 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         SizedBox(
                           width: 10,
                         ),
-                        TextButtom(
-                          press: () {},
-                          title: "$genresLocal",
-                          isActive: false,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
                         _genre == "0"
                             ? Container()
                             : TextButtom(
                                 press: () {},
-                                title: _genre,
+                                title: "$genresLocal",
                                 isActive: false,
                               ),
                         _genre == "0"
                             ? Container()
                             : SizedBox(
                                 width: 10,
+                              ),
+                        _genre == "0"
+                            ? Container()
+                            : TextButtom(
+                                press: () {},
+                                title: _genre,
+                                isActive: false,
                               ),
                       ],
                     ),
@@ -277,7 +276,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
               child: Text(
                 songLocal,
                 textDirection: TextDirection.ltr,
-                style: nomalGrayText,
+                style: sublGrayText,
               ),
             )),
         Expanded(
@@ -286,7 +285,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
               child: Text(
             drationLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         ),
         Expanded(
@@ -295,7 +294,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
               child: Text(
             bitRangeLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         ),
         Expanded(
@@ -304,7 +303,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
               child: Text(
             playCountLocal,
             textDirection: TextDirection.rtl,
-            style: nomalGrayText,
+            style: sublGrayText,
           )),
         )
       ],
@@ -388,7 +387,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return RightHeader(
-        top: 225,
+        top: 222,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

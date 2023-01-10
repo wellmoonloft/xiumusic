@@ -18,7 +18,9 @@
 
 有了这四个需求，我决定自己撸一个APP给自己用
 
-![1673160145872](https://s2.loli.net/2023/01/09/X8bglEody1kfmLN.jpg)
+这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic，想玩的都可以下载了试一试，如果接口相同那应该问题不大
+
+![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
 ## Todo List 
 
@@ -39,8 +41,8 @@
 - [ ] 搜索  
   - [ ] 搜索页面，这个用弹窗好还是做一个页面好？
 
-- [ ] 专辑  
-  - [ ] 专辑列表
+- [x] 专辑  
+  - [x] 专辑列表
   - [x] 专辑详情
   
 - [x] 歌手  
@@ -75,7 +77,7 @@
 
 
 
-![](https://s2.loli.net/2023/01/09/GmhW8pcNIDLqAdY.jpg)
+![](https://s2.loli.net/2023/01/10/BCPjVHlazr2mK1R.jpg)
 
 ------------------------------
 
@@ -89,15 +91,6 @@
 
 #### MacOS
 
-设置 Title Bar为穿透模式，不然很丑
-
-1. open macos/Runner.xcworkspace with Xcode
-
-2. Runner-Runner-Resources-MainMenu.xib
-
-3. APP_NAME-Window
-
-4. Transparent Title Bar && Full Size Content View
 
 添加苹果安全
 
@@ -118,5 +111,6 @@ macos-Runner-Release.entitlements
 - [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具，差1%就超过audioplayers了。
 - [dio: ^4.0.6](https://pub.dev/packages/dio) 及其简单的Restful请求工具。
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
-- [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化用的。
-
+- [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化以及隐藏titile栏用的。
+- [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
+  
