@@ -29,8 +29,12 @@ class _SettingsState extends State<Settings> {
     if (servercontroller.text != "" &&
         usernamecontroller.text != "" &&
         passwordcontroller.text != "") {
-      var status = await testServer(servercontroller.text,
-          usernamecontroller.text, passwordcontroller.text);
+      String _serverURL = servercontroller.text;
+      if (_serverURL.endsWith("/")) {
+        _serverURL = _serverURL.substring(0, _serverURL.length - 1);
+      }
+      var status = await testServer(
+          _serverURL, usernamecontroller.text, passwordcontroller.text);
 
       if (status) {
         final _randomNumber = generateRandomString();
@@ -39,7 +43,7 @@ class _SettingsState extends State<Settings> {
         final _randomString = md5.convert(_randomBytes).toString();
 
         ServerInfo _serverInfo = ServerInfo(
-            baseurl: servercontroller.text.toString(),
+            baseurl: _serverURL,
             username: usernamecontroller.text.toString(),
             salt: _randomNumber,
             hash: _randomString);
@@ -47,6 +51,7 @@ class _SettingsState extends State<Settings> {
         //初始化服务器
         await getFromNet();
         await getArtistsFromNet();
+        await sacnServerStatus();
         setState(() {
           isServers.value = true;
         });
@@ -176,15 +181,13 @@ class _SettingsState extends State<Settings> {
             Row(
               children: [
                 TextButtom(
-                  press: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return MyDialog("尚未完工", "敬请期待");
-                      },
-                    );
+                  press: () async {
+                    //初始化服务器
+                    await getFromNet();
+                    await getArtistsFromNet();
+                    await sacnServerStatus();
                   },
-                  title: scanLocal,
+                  title: "强制更新",
                   isActive: false,
                 ),
                 SizedBox(
@@ -258,18 +261,21 @@ class _SettingsState extends State<Settings> {
                 label: serverURLLocal,
                 hintLabel: pleasInputLocal + serverURLLocal,
                 hideText: false,
+                icon: Icons.dns,
               ),
               MyTextInput(
                 control: usernamecontroller,
                 label: userNameLocal,
                 hintLabel: pleasInputLocal + userNameLocal,
                 hideText: false,
+                icon: Icons.person,
               ),
               MyTextInput(
                 control: passwordcontroller,
                 label: passWordLocal,
                 hintLabel: pleasInputLocal + passWordLocal,
                 hideText: true,
+                icon: Icons.password,
               ),
             ],
           )),

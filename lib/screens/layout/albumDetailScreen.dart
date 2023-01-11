@@ -67,7 +67,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       Songs _tem = Songs.fromJson(_element);
       _list.add(_tem);
     }
-    await BaseDB.instance.addSongs(_list, albumId);
+    await BaseDB.instance.updateSongs(_list);
     setState(() {
       _songs = _list;
       _songsnum = _songsList["songCount"];
@@ -333,14 +333,15 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         //拼装当前歌曲
                         Map _activeSong = new Map();
                         String _url = await getCoverArt(_tem.id);
+                        _activeSong["value"] = _tem.id;
                         _activeSong["artist"] = _tem.artist;
                         _activeSong["url"] = _url;
                         _activeSong["title"] = _tem.title;
                         _activeSong["album"] = _tem.album;
                         activeSong.value = _activeSong;
                       },
-                      child: ValueListenableBuilder<String>(
-                          valueListenable: activeSongValue,
+                      child: ValueListenableBuilder<Map>(
+                          valueListenable: activeSong,
                           builder: ((context, value, child) {
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -351,7 +352,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                   child: Text(
                                     _tem.title,
                                     textDirection: TextDirection.ltr,
-                                    style: activeSongValue.value == _tem.id
+                                    style: (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
                                         ? activeText
                                         : nomalGrayText,
                                   ),
@@ -361,7 +363,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                   child: Text(
                                     formatDuration(_tem.duration),
                                     textDirection: TextDirection.rtl,
-                                    style: activeSongValue.value == _tem.id
+                                    style: (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
                                         ? activeText
                                         : nomalGrayText,
                                   ),
@@ -371,7 +374,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                   child: Text(
                                     _tem.bitRate.toString(),
                                     textDirection: TextDirection.rtl,
-                                    style: activeSongValue.value == _tem.id
+                                    style: (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
                                         ? activeText
                                         : nomalGrayText,
                                   ),
@@ -381,7 +385,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                   child: Text(
                                     _tem.playCount.toString(),
                                     textDirection: TextDirection.rtl,
-                                    style: activeSongValue.value == _tem.id
+                                    style: (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
                                         ? activeText
                                         : nomalGrayText,
                                   ),

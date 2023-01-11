@@ -80,7 +80,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                 child: frame != null
                                     ? child
                                     : Image.asset("assets/images/logo.jpg"),
-                                duration: const Duration(milliseconds: 2000),
+                                duration: const Duration(milliseconds: 1000),
                               );
                             },
                           ),

@@ -3,7 +3,11 @@ import '../screens/layout/albumDetailScreen.dart';
 import '../screens/layout/albumScreen.dart';
 import '../screens/layout/artistDetailScreen.dart';
 import '../screens/layout/artistsScreen.dart';
+import '../screens/layout/favoriteScreen.dart';
 import '../screens/layout/genresScreen.dart';
+import '../screens/layout/indexScreen.dart';
+import '../screens/layout/playListScreen.dart';
+import '../screens/layout/searchScreen.dart';
 import '../screens/layout/settings.dart';
 
 class Roter extends StatelessWidget {
@@ -20,13 +24,13 @@ class Roter extends StatelessWidget {
       builder: (context, constraints) {
         switch (roter) {
           case 0: //首页
-            return Container();
-          case 1: //正在播放
-            return Container();
+            return IndexScreen();
+          // case 1: //正在播放
+          //   return PlayScreen();
           case 2: //播放列表
-            return Container();
+            return PlayListScreen();
           case 3: //收藏
-            return Container();
+            return FavoriteScreen();
           case 4: //专辑
             return AlbumScreen();
           case 5: //歌手
@@ -37,10 +41,12 @@ class Roter extends StatelessWidget {
             return Settings();
 
           //不通过点击进入
-          case 8:
+          case 8: //专辑详情
             return AlbumDetailScreen();
-          case 9:
+          case 9: //艺人详情
             return ArtistDetailScreen();
+          case 10: //搜索
+            return SearchScreen();
 
           default:
             return Settings();

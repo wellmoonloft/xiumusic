@@ -5,7 +5,7 @@ testServer(String _baseUrl, String _username, String _password) async {
   try {
     var response = await Dio().get(
       _baseUrl +
-          'rest/ping?v=0.0.1&c=xiumusic&f=json&u=' +
+          '/rest/ping?v=0.0.1&c=xiumusic&f=json&u=' +
           _username +
           '&p=' +
           _password,
@@ -31,13 +31,29 @@ testServer(String _baseUrl, String _username, String _password) async {
 _getServerInfo(String _api) async {
   final _infoList = await BaseDB.instance.getServerInfo();
   String _request = _infoList.baseurl +
-      'rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
+      '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
       _infoList.username +
       '&s=' +
       _infoList.salt +
       '&t=' +
       _infoList.hash;
   return _request;
+}
+
+getServerStatus() async {
+  String _sql = await _getServerInfo("getScanStatus");
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _value1 = response.data['subsonic-response'];
+      Map scanStatus = _value1['scanStatus'];
+
+      return scanStatus;
+    }
+  } catch (e) {
+    print(e);
+    return false;
+  }
 }
 
 getGenres() async {
@@ -159,7 +175,6 @@ getSong(String _id) async {
     var response = await Dio().get(
       _sql + '&id=' + _id,
     );
-    //print(response);
     if (response.statusCode == 200) {
       Map _value1 = response.data['subsonic-response'];
       Map _song = _value1['song'];
@@ -179,4 +194,20 @@ getCoverArt(String _id) async {
 getSongStreamUrl(String _id) async {
   String _sql = await _getServerInfo("stream");
   return _sql + '&id=' + _id;
+}
+
+getConvertContent(String _content) async {
+  String _connext = _content;
+  String _request =
+      "https://www.mxnzp.com/api/convert/zh?content=$_connext&type=1&app_id=jptqrnicprbjfkrk&app_secret=ZVNRSjZHcy9OaXlLdWNmTStxaU9xQT09";
+  try {
+    var response = await Dio().get(_request);
+    if (response.statusCode == 1) {
+      Map _value = response.data['data'];
+
+      return _value;
+    }
+  } catch (e) {
+    print(e);
+  }
 }

@@ -1,32 +1,36 @@
-//业务逻辑
-
-//这里需要再加一个检查，当用户把歌曲删除的时候，加一个弹窗提示强制刷新，或者自动刷新
-//专辑和艺人那边也是，如果整张专辑和整个艺人的歌全都删掉了，就需要刷新数据库
-//应该写个异步去操作这个事
-
-//这个接口应该可以用 getScanStatus
-//里面有个count...但是还有问题，万一有人删了一首歌，再加一首歌咋整...
-
-// {
-//     "subsonic-response": {
-//         "status": "ok",
-//         "version": "1.16.1",
-//         "type": "navidrome",
-//         "serverVersion": "0.48.0 (af5c2b5a)",
-//         "scanStatus": {
-//             "scanning": false,
-//             "count": 1874,
-//             "folderCount": 116,
-//             "lastScan": "2023-01-09T12:25:08.007176678Z"
-//         }
-//     }
-// }
-
-//去你妈的，就为了这个事要写那么多逻辑，算了吧，自己搭的服务器，自己删了文件不刷新，这不是有毛病么
+// TODO: 设置里面有个强制刷新，绕过服务器状态检查直接删表（除了ServerInfoTable）
+// 其他地方的刷新都做成update，但是最好先sacnServerStatus()一下
+// 还需要一个app打开的时候自动检测
+// 这里有一个bug，就是如果用户在同一文件夹里删除一首歌后又添加一首歌，返回的结果也是不需要更新
+// 不过这个几乎是小概率事件，同时在设置里面提供一个绕过服务器状态检查的暴力更新即可
 
 import '../models/myModel.dart';
 import 'baseDB.dart';
 import 'httpClient.dart';
+
+//0.对比服务器变化是否要更新
+sacnServerStatus() async {
+  final _net = await getServerStatus();
+  ServerStatus _netstatus = ServerStatus.fromJson(_net);
+
+  final _database = await BaseDB.instance.getServerStatus();
+
+  if (_database == null) {
+    //新数据库，需要更新
+    await BaseDB.instance.addServerStatus(_netstatus);
+    return true;
+  } else {
+    ServerStatus _databasestatus = _database;
+    if (_netstatus.count == _databasestatus.count &&
+        _netstatus.folderCount == _databasestatus.folderCount) {
+      //不需要更新
+      return false;
+    } else {
+      await BaseDB.instance.addServerStatus(_netstatus);
+      return true;
+    }
+  }
+}
 
 //1.流派
 getFromNet() async {

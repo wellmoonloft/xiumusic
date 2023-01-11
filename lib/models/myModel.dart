@@ -35,6 +35,29 @@ class ServerInfo {
   }
 }
 
+class ServerStatus {
+  late int count;
+  late int folderCount;
+  late String lastScan;
+
+  ServerStatus(
+      {required this.count, required this.folderCount, required this.lastScan});
+
+  ServerStatus.fromJson(Map<String, dynamic> json) {
+    count = json['count'];
+    folderCount = json['folderCount'];
+    lastScan = json['lastScan'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> _data = new Map<String, dynamic>();
+    _data['count'] = this.count;
+    _data['folderCount'] = this.folderCount;
+    _data['lastScan'] = this.lastScan;
+    return _data;
+  }
+}
+
 class Genres {
   late String value;
   late int songCount;

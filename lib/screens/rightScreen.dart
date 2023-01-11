@@ -67,7 +67,7 @@ class _RightScreenState extends State<RightScreen> {
                             size: 15,
                           ),
                           onPressed: () {
-                            _scaffoldKey.currentState?.openDrawer();
+                            indexValue.value = 10;
                           },
                         ),
                       ),
@@ -79,7 +79,7 @@ class _RightScreenState extends State<RightScreen> {
                             size: 15,
                           ),
                           onPressed: () {
-                            _scaffoldKey.currentState?.openDrawer();
+                            indexValue.value = 7;
                           },
                         ),
                       ),

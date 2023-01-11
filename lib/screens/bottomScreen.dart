@@ -8,6 +8,7 @@ import '../models/notifierValue.dart';
 import 'common/baseCSS.dart';
 import 'components/playerControBar.dart';
 import 'components/playerSeekBar.dart';
+import 'layout/playScreen.dart';
 
 class BottomScreen extends StatefulWidget {
   const BottomScreen({Key? key, required this.size}) : super(key: key);
@@ -19,6 +20,7 @@ class BottomScreen extends StatefulWidget {
 class _BottomScreenState extends State<BottomScreen> {
   final _player = AudioPlayer();
   double _activevolume = 1.0;
+
   @override
   initState() {
     super.initState();
@@ -41,11 +43,10 @@ class _BottomScreenState extends State<BottomScreen> {
       final _title = currentItem?.tag as String?;
       final _tem = await getSong(_title.toString());
 
-      activeSongValue.value = _title.toString();
-
       //拼装当前歌曲
       Map _activeSong = new Map();
       String _url = await getCoverArt(_tem["id"]);
+      _activeSong["value"] = _tem["id"];
       _activeSong["artist"] = _tem["artist"];
       _activeSong["url"] = _url;
       _activeSong["title"] = _tem["title"];
@@ -53,7 +54,7 @@ class _BottomScreenState extends State<BottomScreen> {
       activeSong.value = _activeSong;
 
       // update shuffle mode
-      // isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
+      isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
 
       final playlist = sequenceState.effectiveSequence;
       //update previous and next buttons
@@ -90,6 +91,25 @@ class _BottomScreenState extends State<BottomScreen> {
     _player.play();
   }
 
+  Future<void> showListDialog() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return UnconstrainedBox(
+          constrainedAxis: Axis.vertical,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: widget.size.width, maxHeight: widget.size.height),
+            child: Material(
+              child: PlayScreen(),
+              type: MaterialType.canvas,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Stream<PositionData> get _positionDataStream {
     return Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         _player.positionStream,
@@ -111,6 +131,9 @@ class _BottomScreenState extends State<BottomScreen> {
         builder: ((context, value, child) {
           if (value != "1") {
             setAudioSource();
+            //新加列表的时候关闭乱序，避免出错
+            _player.setShuffleModeEnabled(false);
+            isShuffleModeEnabledNotifier.value = false;
           }
 
           return Container(
@@ -126,31 +149,52 @@ class _BottomScreenState extends State<BottomScreen> {
                         builder: (context, _song, child) {
                           return Row(
                             children: [
-                              Container(
-                                margin: leftrightPadding,
-                                height: 65,
-                                width: 65,
-                                child: (_song.isEmpty)
-                                    ? Image.asset("assets/images/logo.jpg")
-                                    : Image.network(
-                                        _song["url"],
-                                        fit: BoxFit.cover,
-                                        frameBuilder: (context, child, frame,
-                                            wasSynchronouslyLoaded) {
-                                          if (wasSynchronouslyLoaded) {
-                                            return child;
-                                          }
-                                          return AnimatedSwitcher(
-                                            child: frame != null
-                                                ? child
-                                                : Image.asset(
-                                                    "assets/images/logo.jpg"),
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                          );
-                                        },
-                                      ),
-                              ),
+                              InkWell(
+                                  onTap: () async {
+                                    // indexValue.value = 1;
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return UnconstrainedBox(
+                                          constrainedAxis: Axis.vertical,
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                maxWidth: widget.size.width,
+                                                maxHeight: widget.size.height),
+                                            child: Material(
+                                              child: PlayScreen(),
+                                              type: MaterialType.canvas,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: leftrightPadding,
+                                    height: 65,
+                                    width: 65,
+                                    child: (_song.isEmpty)
+                                        ? Image.asset("assets/images/logo.jpg")
+                                        : Image.network(
+                                            _song["url"],
+                                            fit: BoxFit.cover,
+                                            frameBuilder: (context, child,
+                                                frame, wasSynchronouslyLoaded) {
+                                              if (wasSynchronouslyLoaded) {
+                                                return child;
+                                              }
+                                              return AnimatedSwitcher(
+                                                child: frame != null
+                                                    ? child
+                                                    : Image.asset(
+                                                        "assets/images/logo.jpg"),
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                              );
+                                            },
+                                          ),
+                                  )),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,

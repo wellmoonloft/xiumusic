@@ -29,7 +29,7 @@ class _GenresScreenState extends State<GenresScreen> {
       albumsnum += _tem.albumCount;
       genresnum++;
     }
-    await BaseDB.instance.addGenres(_list);
+    await BaseDB.instance.updateGenres(_list);
     setState(() {
       _genres = _list;
     });

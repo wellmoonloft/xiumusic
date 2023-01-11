@@ -30,14 +30,14 @@ class _LeftScreenState extends State<LeftScreen> {
                       icon: Icons.home,
                       color: kGrayColor,
                     ),
-                    TextIconButtom(
-                      press: () {
-                        indexValue.value = 1;
-                      },
-                      title: activeSongLocal,
-                      icon: Icons.headphones,
-                      color: kGrayColor,
-                    ),
+                    // TextIconButtom(
+                    //   press: () {
+                    //     indexValue.value = 1;
+                    //   },
+                    //   title: activeSongLocal,
+                    //   icon: Icons.headphones,
+                    //   color: kGrayColor,
+                    // ),
                     TextIconButtom(
                       press: () {
                         indexValue.value = 2;

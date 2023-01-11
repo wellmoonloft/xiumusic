@@ -63,7 +63,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       _duration += _tem.duration;
       _songs += _tem.songCount;
     }
-    await BaseDB.instance.addAlbums(_list, artistId);
+    await BaseDB.instance.updateAlbums(_list);
     setState(() {
       _albums = _list;
       _albumsnum = _list.length;
@@ -170,7 +170,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                         child: frame != null
                             ? child
                             : Image.asset("assets/images/logo.jpg"),
-                        duration: const Duration(milliseconds: 2000),
+                        duration: const Duration(milliseconds: 1000),
                       );
                     },
                   ),

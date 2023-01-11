@@ -33,7 +33,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
         albumsnum += _tem.albumCount;
       }
     }
-    await BaseDB.instance.addArtists(_list);
+    await BaseDB.instance.updateArtists(_list);
     setState(() {
       _artists = _list;
       artistsnum = _list.length;

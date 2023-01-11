@@ -112,7 +112,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 } else {
                   isShuffleModeEnabledNotifier.value = true;
                   widget.player.setShuffleModeEnabled(true);
-                  widget.player.shuffle();
+                  // widget.player.shuffle();
                 }
               },
             );
@@ -127,6 +127,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   color: isFirst ? badgeDark : kTextColor,
                 ),
                 onPressed: () {
+                  // ignore: unnecessary_statements
                   (isFirst) ? null : widget.player.seekToPrevious();
                 },
               );
@@ -149,7 +150,16 @@ class _PlayerControBarState extends State<PlayerControBar> {
             final playerState = snapshot.data;
             final processingState = playerState?.processingState;
             final playing = playerState?.playing;
-            if (playing != true) {
+            if (widget.player.sequenceState == null) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.play_circle,
+                  color: badgeDark,
+                ),
+                iconSize: 40.0,
+                onPressed: null,
+              );
+            } else if (playing != true) {
               return IconButton(
                 icon: const Icon(
                   Icons.play_circle,
@@ -171,10 +181,10 @@ class _PlayerControBarState extends State<PlayerControBar> {
               return IconButton(
                 icon: const Icon(
                   Icons.play_circle,
-                  color: kTextColor,
+                  color: badgeDark,
                 ),
                 iconSize: 40.0,
-                onPressed: () => widget.player.play(),
+                onPressed: null,
               );
             }
           },
@@ -198,6 +208,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   color: isLast ? badgeDark : kTextColor,
                 ),
                 onPressed: () {
+                  // ignore: unnecessary_statements
                   (isLast) ? null : widget.player.seekToNext();
                 },
               );

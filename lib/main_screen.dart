@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'screens/common/baseCSS.dart';
 import 'screens/bottomScreen.dart';
+import 'screens/components/appSearchBar.dart';
 import 'screens/leftScreen.dart';
 import 'screens/rightScreen.dart';
 
@@ -14,6 +15,9 @@ class MainScreen extends StatelessWidget {
       _isMobile = false;
     }
     return Scaffold(
+        // appBar: AppBarSearch(
+        //   height: 35,
+        // ),
         body: _isMobile
             ? SafeArea(
                 child: Column(children: [
@@ -46,7 +50,6 @@ class MainScreen extends StatelessWidget {
                             )
                           ],
                         )),
-                    //Container(decoration: lineBorder),
                     Container(
                       height: 95,
                       decoration: BoxDecoration(

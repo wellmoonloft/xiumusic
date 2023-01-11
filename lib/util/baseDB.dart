@@ -11,6 +11,8 @@ class BaseDB {
   // ignore: non_constant_identifier_names
   final String ServerInfoTable = "serverInfo";
   // ignore: non_constant_identifier_names
+  final String ServerStatusTable = "serverStatus";
+  // ignore: non_constant_identifier_names
   final String GenresTable = "genres";
   // ignore: non_constant_identifier_names
   final String ArtistsTable = "artists";
@@ -40,6 +42,14 @@ class BaseDB {
                 username TEXT NOT NULL,
                 salt TEXT NOT NULL,
                 hash TEXT NOT NULL
+              )
+        ''');
+    await _database.execute('''
+              create table $ServerStatusTable (
+                uid INTEGER PRIMARY KEY AUTOINCREMENT,
+                count INTEGER NOT NULL,
+                folderCount INTEGER NOT NULL,
+                lastScan TEXT NOT NULL
               )
         ''');
     await _database.execute('''
@@ -104,7 +114,20 @@ class BaseDB {
     }
   }
 
-  // list -> 写入到posts -> for性能非常低下，batch insert
+  addServerStatus(ServerStatus _info) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(ServerStatusTable);
+      await batch.commit(noResult: true);
+      batch.insert(ServerStatusTable, _info.toJson());
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   addGenres(List<Genres> _genres) async {
     try {
       final db = await instance.db;
@@ -113,6 +136,21 @@ class BaseDB {
       await batch.commit(noResult: true);
       for (Genres element in _genres) {
         batch.insert(GenresTable, element.toJson());
+      }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  updateGenres(List<Genres> _genres) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      for (Genres element in _genres) {
+        batch.update(GenresTable, element.toJson(),
+            where: "value = ?", whereArgs: [element.value]);
       }
       var res = await batch.commit(noResult: true);
       return res;
@@ -137,6 +175,21 @@ class BaseDB {
     }
   }
 
+  updateArtists(List<Artists> _artists) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      for (Artists element in _artists) {
+        batch.update(ArtistsTable, element.toJson(),
+            where: "id = ?", whereArgs: [element.id]);
+      }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   addAlbums(List<Albums> _albums, String artistId) async {
     try {
       final db = await instance.db;
@@ -145,6 +198,21 @@ class BaseDB {
       await batch.commit(noResult: true);
       for (Albums element in _albums) {
         batch.insert(AlbumsTable, element.toJson());
+      }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  updateAlbums(List<Albums> _albums) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      for (Albums element in _albums) {
+        batch.update(AlbumsTable, element.toJson(),
+            where: "id = ?", whereArgs: [element.id]);
       }
       var res = await batch.commit(noResult: true);
       return res;
@@ -169,12 +237,28 @@ class BaseDB {
     }
   }
 
+  updateSongs(List<Songs> _songs) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      for (Songs element in _songs) {
+        batch.update(SongsTable, element.toJson(),
+            where: "id = ?", whereArgs: [element.id]);
+      }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   deleteServerInfo() async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
       batch.delete(ServerInfoTable);
       //清空数据库，后面前端加个提示
+      batch.delete(ServerStatusTable);
       batch.delete(GenresTable);
       batch.delete(ArtistsTable);
       batch.delete(AlbumsTable);
@@ -193,6 +277,19 @@ class BaseDB {
       var res = await db.query(ServerInfoTable);
       if (res.length == 0) return null;
       List<ServerInfo> lists = res.map((e) => ServerInfo.fromJson(e)).toList();
+      return lists[0];
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getServerStatus() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(ServerStatusTable);
+      if (res.length == 0) return null;
+      List<ServerStatus> lists =
+          res.map((e) => ServerStatus.fromJson(e)).toList();
       return lists[0];
     } catch (err) {
       print('err is 👉 $err');
@@ -294,6 +391,21 @@ class BaseDB {
       if (res.length == 0) return null;
       List<Songs> lists = res.map((e) => Songs.fromJson(e)).toList();
       return lists[0];
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getSongByName(String title, String title2) async {
+    try {
+      final db = await instance.db;
+      if (title2 == "") title2 = title;
+      var res = await db.rawQuery(
+          "SELECT * FROM $SongsTable WHERE title like '%$title%' or  title like '%$title2%' ");
+
+      if (res.length == 0) return null;
+      List<Songs> lists = res.map((e) => Songs.fromJson(e)).toList();
+      return lists;
     } catch (err) {
       print('err is 👉 $err');
     }

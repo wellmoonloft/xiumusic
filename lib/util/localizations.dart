@@ -34,3 +34,4 @@ final String indexLocal = "首页";
 final String activeSongLocal = "正在播放";
 final String playlistLocal = "播放列表";
 final String favoriteLocal = "收藏";
+final String searchLocal = "搜索";
