@@ -5,7 +5,10 @@ import '../util/localizations.dart';
 import 'common/textButtom.dart';
 
 class LeftScreen extends StatefulWidget {
-  const LeftScreen({Key? key}) : super(key: key);
+  const LeftScreen({
+    Key? key,
+  }) : super(key: key);
+
   @override
   _LeftScreenState createState() => _LeftScreenState();
 }
@@ -21,7 +24,7 @@ class _LeftScreenState extends State<LeftScreen> {
                 padding: leftrightPadding,
                 child: Column(
                   children: [
-                    SizedBox(height: 30),
+                    SizedBox(height: isMobile.value ? 30 : 0),
                     TextIconButtom(
                       press: () {
                         indexValue.value = 0;
@@ -78,15 +81,15 @@ class _LeftScreenState extends State<LeftScreen> {
                       icon: Icons.public,
                       color: kGrayColor,
                     ),
-                    TextIconButtom(
-                      press: () {
-                        indexValue.value = 7;
-                      },
-                      title: settingsLocal,
-                      icon: Icons.settings,
-                      color: kGrayColor,
-                    ),
-                    Container(padding: allPadding, decoration: lineBorder),
+                    // TextIconButtom(
+                    //   press: () {
+                    //     indexValue.value = 7;
+                    //   },
+                    //   title: settingsLocal,
+                    //   icon: Icons.settings,
+                    //   color: kGrayColor,
+                    // ),
+                    // Container(padding: allPadding, decoration: lineBorder),
                   ],
                 ))));
   }

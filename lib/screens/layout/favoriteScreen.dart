@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../util/localizations.dart';
 import '../common/baseCSS.dart';
 import '../common/rightHeader.dart';
+import '../common/textButtom.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
@@ -14,43 +16,105 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     super.initState();
   }
 
+  Widget _buildTopWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Container(child: Text(favoriteLocal, style: titleText1)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              " 111",
+              style: nomalGrayText,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "222 ",
+              style: nomalGrayText,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "333 ",
+              style: nomalGrayText,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeaderWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+            flex: 1,
+            child: Container(
+              child: Text(
+                nameLocal,
+                textDirection: TextDirection.ltr,
+                style: sublGrayText,
+              ),
+            )),
+        Expanded(
+          flex: 1,
+          child: Text(
+            albumLocal,
+            textDirection: TextDirection.rtl,
+            style: sublGrayText,
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Container(
+              child: Text(
+            songLocal,
+            textDirection: TextDirection.rtl,
+            style: sublGrayText,
+          )),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return RightHeader(
         top: 120,
         headerWidget: Column(
           children: [
+            _buildTopWidget(),
+            SizedBox(
+              height: 24,
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("收藏", style: titleText1),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        "0",
-                        style: nomalGrayText,
-                      ),
-                    )
-                  ],
+                TextButtom(
+                  press: () {},
+                  title: "艺人",
+                  isActive: false,
                 ),
-                Container(
-                  padding: EdgeInsets.all(0),
-                  // child: TextButtom(
-                  //   press: () {
-                  //     _getFromNet();
-                  //   },
-                  //   title: "刷新",
-                  //   isActive: false,
-                  // ),
+                TextButtom(
+                  press: () {},
+                  title: "专辑",
+                  isActive: false,
+                ),
+                TextButtom(
+                  press: () {},
+                  title: "歌曲",
+                  isActive: false,
                 )
               ],
             ),
-            SizedBox(
-              height: 44,
-            ),
+            _buildHeaderWidget(),
             Container()
           ],
         ),

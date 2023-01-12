@@ -37,13 +37,15 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
         _duration += _xx.duration;
         _songs += _xx.songCount;
       }
-      setState(() {
-        _albums = _albumsList;
-        _albumsnum = _albumsList.length;
-        _artilstname = _artistList[0].name;
+      if (mounted) {
+        setState(() {
+          _albums = _albumsList;
+          _albumsnum = _albumsList.length;
+          _artilstname = _artistList[0].name;
 
-        _arturl = _artURL;
-      });
+          _arturl = _artURL;
+        });
+      }
     } else {
       _getAlbumsFromNet(artistId);
     }
@@ -64,12 +66,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       _songs += _tem.songCount;
     }
     await BaseDB.instance.updateAlbums(_list);
-    setState(() {
-      _albums = _list;
-      _albumsnum = _list.length;
-      _artilstname = _list[0].artist;
-      _arturl = _xx;
-    });
+    if (mounted) {
+      setState(() {
+        _albums = _list;
+        _albumsnum = _list.length;
+        _artilstname = _list[0].artist;
+        _arturl = _xx;
+      });
+    }
   }
 
   @override
@@ -90,7 +94,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               return ListTile(
                   title: InkWell(
                       onTap: () {
-                        //_getSongs(_tem.id);
                         activeID.value = _tem.id;
                         indexValue.value = 8;
                       },
@@ -152,14 +155,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                height: 180,
-                width: 180,
+                height: screenImageWidthAndHeight,
+                width: screenImageWidthAndHeight,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Image.network(
                     _arturl,
-                    height: 180,
-                    width: 180,
+                    height: screenImageWidthAndHeight,
+                    width: screenImageWidthAndHeight,
                     fit: BoxFit.cover,
                     frameBuilder:
                         (context, child, frame, wasSynchronouslyLoaded) {
@@ -170,7 +173,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                         child: frame != null
                             ? child
                             : Image.asset("assets/images/logo.jpg"),
-                        duration: const Duration(milliseconds: 1000),
+                        duration: const Duration(milliseconds: imageMilli),
                       );
                     },
                   ),
@@ -223,32 +226,65 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                           "$drationLocal: " + formatDuration(_duration),
                           style: nomalGrayText,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "$playCountLocal: " + _playCount.toString(),
-                          style: nomalGrayText,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          width: 50,
-                          child: TextButtom(
-                            press: () {
-                              _songs = 0;
-                              _playCount = 0;
-                              _duration = 0;
-                              _getAlbumsFromNet(activeID.value);
-                            },
-                            title: refreshLocal,
-                            isActive: false,
+                        if (!isMobile.value)
+                          SizedBox(
+                            width: 10,
                           ),
-                        )
+                        if (!isMobile.value)
+                          Text(
+                            "$playCountLocal: " + _playCount.toString(),
+                            style: nomalGrayText,
+                          ),
+                        if (!isMobile.value)
+                          SizedBox(
+                            width: 10,
+                          ),
+                        if (!isMobile.value)
+                          Container(
+                            width: 50,
+                            child: TextButtom(
+                              press: () {
+                                _songs = 0;
+                                _playCount = 0;
+                                _duration = 0;
+                                _getAlbumsFromNet(activeID.value);
+                              },
+                              title: refreshLocal,
+                              isActive: false,
+                            ),
+                          )
                       ],
                     ),
-                  )
+                  ),
+                  if (isMobile.value)
+                    SizedBox(
+                      height: 5,
+                    ),
+                  if (isMobile.value)
+                    Container(
+                        padding: leftrightPadding,
+                        child: Row(children: [
+                          Text(
+                            "$playCountLocal: " + _playCount.toString(),
+                            style: nomalGrayText,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: 50,
+                            child: TextButtom(
+                              press: () {
+                                _songs = 0;
+                                _playCount = 0;
+                                _duration = 0;
+                                _getAlbumsFromNet(activeID.value);
+                              },
+                              title: refreshLocal,
+                              isActive: false,
+                            ),
+                          )
+                        ]))
                 ],
               ),
             ),

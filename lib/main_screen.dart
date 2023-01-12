@@ -1,69 +1,88 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'models/notifierValue.dart';
 import 'screens/common/baseCSS.dart';
 import 'screens/bottomScreen.dart';
-import 'screens/components/appSearchBar.dart';
+import 'screens/components/myAppBar.dart';
+import 'screens/layout/settings.dart';
 import 'screens/leftScreen.dart';
-import 'screens/rightScreen.dart';
+import 'util/roter.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({
+    Key? key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Size _size = MediaQuery.of(context).size;
-    bool _isMobile = true;
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      _isMobile = false;
+    final GlobalKey<ScaffoldState> myLeftStateKey = GlobalKey<ScaffoldState>();
+    final Size _size = MediaQuery.of(context).size;
+    //手机端的上下安全高度，这里是第一次赋值，以后也不会变了，不是常量胜似常量
+    safePadding.value = MediaQuery.of(context).padding.top +
+        MediaQuery.of(context).padding.bottom;
+    _drawer() {
+      myLeftStateKey.currentState?.openDrawer();
     }
-    return Scaffold(
-        // appBar: AppBarSearch(
-        //   height: 35,
-        // ),
-        body: _isMobile
-            ? SafeArea(
-                child: Column(children: [
+
+    return SafeArea(
+        child: Scaffold(
+      key: myLeftStateKey,
+      appBar: MyAppBar(
+        drawer: () => _drawer(),
+      ),
+      drawer: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: drawerWidth),
+        child: LeftScreen(),
+      ),
+      body: Column(
+        children: [
+          Container(
+              height: isMobile.value
+                  ? _size.height -
+                      bottomHeight -
+                      appBarHeight -
+                      safePadding.value
+                  : _size.height - bottomHeight - appBarHeight,
+              child: Row(
+                children: [
+                  if (!isMobile.value)
+                    Container(
+                      width: drawerWidth,
+                      child: LeftScreen(),
+                    ),
                   Container(
-                    height: _size.height - 90,
-                    child: RightScreen(),
-                  ),
-                  Container(
-                    height: 90,
-                    child: BottomScreen(
-                      size: _size,
+                    width: isMobile.value
+                        ? _size.width
+                        : _size.width - drawerWidth,
+                    child: Container(
+                      color: bkColor,
+                      child: Column(
+                        children: [
+                          ValueListenableBuilder<bool>(
+                              valueListenable: isServers,
+                              builder: ((context, _value, child) {
+                                return Container(
+                                  child: _value
+                                      ? ValueListenableBuilder<int>(
+                                          valueListenable: indexValue,
+                                          builder: ((context, value, child) {
+                                            return Roter(roter: value);
+                                          }))
+                                      : Settings(),
+                                );
+                              }))
+                        ],
+                      ),
                     ),
                   )
-                ]),
-              )
-            : SafeArea(
-                child: Column(
-                  children: [
-                    Container(
-                        height: _size.height - 95,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 160,
-                              child: LeftScreen(),
-                            ),
-                            Container(
-                              width: _size.width - 160,
-                              child: RightScreen(),
-                            )
-                          ],
-                        )),
-                    Container(
-                      height: 95,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: borderColor, width: 0.1),
-                        ),
-                      ),
-                      width: _size.width,
-                      child: BottomScreen(
-                        size: _size,
-                      ),
-                    )
-                  ],
-                ),
-              ));
+                ],
+              )),
+          Container(
+            height: bottomHeight,
+            decoration: lineBorder,
+            width: _size.width,
+            child: BottomScreen(),
+          )
+        ],
+      ),
+    ));
   }
 }

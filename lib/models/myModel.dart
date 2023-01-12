@@ -58,6 +58,72 @@ class ServerStatus {
   }
 }
 
+class Playlist {
+  late String id;
+  late String name;
+  late int songCount;
+  late int duration;
+  late int public;
+  late String owner;
+  late String created;
+  late String changed;
+
+  Playlist(
+      {required this.id,
+      required this.name,
+      required this.songCount,
+      required this.duration,
+      required this.public,
+      required this.owner,
+      required this.created,
+      required this.changed});
+
+  Playlist.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    songCount = json['songCount'];
+    duration = json['duration'];
+    public = json['public'];
+    owner = json['owner'];
+    created = json['created'];
+    changed = json['changed'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> _data = new Map<String, dynamic>();
+    _data['id'] = this.id;
+    _data['name'] = this.name;
+    _data['songCount'] = this.songCount;
+    _data['duration'] = this.duration;
+    _data['public'] = this.public;
+    _data['owner'] = this.owner;
+    _data['created'] = this.created;
+    _data['changed'] = this.changed;
+
+    return _data;
+  }
+}
+
+class PlaylistAndSong {
+  late String playlistId;
+  late String songId;
+
+  PlaylistAndSong({required this.playlistId, required this.songId});
+
+  PlaylistAndSong.fromJson(Map<String, dynamic> json) {
+    playlistId = json['playlistId'];
+    songId = json['songId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> _data = new Map<String, dynamic>();
+    _data['playlistId'] = this.playlistId;
+    _data['songId'] = this.songId;
+
+    return _data;
+  }
+}
+
 class Genres {
   late String value;
   late int songCount;

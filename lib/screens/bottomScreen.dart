@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,8 +11,6 @@ import 'components/playerSeekBar.dart';
 import 'layout/playScreen.dart';
 
 class BottomScreen extends StatefulWidget {
-  const BottomScreen({Key? key, required this.size}) : super(key: key);
-  final Size size;
   @override
   _BottomScreenState createState() => _BottomScreenState();
 }
@@ -24,7 +22,6 @@ class _BottomScreenState extends State<BottomScreen> {
   @override
   initState() {
     super.initState();
-    //_init();
     _listenForChangesInSequenceState();
   }
 
@@ -38,7 +35,7 @@ class _BottomScreenState extends State<BottomScreen> {
     _player.sequenceStateStream.listen((sequenceState) async {
       if (sequenceState == null) return;
 
-      // update current song title
+      // 更新当前歌曲
       final currentItem = sequenceState.currentSource;
       final _title = currentItem?.tag as String?;
       final _tem = await getSong(_title.toString());
@@ -53,11 +50,11 @@ class _BottomScreenState extends State<BottomScreen> {
       _activeSong["album"] = _tem["album"];
       activeSong.value = _activeSong;
 
-      // update shuffle mode
+      // 更新随机状态
       isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
 
       final playlist = sequenceState.effectiveSequence;
-      //update previous and next buttons
+      //更新上下首歌曲
       if (playlist.isEmpty || currentItem == null) {
         isFirstSongNotifier.value = true;
         isLastSongNotifier.value = true;
@@ -91,25 +88,6 @@ class _BottomScreenState extends State<BottomScreen> {
     _player.play();
   }
 
-  Future<void> showListDialog() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return UnconstrainedBox(
-          constrainedAxis: Axis.vertical,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-                maxWidth: widget.size.width, maxHeight: widget.size.height),
-            child: Material(
-              child: PlayScreen(),
-              type: MaterialType.canvas,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Stream<PositionData> get _positionDataStream {
     return Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         _player.positionStream,
@@ -121,10 +99,7 @@ class _BottomScreenState extends State<BottomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool _isMobile = true;
-    if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-      _isMobile = false;
-    }
+    final Size _size = MediaQuery.of(context).size;
     return ValueListenableBuilder<String>(
         //
         valueListenable: activeSongValue,
@@ -137,13 +112,14 @@ class _BottomScreenState extends State<BottomScreen> {
           }
 
           return Container(
-              height: 95,
+              height: bottomHeight,
               color: bkColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      width: widget.size.width / 4,
+                      width:
+                          (isMobile.value) ? _size.width / 2 : _size.width / 4,
                       child: ValueListenableBuilder<Map>(
                         valueListenable: activeSong,
                         builder: (context, _song, child) {
@@ -151,7 +127,6 @@ class _BottomScreenState extends State<BottomScreen> {
                             children: [
                               InkWell(
                                   onTap: () async {
-                                    // indexValue.value = 1;
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -159,8 +134,8 @@ class _BottomScreenState extends State<BottomScreen> {
                                           constrainedAxis: Axis.vertical,
                                           child: ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                maxWidth: widget.size.width,
-                                                maxHeight: widget.size.height),
+                                                maxWidth: _size.width,
+                                                maxHeight: _size.height),
                                             child: Material(
                                               child: PlayScreen(),
                                               type: MaterialType.canvas,
@@ -172,25 +147,19 @@ class _BottomScreenState extends State<BottomScreen> {
                                   },
                                   child: Container(
                                     margin: leftrightPadding,
-                                    height: 65,
-                                    width: 65,
+                                    height: bottomImageWidthAndHeight,
+                                    width: bottomImageWidthAndHeight,
                                     child: (_song.isEmpty)
                                         ? Image.asset("assets/images/logo.jpg")
-                                        : Image.network(
-                                            _song["url"],
+                                        : CachedNetworkImage(
+                                            imageUrl: _song["url"],
                                             fit: BoxFit.cover,
-                                            frameBuilder: (context, child,
-                                                frame, wasSynchronouslyLoaded) {
-                                              if (wasSynchronouslyLoaded) {
-                                                return child;
-                                              }
+                                            placeholder: (context, url) {
                                               return AnimatedSwitcher(
-                                                child: frame != null
-                                                    ? child
-                                                    : Image.asset(
-                                                        "assets/images/logo.jpg"),
+                                                child: Image.asset(
+                                                    "assets/images/logo.jpg"),
                                                 duration: const Duration(
-                                                    milliseconds: 500),
+                                                    milliseconds: imageMilli),
                                               );
                                             },
                                           ),
@@ -202,7 +171,9 @@ class _BottomScreenState extends State<BottomScreen> {
                                   InkWell(
                                     onTap: () {},
                                     child: Container(
-                                      width: widget.size.width / 4 - 95,
+                                      width: (isMobile.value)
+                                          ? _size.width / 3 - 95
+                                          : _size.width / 4 - 95,
                                       child: Text(
                                           _song.isEmpty ? "" : _song["title"],
                                           maxLines: 2,
@@ -213,7 +184,9 @@ class _BottomScreenState extends State<BottomScreen> {
                                   InkWell(
                                     onTap: () {},
                                     child: Container(
-                                      width: widget.size.width / 4 - 95,
+                                      width: (isMobile.value)
+                                          ? _size.width / 3 - 95
+                                          : _size.width / 4 - 95,
                                       child: Text(
                                           _song.isEmpty ? "" : _song["artist"],
                                           maxLines: 1,
@@ -224,7 +197,9 @@ class _BottomScreenState extends State<BottomScreen> {
                                   InkWell(
                                     onTap: () {},
                                     child: Container(
-                                      width: widget.size.width / 4 - 95,
+                                      width: (isMobile.value)
+                                          ? _size.width / 3 - 95
+                                          : _size.width / 4 - 95,
                                       child: Text(
                                           _song.isEmpty ? "" : _song["album"],
                                           maxLines: 1,
@@ -239,9 +214,7 @@ class _BottomScreenState extends State<BottomScreen> {
                         },
                       )),
                   Container(
-                    width: (!_isMobile)
-                        ? widget.size.width / 2
-                        : widget.size.width - widget.size.width / 4,
+                    width: _size.width / 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +225,7 @@ class _BottomScreenState extends State<BottomScreen> {
                           builder: (context, snapshot) {
                             final positionData = snapshot.data;
                             return PlayerSeekBar(
-                              trackWidth: widget.size.width / 3,
+                              trackWidth: _size.width / 3,
                               duration: positionData?.duration ?? Duration.zero,
                               position: positionData?.position ?? Duration.zero,
                               bufferedPosition:
@@ -265,9 +238,9 @@ class _BottomScreenState extends State<BottomScreen> {
                       ],
                     ),
                   ),
-                  if (!_isMobile)
+                  if (!isMobile.value)
                     Container(
-                      width: widget.size.width / 4,
+                      width: _size.width / 4,
                       padding: EdgeInsets.only(right: 15),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -365,7 +338,7 @@ class _BottomScreenState extends State<BottomScreen> {
                                                       SliderComponentShape
                                                           .noThumb),
                                           child: Container(
-                                              width: widget.size.width / 8,
+                                              width: _size.width / 8,
                                               child: Slider(
                                                 divisions: 10,
                                                 min: 0.0,

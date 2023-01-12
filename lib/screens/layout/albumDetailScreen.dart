@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../util/baseDB.dart';
@@ -37,19 +38,21 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       String _xx = await getCoverArt(albumId);
       final xx = await BaseDB.instance.getAlbumsByID(albumId);
       Albums _albums = xx[0];
-      setState(() {
-        _songs = _songsList;
-        _songsnum = _albums.songCount;
-        _albumsname = _albums.title;
-        _playCount = _albums.playCount;
-        _duration = _albums.duration;
-        _year = _albums.year;
-        _artist = _albums.artist;
-        _artistID = _albums.artistId;
-        _genre = _albums.genre;
-        _createDate = _albums.created;
-        _arturl = _xx;
-      });
+      if (mounted) {
+        setState(() {
+          _songs = _songsList;
+          _songsnum = _albums.songCount;
+          _albumsname = _albums.title;
+          _playCount = _albums.playCount;
+          _duration = _albums.duration;
+          _year = _albums.year;
+          _artist = _albums.artist;
+          _artistID = _albums.artistId;
+          _genre = _albums.genre;
+          _createDate = _albums.created;
+          _arturl = _xx;
+        });
+      }
     } else {
       _getSongsFromNet(albumId);
     }
@@ -68,32 +71,34 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       _list.add(_tem);
     }
     await BaseDB.instance.updateSongs(_list);
-    setState(() {
-      _songs = _list;
-      _songsnum = _songsList["songCount"];
-      _albumsname = _songsList["name"];
-      if (_songsList["playCount"] == null) {
-        _playCount = 0;
-      } else {
-        _playCount = _songsList["playCount"];
-      }
-      if (_songsList["year"] == null) {
-        _year = 0;
-      } else {
-        _year = _songsList["year"];
-      }
-      if (_songsList["genre"] == null) {
-        _genre = "0";
-      } else {
-        _genre = _songsList["genre"];
-      }
+    if (mounted) {
+      setState(() {
+        _songs = _list;
+        _songsnum = _songsList["songCount"];
+        _albumsname = _songsList["name"];
+        if (_songsList["playCount"] == null) {
+          _playCount = 0;
+        } else {
+          _playCount = _songsList["playCount"];
+        }
+        if (_songsList["year"] == null) {
+          _year = 0;
+        } else {
+          _year = _songsList["year"];
+        }
+        if (_songsList["genre"] == null) {
+          _genre = "0";
+        } else {
+          _genre = _songsList["genre"];
+        }
 
-      _createDate = _songsList["created"];
-      _duration = _songsList["duration"];
-      _artistID = _songsList["artistId"];
-      _artist = _songsList["artist"];
-      _arturl = _xx;
-    });
+        _createDate = _songsList["created"];
+        _duration = _songsList["duration"];
+        _artistID = _songsList["artistId"];
+        _artist = _songsList["artist"];
+        _arturl = _xx;
+      });
+    }
   }
 
   Widget _buildTopWidget() {
@@ -105,25 +110,17 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                height: 180,
-                width: 180,
+                height: screenImageWidthAndHeight,
+                width: screenImageWidthAndHeight,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    _arturl,
-                    height: 180,
-                    width: 180,
+                  child: CachedNetworkImage(
+                    imageUrl: _arturl,
                     fit: BoxFit.cover,
-                    frameBuilder:
-                        (context, child, frame, wasSynchronouslyLoaded) {
-                      if (wasSynchronouslyLoaded) {
-                        return child;
-                      }
+                    placeholder: (context, url) {
                       return AnimatedSwitcher(
-                        child: frame != null
-                            ? child
-                            : Image.asset("assets/images/logo.jpg"),
-                        duration: const Duration(milliseconds: 2000),
+                        child: Image.asset("assets/images/logo.jpg"),
+                        duration: const Duration(milliseconds: imageMilli),
                       );
                     },
                   ),
@@ -135,7 +132,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      width: _size.width - 400,
+                      width: _size.width / 2,
                       padding: EdgeInsets.all(10),
                       child: Text(_albumsname,
                           maxLines: 1,
@@ -163,13 +160,15 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           title: _artist,
                           isActive: false,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "$yearLocal: " + _year.toString(),
-                          style: nomalGrayText,
-                        ),
+                        if (!isMobile.value)
+                          SizedBox(
+                            width: 10,
+                          ),
+                        if (!isMobile.value)
+                          Text(
+                            "$yearLocal: " + _year.toString(),
+                            style: nomalGrayText,
+                          ),
                         SizedBox(
                           width: 10,
                         ),
@@ -213,16 +212,41 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           "$drationLocal: " + formatDuration(_duration),
                           style: nomalGrayText,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "$playCountLocal: " + _playCount.toString(),
-                          style: nomalGrayText,
-                        ),
+                        if (!isMobile.value)
+                          SizedBox(
+                            width: 10,
+                          ),
+                        if (!isMobile.value)
+                          Text(
+                            "$playCountLocal: " + _playCount.toString(),
+                            style: nomalGrayText,
+                          ),
                       ],
                     ),
                   ),
+                  if (isMobile.value)
+                    SizedBox(
+                      height: 10,
+                    ),
+                  if (isMobile.value)
+                    Container(
+                      padding: leftrightPadding,
+                      child: Row(
+                        children: [
+                          Text(
+                            "$playCountLocal: " + _playCount.toString(),
+                            style: nomalGrayText,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "$yearLocal: " + _year.toString(),
+                            style: nomalGrayText,
+                          ),
+                        ],
+                      ),
+                    ),
                   SizedBox(
                     height: 10,
                   ),
@@ -234,25 +258,24 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           "创建: " + timeISOtoString(_createDate),
                           style: nomalGrayText,
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          width: 50,
-                          child: TextButtom(
-                            press: () {
-                              _songsnum = 0;
-                              _playCount = 0;
-                              _duration = 0;
-                              _getSongsFromNet(activeID.value);
-                            },
-                            title: refreshLocal,
-                            isActive: false,
+                        if (!isMobile.value)
+                          SizedBox(
+                            width: 10,
                           ),
-                        )
+                        if (!isMobile.value)
+                          Container(
+                            width: 50,
+                            child: TextButtom(
+                              press: () {
+                                _songsnum = 0;
+                                _playCount = 0;
+                                _duration = 0;
+                                _getSongsFromNet(activeID.value);
+                              },
+                              title: refreshLocal,
+                              isActive: false,
+                            ),
+                          )
                       ],
                     ),
                   )

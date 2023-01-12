@@ -26,16 +26,29 @@ const sublGrayText = TextStyle(color: borderColor, fontSize: 12);
 
 const lineBorder = BoxDecoration(
   border: Border(
-    top: BorderSide(color: borderColor, width: 0.2),
+    top: BorderSide(color: borderColor, width: 0.1),
   ),
 );
 
 BoxDecoration circularBorder = BoxDecoration(
     borderRadius: BorderRadius.all(Radius.circular(5.0)),
-    //设置四周边框
     border: Border.all(width: 0.2, color: borderColor));
 
 BoxDecoration backbadge = BoxDecoration(
   color: badgeRed,
   borderRadius: BorderRadius.circular(50.0),
 );
+//底部高度
+const double bottomHeight = 95;
+//appbar高度
+const double appBarHeight = 40;
+//侧拉栏宽度
+const double drawerWidth = 160;
+//底部图片大小
+const double bottomImageWidthAndHeight = 65;
+//正常页面图片大小
+const double screenImageWidthAndHeight = 180;
+//正在播放图片大小
+const double playingImageWidthAndHeight = 180;
+//图片刷新动画延迟
+const int imageMilli = 500;

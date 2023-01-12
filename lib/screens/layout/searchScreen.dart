@@ -6,6 +6,7 @@ import '../../util/util.dart';
 import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
+import '../common/myTextInput.dart';
 import '../common/rightHeader.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -29,9 +30,11 @@ class _SearchScreenState extends State<SearchScreen> {
         Songs _tem = element;
         _list.add(_tem);
       }
-      setState(() {
-        _songs = _list;
-      });
+      if (mounted) {
+        setState(() {
+          _songs = _list;
+        });
+      }
     }
   }
 
@@ -110,39 +113,42 @@ class _SearchScreenState extends State<SearchScreen> {
                                         : nomalGrayText,
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    formatDuration(_tem.duration),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
+                                if (!isMobile.value)
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      formatDuration(_tem.duration),
+                                      textDirection: TextDirection.rtl,
+                                      style: (value.isNotEmpty &&
+                                              value["value"] == _tem.id)
+                                          ? activeText
+                                          : nomalGrayText,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.bitRate.toString(),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
+                                if (!isMobile.value)
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      _tem.bitRate.toString(),
+                                      textDirection: TextDirection.rtl,
+                                      style: (value.isNotEmpty &&
+                                              value["value"] == _tem.id)
+                                          ? activeText
+                                          : nomalGrayText,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.playCount.toString(),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
+                                if (!isMobile.value)
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text(
+                                      _tem.playCount.toString(),
+                                      textDirection: TextDirection.rtl,
+                                      style: (value.isNotEmpty &&
+                                              value["value"] == _tem.id)
+                                          ? activeText
+                                          : nomalGrayText,
+                                    ),
                                   ),
-                                ),
                               ],
                             );
                           }))));
@@ -182,33 +188,36 @@ class _SearchScreenState extends State<SearchScreen> {
             style: sublGrayText,
           )),
         ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            drationLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            bitRangeLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            playCountLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        )
+        if (!isMobile.value)
+          Expanded(
+            flex: 1,
+            child: Container(
+                child: Text(
+              drationLocal,
+              textDirection: TextDirection.rtl,
+              style: sublGrayText,
+            )),
+          ),
+        if (!isMobile.value)
+          Expanded(
+            flex: 1,
+            child: Container(
+                child: Text(
+              bitRangeLocal,
+              textDirection: TextDirection.rtl,
+              style: sublGrayText,
+            )),
+          ),
+        if (!isMobile.value)
+          Expanded(
+            flex: 1,
+            child: Container(
+                child: Text(
+              playCountLocal,
+              textDirection: TextDirection.rtl,
+              style: sublGrayText,
+            )),
+          )
       ],
     );
   }
@@ -218,50 +227,18 @@ class _SearchScreenState extends State<SearchScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(child: Text(searchLocal, style: titleText1)),
-            Container(
-              width: 220,
-              height: 35,
-              margin: EdgeInsets.only(left: 15, bottom: 6),
-              child: TextField(
-                controller: searchController,
-                style: nomalGrayText,
-                cursorColor: kGrayColor,
-                textInputAction: TextInputAction.search,
-                onChanged: (value) {},
-                onSubmitted: (value) {
-                  _getSongsbyName();
-                },
-                decoration: InputDecoration(
-                    hintText: "请输入歌曲名...",
-                    labelStyle: nomalGrayText,
-                    border: InputBorder.none,
-                    hintStyle: nomalGrayText,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
-                    filled: true,
-                    fillColor: badgeDark,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: kGrayColor,
-                      size: 14,
-                    )),
-              ),
-            ),
-          ],
+        MyTextInput(
+          control: searchController,
+          label: searchLocal,
+          hintLabel: "请输入歌曲名...",
+          hideText: false,
+          icon: Icons.search,
+          press: () {
+            _getSongsbyName();
+          },
+          titleStyle: titleText1,
+          mainaxis: MainAxisAlignment.start,
+          crossaxis: CrossAxisAlignment.end,
         ),
         SizedBox(height: 10),
         Container(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../models/myModel.dart';
@@ -30,10 +31,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
       _listURL.add(_yy);
       _albumsnum++;
     }
-    setState(() {
-      _albums = _albumsList;
-      _imageURL = _listURL;
-    });
+    if (mounted) {
+      setState(() {
+        _albums = _albumsList;
+        _imageURL = _listURL;
+      });
+    }
   }
 
   @override
@@ -45,7 +48,13 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Widget _itemBuildWidget() {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
     Size _size = MediaQuery.of(context).size;
-    double _rightWidth = (_size.width - 160) / 180;
+    double _rightWidth = 0;
+    if (isMobile.value) {
+      _rightWidth = (_size.width) / screenImageWidthAndHeight;
+    } else {
+      _rightWidth = (_size.width - drawerWidth) / screenImageWidthAndHeight;
+    }
+
     int _count = _rightWidth.truncate();
     return Container(
       color: bkColor,
@@ -68,19 +77,14 @@ class _AlbumScreenState extends State<AlbumScreen> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image.network(
-                            _temURL,
+                          child: CachedNetworkImage(
+                            imageUrl: _temURL,
                             fit: BoxFit.cover,
-                            frameBuilder: (context, child, frame,
-                                wasSynchronouslyLoaded) {
-                              if (wasSynchronouslyLoaded) {
-                                return child;
-                              }
+                            placeholder: (context, url) {
                               return AnimatedSwitcher(
-                                child: frame != null
-                                    ? child
-                                    : Image.asset("assets/images/logo.jpg"),
-                                duration: const Duration(milliseconds: 1000),
+                                child: Image.asset("assets/images/logo.jpg"),
+                                duration:
+                                    const Duration(milliseconds: imageMilli),
                               );
                             },
                           ),

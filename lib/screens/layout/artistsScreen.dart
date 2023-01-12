@@ -34,10 +34,12 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
       }
     }
     await BaseDB.instance.updateArtists(_list);
-    setState(() {
-      _artists = _list;
-      artistsnum = _list.length;
-    });
+    if (mounted) {
+      setState(() {
+        _artists = _list;
+        artistsnum = _list.length;
+      });
+    }
   }
 
   _getArtists() async {
@@ -48,10 +50,12 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
           Artists _xx = element;
           albumsnum += _xx.albumCount;
         }
-        setState(() {
-          _artists = _artistsList;
-          artistsnum = _artistsList.length;
-        });
+        if (mounted) {
+          setState(() {
+            _artists = _artistsList;
+            artistsnum = _artistsList.length;
+          });
+        }
       } else {
         _getArtistsFromNet();
       }

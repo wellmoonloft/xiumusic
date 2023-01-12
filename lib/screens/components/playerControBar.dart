@@ -132,18 +132,19 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 },
               );
             }),
-        IconButton(
-          icon: const Icon(
-            Icons.fast_rewind,
-            color: kTextColor,
+        if (!isMobile.value)
+          IconButton(
+            icon: const Icon(
+              Icons.fast_rewind,
+              color: kTextColor,
+            ),
+            onPressed: () {
+              if (widget.player.position.inSeconds - 15 > 0) {
+                widget.player.seek(
+                    Duration(seconds: widget.player.position.inSeconds - 15));
+              }
+            },
           ),
-          onPressed: () {
-            if (widget.player.position.inSeconds - 15 > 0) {
-              widget.player.seek(
-                  Duration(seconds: widget.player.position.inSeconds - 15));
-            }
-          },
-        ),
         StreamBuilder<PlayerState>(
           stream: widget.player.playerStateStream,
           builder: (context, snapshot) {
@@ -189,16 +190,17 @@ class _PlayerControBarState extends State<PlayerControBar> {
             }
           },
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.fast_forward,
-            color: kTextColor,
+        if (!isMobile.value)
+          IconButton(
+            icon: const Icon(
+              Icons.fast_forward,
+              color: kTextColor,
+            ),
+            onPressed: () {
+              widget.player.seek(
+                  Duration(seconds: widget.player.position.inSeconds + 15));
+            },
           ),
-          onPressed: () {
-            widget.player
-                .seek(Duration(seconds: widget.player.position.inSeconds + 15));
-          },
-        ),
         ValueListenableBuilder<bool>(
             valueListenable: isLastSongNotifier,
             builder: (_, isLast, __) {

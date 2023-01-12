@@ -15,7 +15,9 @@ import '../common/rightHeader.dart';
 import '../common/textButtom.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({
+    Key? key,
+  }) : super(key: key);
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -52,9 +54,8 @@ class _SettingsState extends State<Settings> {
         await getFromNet();
         await getArtistsFromNet();
         await sacnServerStatus();
-        setState(() {
-          isServers.value = true;
-        });
+
+        isServers.value = true;
       } else {
         showDialog(
           context: context,
@@ -64,7 +65,6 @@ class _SettingsState extends State<Settings> {
         );
       }
     } else {
-      print(servercontroller.text);
       showDialog(
         context: context,
         builder: (context) {
@@ -77,23 +77,27 @@ class _SettingsState extends State<Settings> {
   _getServerInfo() async {
     final _infoList = await BaseDB.instance.getServerInfo();
     if (_infoList != null) {
-      setState(() {
-        isServers.value = true;
-        servercontroller.text = _infoList.baseurl;
-        usernamecontroller.text = _infoList.username;
-        passwordcontroller.text = "******";
-      });
+      if (mounted) {
+        setState(() {
+          isServers.value = true;
+          servercontroller.text = _infoList.baseurl;
+          usernamecontroller.text = _infoList.username;
+          passwordcontroller.text = "******";
+        });
+      }
     }
   }
 
   _deleteServer() async {
     await BaseDB.instance.deleteServerInfo();
-    setState(() {
-      isServers.value = false;
-      servercontroller.text = "";
-      usernamecontroller.text = "";
-      passwordcontroller.text = "";
-    });
+    if (mounted) {
+      setState(() {
+        isServers.value = false;
+        servercontroller.text = "";
+        usernamecontroller.text = "";
+        passwordcontroller.text = "";
+      });
+    }
   }
 
   @override
@@ -262,6 +266,9 @@ class _SettingsState extends State<Settings> {
                 hintLabel: pleasInputLocal + serverURLLocal,
                 hideText: false,
                 icon: Icons.dns,
+                titleStyle: nomalGrayText,
+                mainaxis: MainAxisAlignment.spaceBetween,
+                crossaxis: CrossAxisAlignment.center,
               ),
               MyTextInput(
                 control: usernamecontroller,
@@ -269,6 +276,10 @@ class _SettingsState extends State<Settings> {
                 hintLabel: pleasInputLocal + userNameLocal,
                 hideText: false,
                 icon: Icons.person,
+                press: null,
+                titleStyle: nomalGrayText,
+                mainaxis: MainAxisAlignment.spaceBetween,
+                crossaxis: CrossAxisAlignment.center,
               ),
               MyTextInput(
                 control: passwordcontroller,
@@ -276,6 +287,10 @@ class _SettingsState extends State<Settings> {
                 hintLabel: pleasInputLocal + passWordLocal,
                 hideText: true,
                 icon: Icons.password,
+                press: null,
+                titleStyle: nomalGrayText,
+                mainaxis: MainAxisAlignment.spaceBetween,
+                crossaxis: CrossAxisAlignment.center,
               ),
             ],
           )),

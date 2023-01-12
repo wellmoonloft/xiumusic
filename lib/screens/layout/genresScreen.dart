@@ -30,9 +30,11 @@ class _GenresScreenState extends State<GenresScreen> {
       genresnum++;
     }
     await BaseDB.instance.updateGenres(_list);
-    setState(() {
-      _genres = _list;
-    });
+    if (mounted) {
+      setState(() {
+        _genres = _list;
+      });
+    }
   }
 
   _getGenres() async {

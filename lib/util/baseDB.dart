@@ -13,6 +13,10 @@ class BaseDB {
   // ignore: non_constant_identifier_names
   final String ServerStatusTable = "serverStatus";
   // ignore: non_constant_identifier_names
+  final String PlaylistTable = "playlist";
+  // ignore: non_constant_identifier_names
+  final String PlaylistAndSongTable = "playlistAndSong";
+  // ignore: non_constant_identifier_names
   final String GenresTable = "genres";
   // ignore: non_constant_identifier_names
   final String ArtistsTable = "artists";
@@ -20,6 +24,7 @@ class BaseDB {
   final String AlbumsTable = "albums";
   // ignore: non_constant_identifier_names
   final String SongsTable = "songs";
+  //TODO 收藏，入口放在当前歌曲，专辑以及艺人页面，然后数据库和页面，这个不涉及接口
 
   Future<Database> get db async {
     if (_db != null) return _db!;
@@ -50,6 +55,26 @@ class BaseDB {
                 count INTEGER NOT NULL,
                 folderCount INTEGER NOT NULL,
                 lastScan TEXT NOT NULL
+              )
+        ''');
+    await _database.execute('''
+              create table $PlaylistTable (
+                uid INTEGER PRIMARY KEY AUTOINCREMENT,
+                id TEXT NOT NULL,
+                name TEXT NOT NULL,
+                songCount INTEGER NOT NULL,
+                duration INTEGER NOT NULL,
+                public INTEGER NOT NULL,
+                owner TEXT NOT NULL,
+                created TEXT NOT NULL,
+                changed TEXT NOT NULL
+              )
+        ''');
+    await _database.execute('''
+              create table $PlaylistAndSongTable (
+                uid INTEGER PRIMARY KEY AUTOINCREMENT,
+                playlistId TEXT NOT NULL,
+                songId TEXT NOT NULL
               )
         ''');
     await _database.execute('''
@@ -303,6 +328,44 @@ class BaseDB {
       if (res.length == 0) return null;
       List<Genres> lists = res.map((e) => Genres.fromJson(e)).toList();
       return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getPlaylists() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(PlaylistTable);
+      if (res.length == 0) return null;
+      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+//TODO 写新增播放列表库，然后httpClinent里面写获取接口的方法
+  getPlaylistSongS(String _id) async {
+    try {
+      final db = await instance.db;
+      var res =
+          await db.query(PlaylistTable, where: "id = ?", whereArgs: [_id]);
+      if (res.length == 0) return null;
+      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
+      String _playlistId = lists[0].id;
+      var res1 = await db.query(PlaylistAndSongTable,
+          where: "playlistId = ?", whereArgs: [_playlistId]);
+      if (res1.length == 0) return null;
+      List<PlaylistAndSong> lists1 =
+          res1.map((e) => PlaylistAndSong.fromJson(e)).toList();
+      List<Songs> songs = [];
+      for (PlaylistAndSong element in lists1) {
+        Songs song = await getSong(element.songId);
+        songs.add(song);
+      }
+
+      return songs;
     } catch (err) {
       print('err is 👉 $err');
     }

@@ -37,8 +37,8 @@ class Roter extends StatelessWidget {
             return ArtistsScreen();
           case 6: //流派
             return GenresScreen();
-          case 7: //设置
-            return Settings();
+          //case 7: //设置
+          //  return Settings();
 
           //不通过点击进入
           case 8: //专辑详情
