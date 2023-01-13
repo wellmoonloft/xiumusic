@@ -43,6 +43,12 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   Widget _itemBuildWidget() {
     return _songs != null && _songs!.length > 0
         ? ListView.builder(

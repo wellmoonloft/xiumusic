@@ -17,7 +17,7 @@ const titleText1 =
     TextStyle(fontSize: 40, color: kGrayColor, fontWeight: FontWeight.bold);
 const titleText2 = TextStyle(
   fontSize: 20,
-  color: kTextColor,
+  color: kGrayColor,
 );
 const activeText = TextStyle(color: badgeRed, fontSize: 14);
 const nomalText1 = TextStyle(color: kTextColor, fontSize: 14);

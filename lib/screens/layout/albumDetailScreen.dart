@@ -32,7 +32,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   int _year = 0;
 
   _getSongs(String albumId) async {
-    final _songsList = await BaseDB.instance.getSongs(albumId);
+    final _songsList = await BaseDB.instance.getSongsById(albumId);
 
     if (_songsList != null) {
       String _xx = await getCoverArt(albumId);

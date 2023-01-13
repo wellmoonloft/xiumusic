@@ -18,7 +18,7 @@ class BottomScreen extends StatefulWidget {
 class _BottomScreenState extends State<BottomScreen> {
   final _player = AudioPlayer();
   double _activevolume = 1.0;
-
+  final _bottomSheetScaffoldKey = GlobalKey<ScaffoldState>();
   @override
   initState() {
     super.initState();
@@ -97,9 +97,38 @@ class _BottomScreenState extends State<BottomScreen> {
             position, bufferedPosition, duration ?? Duration.zero));
   }
 
+  _openBottomSheet() {
+    _bottomSheetScaffoldKey.currentState
+        ?.showBottomSheet((BuildContext context) {
+      return BottomAppBar(
+        child: Container(
+          height: 90.0,
+          width: double.infinity,
+          padding: EdgeInsets.all(16.0),
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.pause_circle_outline),
+              SizedBox(
+                width: 16.0,
+              ),
+              Text('01:30 / 03:30'),
+              Expanded(
+                child: Text(
+                  '从头再来-刘欢',
+                  textAlign: TextAlign.right,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
+
     return ValueListenableBuilder<String>(
         //
         valueListenable: activeSongValue,
@@ -112,7 +141,7 @@ class _BottomScreenState extends State<BottomScreen> {
           }
 
           return Container(
-              height: bottomHeight,
+              height: 95,
               color: bkColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,21 +156,10 @@ class _BottomScreenState extends State<BottomScreen> {
                             children: [
                               InkWell(
                                   onTap: () async {
-                                    showDialog(
+                                    showBottomSheet(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return UnconstrainedBox(
-                                          constrainedAxis: Axis.vertical,
-                                          child: ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                                maxWidth: _size.width,
-                                                maxHeight: _size.height),
-                                            child: Material(
-                                              child: PlayScreen(),
-                                              type: MaterialType.canvas,
-                                            ),
-                                          ),
-                                        );
+                                        return PlayScreen();
                                       },
                                     );
                                   },
@@ -150,19 +168,26 @@ class _BottomScreenState extends State<BottomScreen> {
                                     height: bottomImageWidthAndHeight,
                                     width: bottomImageWidthAndHeight,
                                     child: (_song.isEmpty)
-                                        ? Image.asset("assets/images/logo.jpg")
-                                        : CachedNetworkImage(
-                                            imageUrl: _song["url"],
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) {
-                                              return AnimatedSwitcher(
-                                                child: Image.asset(
-                                                    "assets/images/logo.jpg"),
-                                                duration: const Duration(
-                                                    milliseconds: imageMilli),
-                                              );
-                                            },
-                                          ),
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            child: Image.asset(
+                                                "assets/images/logo.jpg"))
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            child: CachedNetworkImage(
+                                              imageUrl: _song["url"],
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) {
+                                                return AnimatedSwitcher(
+                                                  child: Image.asset(
+                                                      "assets/images/logo.jpg"),
+                                                  duration: const Duration(
+                                                      milliseconds: imageMilli),
+                                                );
+                                              },
+                                            )),
                                   )),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +304,30 @@ class _BottomScreenState extends State<BottomScreen> {
                                     color: kTextColor,
                                     size: 16,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      barrierColor: Colors.black54,
+                                      context: context,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(30),
+                                              topRight: Radius.circular(30))),
+                                      builder: (ctx) {
+                                        return UnconstrainedBox(
+                                          constrainedAxis: Axis.vertical,
+                                          child: ConstrainedBox(
+                                            constraints: BoxConstraints(
+                                                maxWidth: _size.width / 2,
+                                                maxHeight: _size.height / 2),
+                                            child: Material(
+                                              child: Container(),
+                                              type: MaterialType.canvas,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             ],

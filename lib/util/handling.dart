@@ -33,7 +33,7 @@ sacnServerStatus() async {
 }
 
 //1.流派
-getFromNet() async {
+getGenresFromNet() async {
   final _genresList = await getGenres();
   List<Genres> _list = [];
   for (dynamic element in _genresList) {

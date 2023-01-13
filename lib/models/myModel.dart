@@ -215,6 +215,8 @@ class Albums {
     created = json['created'];
   }
 
+  get length => null;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> _data = new Map<String, dynamic>();
     _data['id'] = this.id;

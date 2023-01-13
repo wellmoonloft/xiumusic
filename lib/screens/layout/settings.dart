@@ -51,7 +51,7 @@ class _SettingsState extends State<Settings> {
             hash: _randomString);
         await BaseDB.instance.addServerInfo(_serverInfo);
         //初始化服务器
-        await getFromNet();
+        await getGenresFromNet();
         await getArtistsFromNet();
         await sacnServerStatus();
 
@@ -104,6 +104,14 @@ class _SettingsState extends State<Settings> {
   initState() {
     super.initState();
     _getServerInfo();
+  }
+
+  @override
+  void dispose() {
+    servercontroller.dispose();
+    usernamecontroller.dispose();
+    passwordcontroller.dispose();
+    super.dispose();
   }
 
   @override
@@ -187,7 +195,7 @@ class _SettingsState extends State<Settings> {
                 TextButtom(
                   press: () async {
                     //初始化服务器
-                    await getFromNet();
+                    await getGenresFromNet();
                     await getArtistsFromNet();
                     await sacnServerStatus();
                   },

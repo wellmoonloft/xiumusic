@@ -184,6 +184,38 @@ class BaseDB {
     }
   }
 
+  addPlaylists(Playlist _playlist) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(PlaylistTable);
+      await batch.commit(noResult: true);
+      batch.insert(PlaylistTable, _playlist.toJson());
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addPlaylistSongS(List<PlaylistAndSong> _playlistAndSong) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(PlaylistTable);
+      await batch.commit(noResult: true);
+      for (PlaylistAndSong element in _playlistAndSong) {
+        batch.insert(PlaylistTable, element.toJson());
+      }
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   addArtists(List<Artists> _artists) async {
     try {
       final db = await instance.db;
@@ -346,21 +378,16 @@ class BaseDB {
   }
 
 //TODO 写新增播放列表库，然后httpClinent里面写获取接口的方法
-  getPlaylistSongS(String _id) async {
+  getPlaylistSongS(String _playlistId) async {
     try {
       final db = await instance.db;
-      var res =
-          await db.query(PlaylistTable, where: "id = ?", whereArgs: [_id]);
-      if (res.length == 0) return null;
-      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
-      String _playlistId = lists[0].id;
-      var res1 = await db.query(PlaylistAndSongTable,
+      var res = await db.query(PlaylistAndSongTable,
           where: "playlistId = ?", whereArgs: [_playlistId]);
-      if (res1.length == 0) return null;
-      List<PlaylistAndSong> lists1 =
-          res1.map((e) => PlaylistAndSong.fromJson(e)).toList();
+      if (res.length == 0) return null;
+      List<PlaylistAndSong> lists =
+          res.map((e) => PlaylistAndSong.fromJson(e)).toList();
       List<Songs> songs = [];
-      for (PlaylistAndSong element in lists1) {
+      for (PlaylistAndSong element in lists) {
         Songs song = await getSong(element.songId);
         songs.add(song);
       }
@@ -434,7 +461,37 @@ class BaseDB {
     }
   }
 
-  getSongs(String albumId) async {
+  getAlbumsByOrder(int _order) async {
+    try {
+      final db = await instance.db;
+      String _order1 = "playCount";
+      if (_order == 1) _order1 = "created";
+      var res = await db.rawQuery(
+          "SELECT * FROM $AlbumsTable ORDER  BY $_order1 DESC LIMIT 10");
+      if (res.length == 0) return null;
+      List<Albums> lists = res.map((e) => Albums.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getSongsByOrder(int _order) async {
+    try {
+      final db = await instance.db;
+      String _order1 = "playCount";
+      if (_order == 1) _order1 = "created";
+      var res = await db.rawQuery(
+          "SELECT * FROM $SongsTable ORDER  BY $_order1 DESC LIMIT 10");
+      if (res.length == 0) return null;
+      List<Songs> lists = res.map((e) => Songs.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getSongsById(String albumId) async {
     try {
       final db = await instance.db;
       var res = await db

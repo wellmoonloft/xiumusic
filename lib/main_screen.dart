@@ -24,65 +24,61 @@ class MainScreen extends StatelessWidget {
 
     return SafeArea(
         child: Scaffold(
-      key: myLeftStateKey,
-      appBar: MyAppBar(
-        drawer: () => _drawer(),
-      ),
-      drawer: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: drawerWidth),
-        child: LeftScreen(),
-      ),
-      body: Column(
-        children: [
-          Container(
-              height: isMobile.value
-                  ? _size.height -
-                      bottomHeight -
-                      appBarHeight -
-                      safePadding.value
-                  : _size.height - bottomHeight - appBarHeight,
-              child: Row(
-                children: [
-                  if (!isMobile.value)
-                    Container(
-                      width: drawerWidth,
-                      child: LeftScreen(),
-                    ),
-                  Container(
-                    width: isMobile.value
-                        ? _size.width
-                        : _size.width - drawerWidth,
-                    child: Container(
-                      color: bkColor,
-                      child: Column(
-                        children: [
-                          ValueListenableBuilder<bool>(
-                              valueListenable: isServers,
-                              builder: ((context, _value, child) {
-                                return Container(
-                                  child: _value
-                                      ? ValueListenableBuilder<int>(
-                                          valueListenable: indexValue,
-                                          builder: ((context, value, child) {
-                                            return Roter(roter: value);
-                                          }))
-                                      : Settings(),
-                                );
-                              }))
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              )),
-          Container(
-            height: bottomHeight,
-            decoration: lineBorder,
-            width: _size.width,
-            child: BottomScreen(),
-          )
-        ],
-      ),
-    ));
+            key: myLeftStateKey,
+            appBar: MyAppBar(
+              drawer: () => _drawer(),
+            ),
+            drawer: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: drawerWidth),
+              child: LeftScreen(),
+            ),
+            body: Column(
+              children: [
+                Container(
+                    height: isMobile.value
+                        ? _size.height -
+                            bottomHeight -
+                            appBarHeight -
+                            safePadding.value -
+                            0.1
+                        : _size.height - bottomHeight - appBarHeight - 0.1,
+                    child: Row(
+                      children: [
+                        if (!isMobile.value)
+                          Container(
+                            width: drawerWidth,
+                            child: LeftScreen(),
+                          ),
+                        Container(
+                            width: isMobile.value
+                                ? _size.width
+                                : _size.width - drawerWidth,
+                            color: bkColor,
+                            child: ValueListenableBuilder<bool>(
+                                valueListenable: isServers,
+                                builder: ((context, _value, child) {
+                                  return Container(
+                                    child: _value
+                                        ? ValueListenableBuilder<int>(
+                                            valueListenable: indexValue,
+                                            builder: ((context, value, child) {
+                                              return Roter(roter: value);
+                                            }))
+                                        : Settings(),
+                                  );
+                                })))
+                      ],
+                    )),
+              ],
+            ),
+            bottomNavigationBar: Container(
+                height: bottomHeight + 0.1,
+                decoration: lineBorder,
+                width: _size.width,
+                child: Column(
+                  children: [
+                    BottomScreen(),
+                  ],
+                ))));
   }
 }

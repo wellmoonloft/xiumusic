@@ -25,21 +25,14 @@ class Roter extends StatelessWidget {
         switch (roter) {
           case 0: //首页
             return IndexScreen();
-          // case 1: //正在播放
-          //   return PlayScreen();
           case 2: //播放列表
             return PlayListScreen();
-          case 3: //收藏
-            return FavoriteScreen();
           case 4: //专辑
             return AlbumScreen();
           case 5: //歌手
             return ArtistsScreen();
           case 6: //流派
             return GenresScreen();
-          //case 7: //设置
-          //  return Settings();
-
           //不通过点击进入
           case 8: //专辑详情
             return AlbumDetailScreen();

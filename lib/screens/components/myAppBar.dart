@@ -8,13 +8,13 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   final drawer;
 
   @override
-  _AMyAppBarState createState() => _AMyAppBarState();
+  _MyAppBarState createState() => _MyAppBarState();
 
   @override
   Size get preferredSize => Size.fromHeight(appBarHeight);
 }
 
-class _AMyAppBarState extends State<MyAppBar> {
+class _MyAppBarState extends State<MyAppBar> {
   @override
   void initState() {
     super.initState();
