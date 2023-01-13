@@ -76,7 +76,7 @@
   - [x] 理论支持IOS/安卓/macOS/Windows/Linux
   - [ ] 目前用macOS开发，还未调试其他端
 
-
+![](https://s2.loli.net/2023/01/12/vMEGWZdzIblT9qx.jpg)
 
 ![](https://s2.loli.net/2023/01/10/BCPjVHlazr2mK1R.jpg)
 

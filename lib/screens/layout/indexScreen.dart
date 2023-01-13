@@ -1,13 +1,10 @@
 import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseDB.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../../util/util.dart';
 import '../common/baseCSS.dart';
 import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';

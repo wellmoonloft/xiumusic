@@ -13,6 +13,7 @@ void main() async {
     WindowOptions windowOptions = WindowOptions(
       size: Size(1024, 768),
       minimumSize: Size(800, 600),
+      maximumSize: Size(1024, 768),
       center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
@@ -35,8 +36,10 @@ class MyApp extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    print("myapp");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      useInheritedMediaQuery: true,
       title: 'XiuMusic',
       theme: ThemeData(fontFamily: 'NotoSansSC'),
       home: MainScreen(),

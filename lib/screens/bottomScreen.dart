@@ -18,7 +18,7 @@ class BottomScreen extends StatefulWidget {
 class _BottomScreenState extends State<BottomScreen> {
   final _player = AudioPlayer();
   double _activevolume = 1.0;
-  final _bottomSheetScaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   initState() {
     super.initState();
@@ -97,34 +97,6 @@ class _BottomScreenState extends State<BottomScreen> {
             position, bufferedPosition, duration ?? Duration.zero));
   }
 
-  _openBottomSheet() {
-    _bottomSheetScaffoldKey.currentState
-        ?.showBottomSheet((BuildContext context) {
-      return BottomAppBar(
-        child: Container(
-          height: 90.0,
-          width: double.infinity,
-          padding: EdgeInsets.all(16.0),
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.pause_circle_outline),
-              SizedBox(
-                width: 16.0,
-              ),
-              Text('01:30 / 03:30'),
-              Expanded(
-                child: Text(
-                  '从头再来-刘欢',
-                  textAlign: TextAlign.right,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
@@ -148,7 +120,7 @@ class _BottomScreenState extends State<BottomScreen> {
                 children: [
                   Container(
                       width:
-                          (isMobile.value) ? _size.width / 2 : _size.width / 4,
+                          (isMobile.value) ? _size.width / 3 : _size.width / 4,
                       child: ValueListenableBuilder<Map>(
                         valueListenable: activeSong,
                         builder: (context, _song, child) {
@@ -239,7 +211,7 @@ class _BottomScreenState extends State<BottomScreen> {
                         },
                       )),
                   Container(
-                    width: _size.width / 2,
+                    width: _size.width * 2 / 4,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,

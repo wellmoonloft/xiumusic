@@ -21,7 +21,7 @@ class MySliverControlList extends StatelessWidget {
     final Size _size = MediaQuery.of(context).size;
     return Container(
       margin: EdgeInsets.only(top: 10),
-      height: _size.width / 4,
+      height: _size.width / 3,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: albums.length,
@@ -40,7 +40,7 @@ class MySliverControlList extends StatelessWidget {
                   children: [
                     Container(
                       constraints: BoxConstraints(
-                        maxHeight: _size.width / 4 - 67,
+                        maxHeight: _size.width / 3 - 67,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
@@ -62,7 +62,7 @@ class MySliverControlList extends StatelessWidget {
                     ),
                     Container(
                         constraints: BoxConstraints(
-                          maxWidth: _size.width / 4 - 67,
+                          maxWidth: _size.width / 3 - 67,
                         ),
                         child: Text(
                             _tem.title + "(" + _tem.year.toString() + ")",
