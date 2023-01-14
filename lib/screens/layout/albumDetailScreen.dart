@@ -54,51 +54,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
           _arturl = _xx;
         });
       }
-    } else {
-      _getSongsFromNet(albumId);
-    }
-  }
-
-  _getSongsFromNet(String albumId) async {
-    List<Songs> _list = [];
-    String _xx = await getCoverArt(albumId);
-    Map _songsList = await getSongs(albumId);
-
-    for (dynamic _element in _songsList["song"]) {
-      if (_element["playCount"] == null) _element["playCount"] = 0;
-      if (_element["year"] == null) _element["year"] = 0;
-      if (_element["genre"] == null) _element["genre"] = "0";
-      Songs _tem = Songs.fromJson(_element);
-      _list.add(_tem);
-    }
-    await BaseDB.instance.updateSongs(_list);
-    if (mounted) {
-      setState(() {
-        _songs = _list;
-        _songsnum = _songsList["songCount"];
-        _albumsname = _songsList["name"];
-        if (_songsList["playCount"] == null) {
-          _playCount = 0;
-        } else {
-          _playCount = _songsList["playCount"];
-        }
-        if (_songsList["year"] == null) {
-          _year = 0;
-        } else {
-          _year = _songsList["year"];
-        }
-        if (_songsList["genre"] == null) {
-          _genre = "0";
-        } else {
-          _genre = _songsList["genre"];
-        }
-
-        _createDate = _songsList["created"];
-        _duration = _songsList["duration"];
-        _artistID = _songsList["artistId"];
-        _artist = _songsList["artist"];
-        _arturl = _xx;
-      });
     }
   }
 
@@ -212,15 +167,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           "$drationLocal: " + formatDuration(_duration),
                           style: nomalGrayText,
                         ),
-                        if (!isMobile.value)
-                          SizedBox(
-                            width: 10,
-                          ),
-                        if (!isMobile.value)
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalGrayText,
-                          ),
                       ],
                     ),
                   ),
@@ -263,27 +209,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                             width: 10,
                           ),
                         if (!isMobile.value)
-                          Container(
-                            width: 50,
-                            child: TextButtom(
-                              press: () {
-                                // _songsnum = 0;
-                                // _playCount = 0;
-                                // _duration = 0;
-                                // _getSongsFromNet(activeID.value);
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return ToastWidget(
-                                      msg: "ssss",
-                                    );
-                                  },
-                                );
-                              },
-                              title: refreshLocal,
-                              isActive: false,
-                            ),
-                          )
+                          Text(
+                            "$playCountLocal: " + _playCount.toString(),
+                            style: nomalGrayText,
+                          ),
                       ],
                     ),
                   )
@@ -369,6 +298,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         _activeSong["url"] = _url;
                         _activeSong["title"] = _tem.title;
                         _activeSong["album"] = _tem.album;
+                        _activeSong["albumId"] = _tem.albumId;
                         activeSong.value = _activeSong;
                       },
                       child: ValueListenableBuilder<Map>(

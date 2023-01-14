@@ -46,33 +46,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
           _arturl = _artURL;
         });
       }
-    } else {
-      _getAlbumsFromNet(artistId);
-    }
-  }
-
-  _getAlbumsFromNet(String artistId) async {
-    List<Albums> _list = [];
-    String _xx = await getCoverArt(artistId);
-    Map _genresList = await getAlbums(artistId);
-    for (dynamic _element in _genresList["album"]) {
-      if (_element["playCount"] == null) _element["playCount"] = 0;
-      if (_element["year"] == null) _element["year"] = 0;
-      if (_element["genre"] == null) _element["genre"] = "0";
-      Albums _tem = Albums.fromJson(_element);
-      _list.add(_tem);
-      _playCount += _tem.playCount;
-      _duration += _tem.duration;
-      _songs += _tem.songCount;
-    }
-    await BaseDB.instance.updateAlbums(_list);
-    if (mounted) {
-      setState(() {
-        _albums = _list;
-        _albumsnum = _list.length;
-        _artilstname = _list[0].artist;
-        _arturl = _xx;
-      });
     }
   }
 
@@ -235,24 +208,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                             "$playCountLocal: " + _playCount.toString(),
                             style: nomalGrayText,
                           ),
-                        if (!isMobile.value)
-                          SizedBox(
-                            width: 10,
-                          ),
-                        if (!isMobile.value)
-                          Container(
-                            width: 50,
-                            child: TextButtom(
-                              press: () {
-                                _songs = 0;
-                                _playCount = 0;
-                                _duration = 0;
-                                _getAlbumsFromNet(activeID.value);
-                              },
-                              title: refreshLocal,
-                              isActive: false,
-                            ),
-                          )
                       ],
                     ),
                   ),
@@ -268,22 +223,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                             "$playCountLocal: " + _playCount.toString(),
                             style: nomalGrayText,
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 50,
-                            child: TextButtom(
-                              press: () {
-                                _songs = 0;
-                                _playCount = 0;
-                                _duration = 0;
-                                _getAlbumsFromNet(activeID.value);
-                              },
-                              title: refreshLocal,
-                              isActive: false,
-                            ),
-                          )
                         ]))
                 ],
               ),

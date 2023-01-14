@@ -482,7 +482,7 @@ class BaseDB {
       String _order1 = "playCount";
       if (_order == 1) _order1 = "created";
       var res = await db.rawQuery(
-          "SELECT * FROM $SongsTable ORDER  BY $_order1 DESC LIMIT 10");
+          "SELECT * FROM $SongsTable ORDER  BY $_order1 DESC LIMIT 5");
       if (res.length == 0) return null;
       List<Songs> lists = res.map((e) => Songs.fromJson(e)).toList();
       return lists;

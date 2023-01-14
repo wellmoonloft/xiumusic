@@ -30,8 +30,8 @@ class MyStructure extends StatelessWidget {
         ),
         Container(
             height: (isMobile.value)
-                ? windowsHeight.value - (top + 145.11 + 25 + 40 + 8)
-                : windowsHeight.value - (top + 145.11),
+                ? windowsHeight.value - (top + 140.11 + 25 + 40 + 8)
+                : windowsHeight.value - (top + 140.11),
             color: rightColor,
             child: contentWidget)
       ],

@@ -8,6 +8,7 @@ import '../models/notifierValue.dart';
 import 'common/baseCSS.dart';
 import 'components/playerControBar.dart';
 import 'components/playerSeekBar.dart';
+import 'components/playerVolumeBar.dart';
 import 'layout/playScreen.dart';
 
 class BottomScreen extends StatefulWidget {
@@ -15,39 +16,34 @@ class BottomScreen extends StatefulWidget {
   _BottomScreenState createState() => _BottomScreenState();
 }
 
-class _BottomScreenState extends State<BottomScreen> {
+class _BottomScreenState extends State<BottomScreen>
+    with TickerProviderStateMixin {
   final _player = AudioPlayer();
-  double _activevolume = 1.0;
+
+  // // Create a controller
+  // late final AnimationController _controller = AnimationController(
+  //   duration: const Duration(seconds: 20),
+  //   vsync: this,
+  // )..repeat(reverse: false);
+
+  // // Create an animation with value of type "double"
+  // late final Animation<double> _animation = CurvedAnimation(
+  //   parent: _controller,
+  //   curve: Curves.linear,
+  // );
 
   @override
   initState() {
     super.initState();
     _listenForChangesInSequenceState();
+    //_controller.stop();
   }
 
   @override
   void dispose() {
     _player.dispose();
+    //_controller.dispose();
     super.dispose();
-  }
-
-  Widget _NormalPopMenu() {
-    return PopupMenuButton<String>(
-        icon: Icon(Icons.queue_music),
-        iconSize: 16,
-        offset: Offset(50, 0),
-        padding: EdgeInsets.all(0),
-        tooltip: "播放列表",
-        itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-              PopupMenuItem<String>(value: 'Item01', child: Text('Item One')),
-              PopupMenuItem<String>(value: 'Item02', child: Text('Item Two')),
-              PopupMenuItem<String>(value: 'Item03', child: Text('Item Three')),
-              PopupMenuItem<String>(value: 'Item04', child: Text('Item Four'))
-            ],
-        onSelected: (String value) {
-          print("you know you love me");
-          //ToastUtil.show(value.toString());
-        });
   }
 
   void _listenForChangesInSequenceState() {
@@ -67,6 +63,7 @@ class _BottomScreenState extends State<BottomScreen> {
       _activeSong["url"] = _url;
       _activeSong["title"] = _tem["title"];
       _activeSong["album"] = _tem["album"];
+      _activeSong["albumId"] = _tem["albumId"];
       activeSong.value = _activeSong;
 
       // 更新随机状态
@@ -128,125 +125,27 @@ class _BottomScreenState extends State<BottomScreen> {
             isShuffleModeEnabledNotifier.value = false;
 
             _player.setLoopMode(LoopMode.all);
+            // _controller.repeat();
           }
 
           return Container(
-              height: 95,
+              height: 90,
               color: bkColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
                   Container(
-                      width: (isMobile.value)
-                          ? windowsWidth.value / 3
-                          : windowsWidth.value / 4,
-                      child: ValueListenableBuilder<Map>(
-                        valueListenable: activeSong,
-                        builder: (context, _song, child) {
-                          return Row(
-                            children: [
-                              InkWell(
-                                  onTap: () async {
-                                    //正在播放的弹窗入口
-                                    showBottomSheet(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return PlayScreen(
-                                            player: _player,
-                                            activevolume: _activevolume);
-                                      },
-                                    );
-                                  },
-                                  child: Container(
-                                    margin: leftrightPadding,
-                                    height: bottomImageWidthAndHeight,
-                                    width: bottomImageWidthAndHeight,
-                                    child: (_song.isEmpty)
-                                        ? ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                            child: Image.asset(
-                                                "assets/images/logo.jpg"))
-                                        : ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                            child: CachedNetworkImage(
-                                              imageUrl: _song["url"],
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) {
-                                                return AnimatedSwitcher(
-                                                  child: Image.asset(
-                                                      "assets/images/logo.jpg"),
-                                                  duration: const Duration(
-                                                      milliseconds: imageMilli),
-                                                );
-                                              },
-                                            )),
-                                  )),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      width: (isMobile.value)
-                                          ? windowsWidth.value / 3 - 95
-                                          : windowsWidth.value / 4 - 95,
-                                      child: Text(
-                                          _song.isEmpty ? "" : _song["title"],
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: nomalGrayText),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      width: (isMobile.value)
-                                          ? windowsWidth.value / 3 - 95
-                                          : windowsWidth.value / 4 - 95,
-                                      child: Text(
-                                          _song.isEmpty ? "" : _song["artist"],
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: sublGrayText),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Container(
-                                      width: (isMobile.value)
-                                          ? windowsWidth.value / 3 - 95
-                                          : windowsWidth.value / 4 - 95,
-                                      child: Text(
-                                          _song.isEmpty ? "" : _song["album"],
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: sublGrayText),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          );
-                        },
-                      )),
-                  Container(
-                    width: (isMobile.value)
-                        ? windowsWidth.value * 2 / 3
-                        : windowsWidth.value * 1 / 2,
+                    width: windowsWidth.value,
+                    height: 10,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        PlayerControBar(_player),
                         StreamBuilder<PositionData>(
                           stream: _positionDataStream,
                           builder: (context, snapshot) {
                             final positionData = snapshot.data;
                             return PlayerSeekBar(
-                              trackWidth: windowsWidth.value / 3,
+                              trackWidth: windowsWidth.value,
                               duration: positionData?.duration ?? Duration.zero,
                               position: positionData?.position ?? Duration.zero,
                               bufferedPosition:
@@ -259,151 +158,140 @@ class _BottomScreenState extends State<BottomScreen> {
                       ],
                     ),
                   ),
-                  if (!isMobile.value)
-                    Container(
-                      width: windowsWidth.value / 4,
-                      padding: EdgeInsets.only(right: 15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                  Container(
+                    height: 80,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                            width: (isMobile.value)
+                                ? windowsWidth.value / 3
+                                : windowsWidth.value / 4,
+                            child: ValueListenableBuilder<Map>(
+                              valueListenable: activeSong,
+                              builder: (context, _song, child) {
+                                return Row(
+                                  children: [
+                                    InkWell(
+                                        onTap: () async {
+                                          //正在播放的弹窗入口
+                                          showBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return PlayScreen(
+                                                player: _player,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child:
+                                            // RotationTransition(
+                                            //     turns: _animation,
+                                            //     child:
+                                            Container(
+                                          margin: leftrightPadding,
+                                          height: bottomImageWidthAndHeight,
+                                          width: bottomImageWidthAndHeight,
+                                          child: (_song.isEmpty)
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  child: Image.asset(
+                                                      "assets/images/logo.jpg"))
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: _song["url"],
+                                                    fit: BoxFit.cover,
+                                                    placeholder:
+                                                        (context, url) {
+                                                      return AnimatedSwitcher(
+                                                        child: Image.asset(
+                                                            "assets/images/logo.jpg"),
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    imageMilli),
+                                                      );
+                                                    },
+                                                  )),
+                                          // )
+                                        )),
+                                    InkWell(
+                                        onTap: () {
+                                          if (_song.isNotEmpty) {
+                                            activeID.value = _song["albumId"];
+                                            indexValue.value = 8;
+                                          }
+                                        },
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: (isMobile.value)
+                                                  ? windowsWidth.value / 3 - 95
+                                                  : windowsWidth.value / 4 - 95,
+                                              child: Text(
+                                                  _song.isEmpty
+                                                      ? ""
+                                                      : _song["title"],
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: nomalGrayText),
+                                            ),
+                                            Container(
+                                              width: (isMobile.value)
+                                                  ? windowsWidth.value / 3 - 95
+                                                  : windowsWidth.value / 4 - 95,
+                                              child: Text(
+                                                  _song.isEmpty
+                                                      ? ""
+                                                      : _song["artist"],
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: sublGrayText),
+                                            ),
+                                            Container(
+                                              width: (isMobile.value)
+                                                  ? windowsWidth.value / 3 - 95
+                                                  : windowsWidth.value / 4 - 95,
+                                              child: Text(
+                                                  _song.isEmpty
+                                                      ? ""
+                                                      : _song["album"],
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: sublGrayText),
+                                            )
+                                          ],
+                                        ))
+                                  ],
+                                );
+                              },
+                            )),
+                        Container(
+                          width: (isMobile.value)
+                              ? windowsWidth.value * 2 / 3
+                              : windowsWidth.value * 1 / 2,
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    color: kTextColor,
-                                    size: 16,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                              Container(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.playlist_add,
-                                    color: kTextColor,
-                                    size: 16,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                              _NormalPopMenu(),
-                              Container(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.queue_music,
-                                    color: kTextColor,
-                                    size: 16,
-                                  ),
-                                  onPressed: () {
-                                    showMenu(
-                                        context: context,
-                                        position: RelativeRect.fromSize(
-                                            Rect.fromPoints(
-                                                Offset(windowsWidth.value - 100,
-                                                    windowsHeight.value - 285),
-                                                Offset(windowsWidth.value,
-                                                    windowsHeight.value)),
-                                            Size(100, 200)),
-                                        elevation: 10,
-                                        items: <PopupMenuItem<String>>[
-                                          PopupMenuItem<String>(
-                                            value: 'Item01',
-                                            child: Text('Item One'),
-                                          ),
-                                          PopupMenuItem<String>(
-                                              value: 'Item02',
-                                              child: Text('Item Two')),
-                                          PopupMenuItem<String>(
-                                              value: 'Item03',
-                                              child: Text('Item Three')),
-                                          PopupMenuItem<String>(
-                                              value: 'Item04',
-                                              child: Text('Item Four'))
-                                        ]).then((value) {
-                                      if (null == value) {
-                                        return;
-                                      }
-                                      // ToastUtil.show(value.toString());
-                                    });
-                                  },
-                                ),
-                              ),
+                              PlayerControBar(_player),
                             ],
                           ),
-                          StreamBuilder<double>(
-                              stream: _player.volumeStream,
-                              builder: (context, snapshot) => Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: 16,
-                                        child: _player.volume == 0.0
-                                            ? IconButton(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 10),
-                                                icon: Icon(
-                                                  Icons.volume_mute,
-                                                  color: kTextColor,
-                                                  size: 16,
-                                                ),
-                                                onPressed: () {
-                                                  _player
-                                                      .setVolume(_activevolume);
-                                                },
-                                              )
-                                            : IconButton(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 10),
-                                                icon: Icon(
-                                                  Icons.volume_up,
-                                                  color: kTextColor,
-                                                  size: 16,
-                                                ),
-                                                onPressed: () {
-                                                  _activevolume =
-                                                      _player.volume;
-                                                  _player.setVolume(0.0);
-                                                },
-                                              ),
-                                      ),
-                                      SliderTheme(
-                                          data: SliderTheme.of(context)
-                                              .copyWith(
-                                                  activeTrackColor: kGrayColor,
-                                                  inactiveTrackColor:
-                                                      borderColor,
-                                                  trackHeight: 1.0,
-                                                  thumbColor: kTextColor,
-                                                  thumbShape:
-                                                      RoundSliderThumbShape(
-                                                          enabledThumbRadius:
-                                                              5),
-                                                  overlayShape:
-                                                      SliderComponentShape
-                                                          .noThumb),
-                                          child: Container(
-                                              width: windowsWidth.value / 8,
-                                              child: Slider(
-                                                divisions: 10,
-                                                min: 0.0,
-                                                max: 1.0,
-                                                value: _player.volume,
-                                                onChanged: _player.setVolume,
-                                              ))),
-                                    ],
-                                  )),
-                        ],
-                      ),
-                    )
+                        ),
+                        if (!isMobile.value) PlayerVolumeBar(_player)
+                      ],
+                    ),
+                  )
                 ],
               ));
         }));

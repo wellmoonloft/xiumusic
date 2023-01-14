@@ -19,29 +19,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
   int artistsnum = 0;
   int albumsnum = 0;
 
-  _getArtistsFromNet() async {
-    List<Artists> _list = [];
-    Map _genresList = await getArtists();
-
-    for (var _element in _genresList["index"]) {
-      var _temp = _element["artist"];
-      for (dynamic _element1 in _temp) {
-        if (_element1["artistImageUrl"] == null)
-          _element1["artistImageUrl"] = "1";
-        Artists _tem = Artists.fromJson(_element1);
-        _list.add(_tem);
-        albumsnum += _tem.albumCount;
-      }
-    }
-    await BaseDB.instance.updateArtists(_list);
-    if (mounted) {
-      setState(() {
-        _artists = _list;
-        artistsnum = _list.length;
-      });
-    }
-  }
-
   _getArtists() async {
     if (_artists == null) {
       final _artistsList = await BaseDB.instance.getArtists();
@@ -56,8 +33,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
             artistsnum = _artistsList.length;
           });
         }
-      } else {
-        _getArtistsFromNet();
       }
     }
   }
@@ -156,18 +131,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
               "$albumLocal: " + albumsnum.toString(),
               style: nomalGrayText,
             ),
-            SizedBox(
-              width: 10,
-            ),
-            TextButtom(
-              press: () {
-                artistsnum = 0;
-                albumsnum = 0;
-                _getArtistsFromNet();
-              },
-              title: refreshLocal,
-              isActive: false,
-            )
           ],
         ),
       ],

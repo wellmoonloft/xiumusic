@@ -39,15 +39,14 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.queue_music,
               color: kGrayColor,
             ),
-            //我觉得这个不需要了，因为我加到nas里就代表就是我的收藏
-            // TextIconButtom(
-            //   press: () {
-            //     indexValue.value = 3;
-            //   },
-            //   title: favoriteLocal,
-            //   icon: Icons.favorite,
-            //   color: kGrayColor,
-            // ),
+            TextIconButtom(
+              press: () {
+                indexValue.value = 3;
+              },
+              title: favoriteLocal,
+              icon: Icons.favorite,
+              color: kGrayColor,
+            ),
             TextIconButtom(
               press: () {
                 indexValue.value = 4;

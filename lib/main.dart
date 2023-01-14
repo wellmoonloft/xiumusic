@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print("main");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       //useInheritedMediaQuery: true,

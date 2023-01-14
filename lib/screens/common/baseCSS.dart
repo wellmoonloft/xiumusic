@@ -39,13 +39,13 @@ BoxDecoration backbadge = BoxDecoration(
   borderRadius: BorderRadius.circular(50.0),
 );
 //底部高度
-const double bottomHeight = 95.1;
+const double bottomHeight = 90;
 //appbar高度
 const double appBarHeight = 40;
 //侧拉栏宽度
 const double drawerWidth = 160;
 //底部图片大小
-const double bottomImageWidthAndHeight = 65;
+const double bottomImageWidthAndHeight = 60;
 //正常页面图片大小
 const double screenImageWidthAndHeight = 180;
 //正在播放图片大小

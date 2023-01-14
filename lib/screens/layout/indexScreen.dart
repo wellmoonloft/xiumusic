@@ -162,6 +162,7 @@ class _IndexScreenState extends State<IndexScreen> {
                         _activeSong["url"] = _url;
                         _activeSong["title"] = _tem.title;
                         _activeSong["album"] = _tem.album;
+                        _activeSong["albumId"] = _tem.albumId;
                         activeSong.value = _activeSong;
                       },
                       child: ValueListenableBuilder<Map>(

@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../common/baseCSS.dart';
-import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
 
 class GenresScreen extends StatefulWidget {
   const GenresScreen({Key? key}) : super(key: key);
@@ -19,24 +17,6 @@ class _GenresScreenState extends State<GenresScreen> {
   int songsnum = 0;
   int genresnum = 0;
 
-  _getFromNet() async {
-    final _genresList = await getGenres();
-    List<Genres> _list = [];
-    for (dynamic element in _genresList) {
-      Genres _tem = Genres.fromJson(element);
-      _list.add(_tem);
-      songsnum += _tem.songCount;
-      albumsnum += _tem.albumCount;
-      genresnum++;
-    }
-    await BaseDB.instance.updateGenres(_list);
-    if (mounted) {
-      setState(() {
-        _genres = _list;
-      });
-    }
-  }
-
   _getGenres() async {
     final _genresList = await BaseDB.instance.getGenres();
     if (_genresList != null) {
@@ -49,8 +29,6 @@ class _GenresScreenState extends State<GenresScreen> {
       setState(() {
         _genres = _genresList;
       });
-    } else {
-      _getFromNet();
     }
   }
 
@@ -158,19 +136,6 @@ class _GenresScreenState extends State<GenresScreen> {
               "$songLocal: " + songsnum.toString(),
               style: nomalGrayText,
             ),
-            SizedBox(
-              width: 10,
-            ),
-            TextButtom(
-              press: () {
-                albumsnum = 0;
-                songsnum = 0;
-                genresnum = 0;
-                _getFromNet();
-              },
-              title: refreshLocal,
-              isActive: false,
-            )
           ],
         ),
       ],

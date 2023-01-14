@@ -78,6 +78,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         _activeSong["url"] = _url;
                         _activeSong["title"] = _tem.title;
                         _activeSong["album"] = _tem.album;
+                        _activeSong["albumId"] = _tem.albumId;
                         activeSong.value = _activeSong;
                       },
                       child: ValueListenableBuilder<Map>(

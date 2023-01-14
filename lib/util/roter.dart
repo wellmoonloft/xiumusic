@@ -27,6 +27,8 @@ class Roter extends StatelessWidget {
             return IndexScreen();
           case 2: //播放列表
             return PlayListScreen();
+          case 3: //收藏
+            return FavoriteScreen();
           case 4: //专辑
             return AlbumScreen();
           case 5: //歌手

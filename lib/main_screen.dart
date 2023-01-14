@@ -25,7 +25,6 @@ class MainScreen extends StatelessWidget {
       windowsHeight.value = MediaQuery.of(context).size.height;
     }
 
-    print("mainscreen");
     return Scaffold(
       key: myLeftStateKey,
       resizeToAvoidBottomInset: false,
@@ -82,7 +81,6 @@ class MainScreen extends StatelessWidget {
               )),
           Container(
               height: bottomHeight,
-              decoration: lineBorder,
               width: windowsWidth.value,
               child: Column(
                 children: [
