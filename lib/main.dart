@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/main_screen.dart';
-
 import 'models/notifierValue.dart';
 
 void main() async {
@@ -13,7 +11,7 @@ void main() async {
     WindowOptions windowOptions = WindowOptions(
       size: Size(1024, 768),
       minimumSize: Size(800, 600),
-      maximumSize: Size(1024, 768),
+      //maximumSize: Size(1024, 768),
       center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
@@ -23,6 +21,7 @@ void main() async {
       await windowManager.show();
       await windowManager.focus();
     });
+
     //是不是移动端，这里是第二次赋值，以后也不会变了，不是常量胜似常量
     isMobile.value = false;
   }
@@ -36,12 +35,15 @@ class MyApp extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print("myapp");
+    print("main");
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      useInheritedMediaQuery: true,
+      //useInheritedMediaQuery: true,
       title: 'XiuMusic',
-      theme: ThemeData(fontFamily: 'NotoSansSC'),
+      theme: ThemeData(
+        fontFamily: 'NotoSansSC',
+        brightness: Brightness.dark,
+      ),
       home: MainScreen(),
     );
   }

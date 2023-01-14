@@ -47,12 +47,12 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   Widget _itemBuildWidget() {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
-    Size _size = MediaQuery.of(context).size;
     double _rightWidth = 0;
     if (isMobile.value) {
-      _rightWidth = (_size.width) / screenImageWidthAndHeight;
+      _rightWidth = windowsWidth.value / screenImageWidthAndHeight;
     } else {
-      _rightWidth = (_size.width - drawerWidth) / screenImageWidthAndHeight;
+      _rightWidth =
+          (windowsWidth.value - drawerWidth) / screenImageWidthAndHeight;
     }
 
     int _count = _rightWidth.truncate();

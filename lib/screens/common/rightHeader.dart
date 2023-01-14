@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../models/notifierValue.dart';
 import 'baseCSS.dart';
 
@@ -17,7 +16,6 @@ class RightHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
     return Container(
         child: Column(
       children: [
@@ -31,7 +29,9 @@ class RightHeader extends StatelessWidget {
           height: 10,
         ),
         Container(
-            height: _size.height - (145.2 + top + safePadding.value),
+            height: (isMobile.value)
+                ? windowsHeight.value - (top + 145.11 + 25 + 40 + 8)
+                : windowsHeight.value - (top + 145.11),
             color: rightColor,
             child: contentWidget)
       ],

@@ -51,7 +51,7 @@ class _BottomScreenState extends State<BottomScreen> {
       activeSong.value = _activeSong;
 
       // 更新随机状态
-      isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
+      //isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
 
       final playlist = sequenceState.effectiveSequence;
       //更新上下首歌曲
@@ -99,8 +99,6 @@ class _BottomScreenState extends State<BottomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size _size = MediaQuery.of(context).size;
-
     return ValueListenableBuilder<String>(
         //
         valueListenable: activeSongValue,
@@ -110,6 +108,8 @@ class _BottomScreenState extends State<BottomScreen> {
             //新加列表的时候关闭乱序，避免出错
             _player.setShuffleModeEnabled(false);
             isShuffleModeEnabledNotifier.value = false;
+
+            _player.setLoopMode(LoopMode.all);
           }
 
           return Container(
@@ -119,8 +119,9 @@ class _BottomScreenState extends State<BottomScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      width:
-                          (isMobile.value) ? _size.width / 3 : _size.width / 4,
+                      width: (isMobile.value)
+                          ? windowsWidth.value / 3
+                          : windowsWidth.value / 4,
                       child: ValueListenableBuilder<Map>(
                         valueListenable: activeSong,
                         builder: (context, _song, child) {
@@ -131,7 +132,9 @@ class _BottomScreenState extends State<BottomScreen> {
                                     showBottomSheet(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return PlayScreen();
+                                        return PlayScreen(
+                                            player: _player,
+                                            activevolume: _activevolume);
                                       },
                                     );
                                   },
@@ -169,8 +172,8 @@ class _BottomScreenState extends State<BottomScreen> {
                                     onTap: () {},
                                     child: Container(
                                       width: (isMobile.value)
-                                          ? _size.width / 3 - 95
-                                          : _size.width / 4 - 95,
+                                          ? windowsWidth.value / 3 - 95
+                                          : windowsWidth.value / 4 - 95,
                                       child: Text(
                                           _song.isEmpty ? "" : _song["title"],
                                           maxLines: 2,
@@ -182,8 +185,8 @@ class _BottomScreenState extends State<BottomScreen> {
                                     onTap: () {},
                                     child: Container(
                                       width: (isMobile.value)
-                                          ? _size.width / 3 - 95
-                                          : _size.width / 4 - 95,
+                                          ? windowsWidth.value / 3 - 95
+                                          : windowsWidth.value / 4 - 95,
                                       child: Text(
                                           _song.isEmpty ? "" : _song["artist"],
                                           maxLines: 1,
@@ -195,8 +198,8 @@ class _BottomScreenState extends State<BottomScreen> {
                                     onTap: () {},
                                     child: Container(
                                       width: (isMobile.value)
-                                          ? _size.width / 3 - 95
-                                          : _size.width / 4 - 95,
+                                          ? windowsWidth.value / 3 - 95
+                                          : windowsWidth.value / 4 - 95,
                                       child: Text(
                                           _song.isEmpty ? "" : _song["album"],
                                           maxLines: 1,
@@ -211,7 +214,9 @@ class _BottomScreenState extends State<BottomScreen> {
                         },
                       )),
                   Container(
-                    width: _size.width * 2 / 4,
+                    width: (isMobile.value)
+                        ? windowsWidth.value * 2 / 3
+                        : windowsWidth.value * 1 / 2,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -222,7 +227,7 @@ class _BottomScreenState extends State<BottomScreen> {
                           builder: (context, snapshot) {
                             final positionData = snapshot.data;
                             return PlayerSeekBar(
-                              trackWidth: _size.width / 3,
+                              trackWidth: windowsWidth.value / 3,
                               duration: positionData?.duration ?? Duration.zero,
                               position: positionData?.position ?? Duration.zero,
                               bufferedPosition:
@@ -237,7 +242,7 @@ class _BottomScreenState extends State<BottomScreen> {
                   ),
                   if (!isMobile.value)
                     Container(
-                      width: _size.width / 4,
+                      width: windowsWidth.value / 4,
                       padding: EdgeInsets.only(right: 15),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -289,8 +294,10 @@ class _BottomScreenState extends State<BottomScreen> {
                                           constrainedAxis: Axis.vertical,
                                           child: ConstrainedBox(
                                             constraints: BoxConstraints(
-                                                maxWidth: _size.width / 2,
-                                                maxHeight: _size.height / 2),
+                                                maxWidth:
+                                                    windowsWidth.value / 2,
+                                                maxHeight:
+                                                    windowsHeight.value / 2),
                                             child: Material(
                                               child: Container(),
                                               type: MaterialType.canvas,
@@ -358,7 +365,7 @@ class _BottomScreenState extends State<BottomScreen> {
                                                       SliderComponentShape
                                                           .noThumb),
                                           child: Container(
-                                              width: _size.width / 8,
+                                              width: windowsWidth.value / 8,
                                               child: Slider(
                                                 divisions: 10,
                                                 min: 0.0,

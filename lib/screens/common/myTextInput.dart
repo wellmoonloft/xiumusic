@@ -45,9 +45,16 @@ class MyTextInput extends StatelessWidget {
             style: nomalGrayText,
             cursorColor: kGrayColor,
             obscureText: hideText,
+            //autofocus: true,
             onSubmitted: (value) {
-              press();
+              if (control.text != "") {
+                press();
+              }
             },
+            // onEditingComplete: () {
+            //   press();
+            //   print("onEditingComplete");
+            // },
             decoration: InputDecoration(
                 hintText: hintLabel,
                 labelStyle: nomalGrayText,

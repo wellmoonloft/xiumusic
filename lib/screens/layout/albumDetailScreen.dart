@@ -102,7 +102,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   }
 
   Widget _buildTopWidget() {
-    Size _size = MediaQuery.of(context).size;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -126,14 +125,14 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                   ),
                 )),
             Container(
-              padding: leftrightPadding,
+              //padding: EdgeInsets.only(left: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      width: _size.width / 2,
-                      padding: EdgeInsets.all(10),
+                      width: windowsWidth.value / 2,
+                      padding: leftrightPadding,
                       child: Text(_albumsname,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

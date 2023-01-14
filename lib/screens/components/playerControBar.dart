@@ -18,7 +18,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
     switch (loopMode) {
       case 0:
         return Tooltip(
-            message: "循环播放",
+            message: "全部循环",
             child: IconButton(
               icon: const Icon(Icons.loop, color: kTextColor, size: 16),
               onPressed: () {
@@ -35,6 +35,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
               icon: const Icon(Icons.loop, color: badgeRed, size: 16),
               onPressed: () {
                 widget.player.setLoopMode(LoopMode.all);
+                isShuffleModeEnabledNotifier.value = true;
+                widget.player.setShuffleModeEnabled(true);
                 setState(() {
                   loopMode = 2;
                 });
@@ -42,26 +44,29 @@ class _PlayerControBarState extends State<PlayerControBar> {
             ));
       case 2:
         return Tooltip(
-            message: "全部循环",
+            message: "随机循环",
             child: IconButton(
-              icon: const Icon(Icons.restart_alt, color: badgeRed, size: 16),
+              icon: const Icon(Icons.shuffle, color: badgeRed, size: 16),
               onPressed: () {
-                widget.player.setLoopMode(LoopMode.off);
+                isShuffleModeEnabledNotifier.value = false;
+                widget.player.setShuffleModeEnabled(false);
                 setState(() {
                   loopMode = 0;
                 });
               },
             ));
       default:
-        return IconButton(
-          icon: const Icon(Icons.restart_alt, color: kTextColor, size: 16),
-          onPressed: () {
-            widget.player.setLoopMode(LoopMode.one);
-            setState(() {
-              loopMode = 1;
-            });
-          },
-        );
+        return Tooltip(
+            message: "全部循环",
+            child: IconButton(
+              icon: const Icon(Icons.loop, color: kTextColor, size: 16),
+              onPressed: () {
+                widget.player.setLoopMode(LoopMode.one);
+                setState(() {
+                  loopMode = 1;
+                });
+              },
+            ));
     }
   }
 

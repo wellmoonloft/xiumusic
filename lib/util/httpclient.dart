@@ -211,3 +211,36 @@ getConvertContent(String _content) async {
     print(e);
   }
 }
+
+getLyric(String _songName) async {
+  String _findSong =
+      "http://music.163.com/api/search/pc?s=$_songName&offset=0&limit=1&type=1";
+  try {
+    var response = await Dio().get(_findSong,
+        options: Options(headers: {
+          "User-Agent":
+              "Mozilla/5.0 (Windows NT 10.0; …) Gecko/20100101 Firefox/61.0"
+        }));
+    if (response.statusCode == 1) {
+      Map _result = response.data['result'];
+      Map _songs = response.data['songs'];
+      Map _song = _songs[0];
+      String _id = _song["id"];
+      String _findLyric = "http://music.163.com/api/song/media?id=$_id";
+      try {
+        var response = await Dio().get(_findLyric);
+        if (response.statusCode == 1) {
+          String _lyric = response.data['lyric'];
+          return _lyric;
+        }
+      } catch (e) {
+        print(e);
+        return null;
+      }
+    }
+    return null;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}

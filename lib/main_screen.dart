@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 import 'models/notifierValue.dart';
 import 'screens/common/baseCSS.dart';
 import 'screens/bottomScreen.dart';
@@ -13,19 +14,22 @@ class MainScreen extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    print("mainscreen");
     final GlobalKey<ScaffoldState> myLeftStateKey = GlobalKey<ScaffoldState>();
-    final Size _size = MediaQuery.of(context).size;
-    //手机端的上下安全高度，这里是第一次赋值，以后也不会变了，不是常量胜似常量
-    safePadding.value = MediaQuery.of(context).padding.top +
-        MediaQuery.of(context).padding.bottom;
     _drawer() {
       myLeftStateKey.currentState?.openDrawer();
     }
 
+    //当不是移动端的时候使用这个可以动态监听窗体变化
+    //如果是移动端的话，窗体不会变化
+    if (!isMobile.value) {
+      windowsWidth.value = MediaQuery.of(context).size.width;
+      windowsHeight.value = MediaQuery.of(context).size.height;
+    }
+
+    print("mainscreen");
     return Scaffold(
       key: myLeftStateKey,
-      //resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       // appBar: MyAppBar(
       //   drawer: () => _drawer(),
       // ),
@@ -35,19 +39,25 @@ class MainScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+          if (isMobile.value)
+            Container(
+              height: 40,
+              color: bkColor,
+            ),
           MyAppBar(
             drawer: () => _drawer(),
           ),
           Container(
+              //padding: EdgeInsets.only(top: 40, bottom: 40),
               height: isMobile.value
-                  ? _size.height -
+                  ? windowsHeight.value -
                       bottomHeight -
                       appBarHeight -
-                      safePadding.value -
-                      0.1 -
-                      8 -
-                      -MediaQuery.of(context).viewInsets.bottom
-                  : _size.height - bottomHeight - appBarHeight - 0.1,
+                      0.01 -
+                      40 -
+                      25 -
+                      8
+                  : windowsHeight.value - bottomHeight - appBarHeight - 0.01,
               child: Row(
                 children: [
                   if (!isMobile.value)
@@ -57,8 +67,8 @@ class MainScreen extends StatelessWidget {
                     ),
                   Container(
                       width: isMobile.value
-                          ? _size.width
-                          : _size.width - drawerWidth,
+                          ? windowsWidth.value
+                          : windowsWidth.value - drawerWidth,
                       color: bkColor,
                       child: ValueListenableBuilder<bool>(
                           valueListenable: isServers,
@@ -76,14 +86,19 @@ class MainScreen extends StatelessWidget {
                 ],
               )),
           Container(
-              height: bottomHeight + 0.1,
+              height: bottomHeight,
               decoration: lineBorder,
-              width: _size.width,
+              width: windowsWidth.value,
               child: Column(
                 children: [
                   BottomScreen(),
                 ],
-              ))
+              )),
+          if (isMobile.value)
+            Container(
+              height: 25,
+              color: bkColor,
+            ),
         ],
       ),
       // bottomNavigationBar: Container(

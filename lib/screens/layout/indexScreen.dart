@@ -96,6 +96,7 @@ class _IndexScreenState extends State<IndexScreen> {
     _getRandomAlbums();
     _getLastAlbums();
     _getRandomSongs();
+    print("index");
   }
 
   @override

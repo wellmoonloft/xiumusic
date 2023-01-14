@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
 
 //左侧按钮更改右侧的监控器，默认起始页为首页 0
@@ -31,7 +33,13 @@ ValueNotifier<bool> isFirstSongNotifier = ValueNotifier<bool>(true);
 ValueNotifier<bool> isLastSongNotifier = ValueNotifier<bool>(true);
 
 //size
-ValueNotifier<double> safePadding = ValueNotifier<double>(0.0);
+//ValueNotifier<double> safePadding = ValueNotifier<double>(0.0);
 
 //安全范围
 ValueNotifier<bool> isMobile = ValueNotifier<bool>(true);
+
+ValueNotifier<double> windowsWidth =
+    ValueNotifier<double>(window.physicalSize.width / window.devicePixelRatio);
+
+ValueNotifier<double> windowsHeight =
+    ValueNotifier<double>(window.physicalSize.height / window.devicePixelRatio);
