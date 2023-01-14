@@ -95,34 +95,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
         //     widget.player.setLoopMode(LoopMode.one);
         //   },
         // ),
-        ValueListenableBuilder<bool>(
-          valueListenable: isShuffleModeEnabledNotifier,
-          builder: (context, isEnabled, child) {
-            return IconButton(
-              icon: (isEnabled)
-                  ? Icon(
-                      Icons.shuffle,
-                      color: badgeRed,
-                      size: 16,
-                    )
-                  : Icon(
-                      Icons.shuffle,
-                      color: kTextColor,
-                      size: 16,
-                    ),
-              onPressed: () {
-                if (isEnabled) {
-                  isShuffleModeEnabledNotifier.value = false;
-                  widget.player.setShuffleModeEnabled(false);
-                } else {
-                  isShuffleModeEnabledNotifier.value = true;
-                  widget.player.setShuffleModeEnabled(true);
-                  // widget.player.shuffle();
-                }
-              },
-            );
-          },
-        ),
+        _buildLoopButtom(),
         ValueListenableBuilder<bool>(
             valueListenable: isFirstSongNotifier,
             builder: (_, isFirst, __) {
@@ -220,7 +193,14 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 },
               );
             }),
-        _buildLoopButtom(),
+        IconButton(
+          icon: Icon(
+            Icons.favorite_border,
+            color: kTextColor,
+            size: 16,
+          ),
+          onPressed: () {},
+        ),
       ],
     );
   }

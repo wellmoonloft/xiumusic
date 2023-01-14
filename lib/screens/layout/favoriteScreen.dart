@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../util/localizations.dart';
 import '../common/baseCSS.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 import '../common/textButtom.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -87,7 +87,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
         top: 120,
         headerWidget: Column(
           children: [
@@ -95,27 +95,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             SizedBox(
               height: 24,
             ),
-            Row(
-              children: [
-                TextButtom(
-                  press: () {},
-                  title: "艺人",
-                  isActive: false,
-                ),
-                TextButtom(
-                  press: () {},
-                  title: "专辑",
-                  isActive: false,
-                ),
-                TextButtom(
-                  press: () {},
-                  title: "歌曲",
-                  isActive: false,
-                )
-              ],
-            ),
-            _buildHeaderWidget(),
-            Container()
           ],
         ),
         contentWidget: Container());

@@ -13,7 +13,7 @@ void main() async {
       minimumSize: Size(800, 600),
       //maximumSize: Size(1024, 768),
       center: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,
     );

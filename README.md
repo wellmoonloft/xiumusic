@@ -18,7 +18,7 @@
 
 有了这四个需求，我决定自己撸一个APP给自己用
 
-这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic，想玩的都可以下载了试一试，如果接口相同那应该问题不大
+这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic，想玩的都可以下载了试一试，如果接口相同那应该问题不大（很多地方没有抛错，建议网络环境好的时候食用）
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
@@ -30,7 +30,8 @@
   - [x] 随机专辑、最多播放歌曲、最近添加专辑...其他随便加
   
 - [ ] 正在播放  
-  - [x] 正在播放页面，感觉入口放在这里不太对，应该从播放音乐的地方点一下切换到这里，但是我没有做路由管理，所以做成点一下弹出来了
+  - [x] 正在播放页面，磨砂玻璃
+  - [ ] 歌词  
 
 - [ ] 播放列表  （最没用的倒数第二）
   - [ ] 播放列表页面
@@ -39,8 +40,9 @@
   - [ ] 收藏页面
 
 - [ ] 搜索  
-  - [x] 搜索页面，做了个页面，顶部的搜索栏等适配移动端的时候再做
+  - [x] 搜索页面
   - [x] 简体中文能搜到繁体中文的歌  
+  - [ ] 顶部的搜索栏  
 
 - [x] 专辑  
   - [x] 专辑列表
@@ -51,11 +53,11 @@
   - [x] 歌手主页
   - [x] 专辑详情
   
-- [x] 流派  
+- [ ] 流派  
   - [x] 页面展示
   - [ ] 跳转到对应专辑和歌曲
   
-- [x] 配置  
+- [ ] 配置  
   - [x] 服务器配置：测试、连接、保存服务器及账号信息
   - [ ] 个性化：没想好做不做
   - [ ] 多语言：没想好做不做
@@ -69,12 +71,16 @@
 - [x] 网络  
   - [x] Restful请求、服务器连接等
 
-- [x] 数据库  
+- [ ] 数据库  
   - [x] 建表、增删改查、初始化(没做转转转)
+  - [ ] 后台程序刷新数据 
 
-- [x] 自适应  
+- [ ] 自适应  
   - [x] 理论支持IOS/安卓/macOS/Windows/Linux
   - [ ] 目前用macOS开发，还未调试其他端
+
+- [ ] 后台任务  
+  - [ ] 监听服务器状态，未发生变化做update，发生变化做insert  
 
 ![](https://s2.loli.net/2023/01/12/vMEGWZdzIblT9qx.jpg)
 
@@ -114,4 +120,5 @@ macos-Runner-Release.entitlements
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
 - [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化以及隐藏titile栏用的。
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
+- [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) 实现图片缓存，使用简单。
   

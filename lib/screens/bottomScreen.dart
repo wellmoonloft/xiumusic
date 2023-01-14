@@ -31,6 +31,25 @@ class _BottomScreenState extends State<BottomScreen> {
     super.dispose();
   }
 
+  Widget _NormalPopMenu() {
+    return PopupMenuButton<String>(
+        icon: Icon(Icons.queue_music),
+        iconSize: 16,
+        offset: Offset(50, 0),
+        padding: EdgeInsets.all(0),
+        tooltip: "播放列表",
+        itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+              PopupMenuItem<String>(value: 'Item01', child: Text('Item One')),
+              PopupMenuItem<String>(value: 'Item02', child: Text('Item Two')),
+              PopupMenuItem<String>(value: 'Item03', child: Text('Item Three')),
+              PopupMenuItem<String>(value: 'Item04', child: Text('Item Four'))
+            ],
+        onSelected: (String value) {
+          print("you know you love me");
+          //ToastUtil.show(value.toString());
+        });
+  }
+
   void _listenForChangesInSequenceState() {
     _player.sequenceStateStream.listen((sequenceState) async {
       if (sequenceState == null) return;
@@ -100,7 +119,6 @@ class _BottomScreenState extends State<BottomScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
-        //
         valueListenable: activeSongValue,
         builder: ((context, value, child) {
           if (value != "1") {
@@ -129,6 +147,7 @@ class _BottomScreenState extends State<BottomScreen> {
                             children: [
                               InkWell(
                                   onTap: () async {
+                                    //正在播放的弹窗入口
                                     showBottomSheet(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -274,6 +293,7 @@ class _BottomScreenState extends State<BottomScreen> {
                                   onPressed: () {},
                                 ),
                               ),
+                              _NormalPopMenu(),
                               Container(
                                 child: IconButton(
                                   icon: Icon(
@@ -282,30 +302,36 @@ class _BottomScreenState extends State<BottomScreen> {
                                     size: 16,
                                   ),
                                   onPressed: () {
-                                    showModalBottomSheet(
-                                      barrierColor: Colors.black54,
-                                      context: context,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(30),
-                                              topRight: Radius.circular(30))),
-                                      builder: (ctx) {
-                                        return UnconstrainedBox(
-                                          constrainedAxis: Axis.vertical,
-                                          child: ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                                maxWidth:
-                                                    windowsWidth.value / 2,
-                                                maxHeight:
-                                                    windowsHeight.value / 2),
-                                            child: Material(
-                                              child: Container(),
-                                              type: MaterialType.canvas,
-                                            ),
+                                    showMenu(
+                                        context: context,
+                                        position: RelativeRect.fromSize(
+                                            Rect.fromPoints(
+                                                Offset(windowsWidth.value - 100,
+                                                    windowsHeight.value - 285),
+                                                Offset(windowsWidth.value,
+                                                    windowsHeight.value)),
+                                            Size(100, 200)),
+                                        elevation: 10,
+                                        items: <PopupMenuItem<String>>[
+                                          PopupMenuItem<String>(
+                                            value: 'Item01',
+                                            child: Text('Item One'),
                                           ),
-                                        );
-                                      },
-                                    );
+                                          PopupMenuItem<String>(
+                                              value: 'Item02',
+                                              child: Text('Item Two')),
+                                          PopupMenuItem<String>(
+                                              value: 'Item03',
+                                              child: Text('Item Three')),
+                                          PopupMenuItem<String>(
+                                              value: 'Item04',
+                                              child: Text('Item Four'))
+                                        ]).then((value) {
+                                      if (null == value) {
+                                        return;
+                                      }
+                                      // ToastUtil.show(value.toString());
+                                    });
                                   },
                                 ),
                               ),

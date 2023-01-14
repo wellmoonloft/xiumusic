@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../common/baseCSS.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 
 class TestAudio extends StatefulWidget {
   const TestAudio({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class _GenresState extends State<TestAudio> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
         top: 120,
         headerWidget: Column(
           children: [

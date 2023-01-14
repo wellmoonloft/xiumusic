@@ -11,7 +11,7 @@ import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myDialog.dart';
 import '../common/myTextInput.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 import '../common/textButtom.dart';
 
 class Settings extends StatefulWidget {
@@ -116,7 +116,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
       top: 102,
       headerWidget: Column(children: [
         Row(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:window_manager/window_manager.dart';
 import 'models/notifierValue.dart';
 import 'screens/common/baseCSS.dart';
 import 'screens/bottomScreen.dart';
@@ -30,9 +29,6 @@ class MainScreen extends StatelessWidget {
     return Scaffold(
       key: myLeftStateKey,
       resizeToAvoidBottomInset: false,
-      // appBar: MyAppBar(
-      //   drawer: () => _drawer(),
-      // ),
       drawer: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: drawerWidth),
         child: LeftScreen(),
@@ -48,7 +44,6 @@ class MainScreen extends StatelessWidget {
             drawer: () => _drawer(),
           ),
           Container(
-              //padding: EdgeInsets.only(top: 40, bottom: 40),
               height: isMobile.value
                   ? windowsHeight.value -
                       bottomHeight -
@@ -101,15 +96,6 @@ class MainScreen extends StatelessWidget {
             ),
         ],
       ),
-      // bottomNavigationBar: Container(
-      //     height: bottomHeight + 0.1,
-      //     decoration: lineBorder,
-      //     width: _size.width,
-      //     child: Column(
-      //       children: [
-      //         BottomScreen(),
-      //       ],
-      //     ))
     );
   }
 }

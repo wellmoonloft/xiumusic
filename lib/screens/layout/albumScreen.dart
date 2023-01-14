@@ -7,7 +7,7 @@ import '../common/baseCSS.dart';
 import '../../util/baseDB.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({Key? key}) : super(key: key);
@@ -49,7 +49,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
     double _rightWidth = 0;
     if (isMobile.value) {
-      _rightWidth = windowsWidth.value / screenImageWidthAndHeight;
+      _rightWidth = windowsHeight.value / screenImageWidthAndHeight;
     } else {
       _rightWidth =
           (windowsWidth.value - drawerWidth) / screenImageWidthAndHeight;
@@ -124,7 +124,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
         top: 80,
         headerWidget: Column(
           children: [_buildTopWidget(), SizedBox(height: 20), Container()],

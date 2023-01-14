@@ -7,7 +7,8 @@ import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
+import '../common/myToast.dart';
 import '../common/textButtom.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
@@ -266,10 +267,18 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                             width: 50,
                             child: TextButtom(
                               press: () {
-                                _songsnum = 0;
-                                _playCount = 0;
-                                _duration = 0;
-                                _getSongsFromNet(activeID.value);
+                                // _songsnum = 0;
+                                // _playCount = 0;
+                                // _duration = 0;
+                                // _getSongsFromNet(activeID.value);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return ToastWidget(
+                                      msg: "ssss",
+                                    );
+                                  },
+                                );
                               },
                               title: refreshLocal,
                               isActive: false,
@@ -428,7 +437,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
         top: 222,
         headerWidget: Column(
           children: [

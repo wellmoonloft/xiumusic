@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../common/baseCSS.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 
 class PlayListScreen extends StatefulWidget {
   const PlayListScreen({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
         top: 120,
         headerWidget: Column(
           children: [

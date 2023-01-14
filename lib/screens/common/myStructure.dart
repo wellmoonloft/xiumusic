@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
 import 'baseCSS.dart';
 
-class RightHeader extends StatelessWidget {
-  const RightHeader({
+class MyStructure extends StatelessWidget {
+  const MyStructure({
     Key? key,
     required this.headerWidget,
     required this.contentWidget,

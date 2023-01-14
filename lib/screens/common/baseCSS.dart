@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:xiumusic/models/notifierValue.dart';
 
 const badgeRed = Color.fromARGB(255, 209, 45, 49);
 const badgeDark = Color.fromARGB(255, 61, 63, 67);

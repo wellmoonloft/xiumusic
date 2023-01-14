@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
+import 'customSearchDelegate.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   MyAppBar({Key? key, required this.drawer}) : super(key: key);
@@ -58,7 +59,10 @@ class _MyAppBarState extends State<MyAppBar> {
                     size: 15,
                   ),
                   onPressed: () {
-                    indexValue.value = 10;
+                    //indexValue.value = 10;
+                    //TODO 快捷搜索
+                    showSearch(
+                        context: context, delegate: CustomSearchDelegate());
                   },
                 ),
               ),

@@ -4,7 +4,7 @@ import '../../models/myModel.dart';
 import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 import '../common/textButtom.dart';
 
 class GenresScreen extends StatefulWidget {
@@ -179,7 +179,7 @@ class _GenresScreenState extends State<GenresScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
       top: 100,
       headerWidget: Column(
         children: [

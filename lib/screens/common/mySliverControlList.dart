@@ -20,7 +20,7 @@ class MySliverControlList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      height: windowsWidth.value / 4,
+      height: isMobile.value ? windowsHeight.value / 4 : windowsWidth.value / 4,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: albums.length,
@@ -39,7 +39,9 @@ class MySliverControlList extends StatelessWidget {
                   children: [
                     Container(
                       constraints: BoxConstraints(
-                        maxHeight: windowsWidth.value / 4 - 67,
+                        maxHeight: isMobile.value
+                            ? windowsHeight.value / 4 - 67
+                            : windowsWidth.value / 4 - 67,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
@@ -61,7 +63,9 @@ class MySliverControlList extends StatelessWidget {
                     ),
                     Container(
                         constraints: BoxConstraints(
-                          maxWidth: windowsWidth.value / 4 - 67,
+                          maxWidth: isMobile.value
+                              ? windowsHeight.value / 4 - 67
+                              : windowsWidth.value / 4 - 67,
                         ),
                         child: Text(
                             _tem.title + "(" + _tem.year.toString() + ")",

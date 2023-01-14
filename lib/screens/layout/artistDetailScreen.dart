@@ -6,7 +6,7 @@ import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 import '../common/textButtom.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
@@ -350,7 +350,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
         top: 217,
         headerWidget: Column(
           children: [

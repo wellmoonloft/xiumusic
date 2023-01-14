@@ -18,15 +18,18 @@ sacnServerStatus() async {
   if (_database == null) {
     //新数据库，需要更新
     await BaseDB.instance.addServerStatus(_netstatus);
+    print("初始化数据库");
     return true;
   } else {
     ServerStatus _databasestatus = _database;
     if (_netstatus.count == _databasestatus.count &&
         _netstatus.folderCount == _databasestatus.folderCount) {
+      print("不需要强制更新");
       //不需要更新
       return false;
     } else {
       await BaseDB.instance.addServerStatus(_netstatus);
+      print("需要强制更新");
       return true;
     }
   }
@@ -41,6 +44,7 @@ getGenresFromNet() async {
     _list.add(_tem);
   }
   await BaseDB.instance.addGenres(_list);
+  print("更新流派数据库：" + _list.length.toString());
 }
 
 //2.艺人/专辑/歌曲
@@ -58,6 +62,7 @@ getArtistsFromNet() async {
     }
   }
   await BaseDB.instance.addArtists(_list);
+  print("更新艺人数据库：" + _list.length.toString());
 }
 
 getAlbumsFromNet(String artistId) async {
@@ -72,6 +77,7 @@ getAlbumsFromNet(String artistId) async {
     getSongsFromNet(_tem.id);
   }
   await BaseDB.instance.addAlbums(_list, artistId);
+  print("更新专辑数据库：" + _list.length.toString());
 }
 
 getSongsFromNet(String albumId) async {
@@ -86,4 +92,5 @@ getSongsFromNet(String albumId) async {
     _list.add(_tem);
   }
   await BaseDB.instance.addSongs(_list, albumId);
+  print("更新歌曲数据库：" + _list.length.toString());
 }

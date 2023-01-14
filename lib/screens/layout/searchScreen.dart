@@ -7,7 +7,7 @@ import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../common/myTextInput.dart';
-import '../common/rightHeader.dart';
+import '../common/myStructure.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -258,7 +258,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RightHeader(
+    return MyStructure(
       top: 125,
       headerWidget: Column(
         children: [
