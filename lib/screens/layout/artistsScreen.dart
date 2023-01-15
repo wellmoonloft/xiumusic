@@ -3,10 +3,8 @@ import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
-import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
 
 class ArtistsScreen extends StatefulWidget {
   const ArtistsScreen({Key? key}) : super(key: key);

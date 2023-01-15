@@ -289,3 +289,23 @@ class Songs {
     return _data;
   }
 }
+
+class SongsAndLyric {
+  late String lyric;
+  late String songId;
+
+  SongsAndLyric({required this.lyric, required this.songId});
+
+  SongsAndLyric.fromJson(Map<String, dynamic> json) {
+    lyric = json['lyric'];
+    songId = json['songId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> _data = new Map<String, dynamic>();
+    _data['lyric'] = this.lyric;
+    _data['songId'] = this.songId;
+
+    return _data;
+  }
+}

@@ -32,8 +32,8 @@ ValueNotifier<bool> isFirstSongNotifier = ValueNotifier<bool>(true);
 //监听是否是最后一首歌，这都是为了封掉上一首下一首按钮避免报错用的
 ValueNotifier<bool> isLastSongNotifier = ValueNotifier<bool>(true);
 
-//size
-//ValueNotifier<double> safePadding = ValueNotifier<double>(0.0);
+//歌词
+ValueNotifier<String> activeLyric = ValueNotifier<String>("没有歌词！！");
 
 //安全范围
 ValueNotifier<bool> isMobile = ValueNotifier<bool>(true);

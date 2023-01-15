@@ -24,6 +24,9 @@ class BaseDB {
   final String AlbumsTable = "albums";
   // ignore: non_constant_identifier_names
   final String SongsTable = "songs";
+  // ignore: non_constant_identifier_names
+  final String SongsAndLyricTable = "songsAndLyric";
+
   //TODO 收藏，入口放在当前歌曲，专辑以及艺人页面，然后数据库和页面，这个不涉及接口
 
   Future<Database> get db async {
@@ -123,6 +126,13 @@ class BaseDB {
                 path TEXT NOT NULL,
                 playCount INTEGER,
                 created TEXT NOT NULL
+              )
+        ''');
+    await _database.execute('''
+              create table $SongsAndLyricTable (
+                uid INTEGER PRIMARY KEY AUTOINCREMENT,
+                lyric TEXT NOT NULL,
+                songId TEXT NOT NULL
               )
         ''');
   }
@@ -225,6 +235,18 @@ class BaseDB {
       for (Artists element in _artists) {
         batch.insert(ArtistsTable, element.toJson());
       }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addSongsAndLyricTable(SongsAndLyric _artists) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.insert(SongsAndLyricTable, _artists.toJson());
       var res = await batch.commit(noResult: true);
       return res;
     } catch (err) {
@@ -526,6 +548,21 @@ class BaseDB {
       if (res.length == 0) return null;
       List<Songs> lists = res.map((e) => Songs.fromJson(e)).toList();
       return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getLyricById(String _songId) async {
+    try {
+      final db = await instance.db;
+      var res = await db
+          .query(SongsAndLyricTable, where: "songId = ?", whereArgs: [_songId]);
+      if (res.length == 0) return null;
+      List<SongsAndLyric> lists =
+          res.map((e) => SongsAndLyric.fromJson(e)).toList();
+      SongsAndLyric _result = lists[0];
+      return _result.lyric;
     } catch (err) {
       print('err is 👉 $err');
     }

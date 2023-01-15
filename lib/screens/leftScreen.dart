@@ -71,6 +71,14 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.public,
               color: kGrayColor,
             ),
+            TextIconButtom(
+              press: () {
+                indexValue.value = 7;
+              },
+              title: "搜索歌词",
+              icon: Icons.public,
+              color: kGrayColor,
+            ),
           ],
         ));
   }

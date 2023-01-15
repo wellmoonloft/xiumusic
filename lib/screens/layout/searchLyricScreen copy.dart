@@ -4,19 +4,24 @@ import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../util/util.dart';
 import '../common/baseCSS.dart';
+import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
+import '../common/textButtom.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key}) : super(key: key);
+class SearchLyricScreen extends StatefulWidget {
+  const SearchLyricScreen({Key? key}) : super(key: key);
   @override
-  _SearchScreenState createState() => _SearchScreenState();
+  _SearchLyricScreenState createState() => _SearchLyricScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchLyricScreenState extends State<SearchLyricScreen> {
   final searchController = new TextEditingController();
+  final songController = new TextEditingController();
+  final artistController = new TextEditingController();
   List? _songs;
+  List _isLyric = [];
 
   _getSongsbyName() async {
     String _title1 = searchController.text;
@@ -27,7 +32,15 @@ class _SearchScreenState extends State<SearchScreen> {
     if (_songsList != null) {
       for (var element in _songsList) {
         Songs _tem = element;
+
         _list.add(_tem);
+
+        final _lyric = await BaseDB.instance.getLyricById(_tem.id);
+        if (_lyric != null && _lyric!.isNotEmpty) {
+          _isLyric.add(true);
+        } else {
+          _isLyric.add(false);
+        }
       }
       if (mounted) {
         setState(() {
@@ -46,7 +59,74 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
     searchController.dispose();
+    artistController.dispose();
+    songController.dispose();
     super.dispose();
+  }
+
+  Future<void> changeLanguage(Songs song) async {
+    int? i = await showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('请确认查询信息'),
+            children: <Widget>[
+              MyTextInput(
+                control: songController,
+                label: "歌曲名",
+                hintLabel: "请输入歌曲名...",
+                hideText: false,
+                icon: Icons.search,
+                press: () {},
+                titleStyle: nomalGrayText,
+                mainaxis: MainAxisAlignment.start,
+                crossaxis: CrossAxisAlignment.end,
+              ),
+              MyTextInput(
+                control: artistController,
+                label: "艺人名",
+                hintLabel: "请输入艺人名...",
+                hideText: false,
+                icon: Icons.search,
+                press: () {},
+                titleStyle: nomalGrayText,
+                mainaxis: MainAxisAlignment.start,
+                crossaxis: CrossAxisAlignment.end,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButtom(
+                    title: "取消",
+                    isActive: false,
+                    press: () {
+                      Navigator.pop(context, 1);
+                    },
+                  ),
+                  TextButtom(
+                    title: "搜索",
+                    isActive: false,
+                    press: () async {
+                      final _lric = await getLyric(
+                          songController.text + " " + artistController.text);
+                      if (_lric != null && _lric != "") {
+                        SongsAndLyric _songandlyric =
+                            SongsAndLyric(lyric: _lric, songId: song.id);
+                        await BaseDB.instance
+                            .addSongsAndLyricTable(_songandlyric);
+                      }
+                      Navigator.pop(context, 1);
+                    },
+                  )
+                ],
+              )
+            ],
+          );
+        });
+
+    if (i != null) {
+      print("选择了：${i == 1 ? "中文简体" : "美国英语"}");
+    }
   }
 
   Widget _itemBuildWidget() {
@@ -58,14 +138,13 @@ class _SearchScreenState extends State<SearchScreen> {
             itemExtent: 50.0, //强制高度为50.0
             itemBuilder: (BuildContext context, int index) {
               Songs _tem = _songs![index];
+              String _xx = _isLyric[index] ? "有" : "无";
               return ListTile(
                   title: InkWell(
                       onTap: () async {
-                        activeSongValue.value = _tem.id;
-                        //歌曲所在专辑歌曲List
-                        activeList.value = _songs!;
-                        //当前歌曲队列
-                        activeIndex.value = index;
+                        artistController.text = _tem.artist;
+                        songController.text = _tem.title;
+                        changeLanguage(_tem);
                       },
                       child: ValueListenableBuilder<Map>(
                           valueListenable: activeSong,
@@ -74,6 +153,17 @@ class _SearchScreenState extends State<SearchScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    _xx,
+                                    textDirection: TextDirection.ltr,
+                                    style: (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
+                                        ? activeText
+                                        : nomalGrayText,
+                                  ),
+                                ),
                                 Expanded(
                                   flex: 2,
                                   child: Text(
@@ -107,42 +197,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                         : nomalGrayText,
                                   ),
                                 ),
-                                if (!isMobile.value)
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      formatDuration(_tem.duration),
-                                      textDirection: TextDirection.rtl,
-                                      style: (value.isNotEmpty &&
-                                              value["value"] == _tem.id)
-                                          ? activeText
-                                          : nomalGrayText,
-                                    ),
-                                  ),
-                                if (!isMobile.value)
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      _tem.bitRate.toString(),
-                                      textDirection: TextDirection.rtl,
-                                      style: (value.isNotEmpty &&
-                                              value["value"] == _tem.id)
-                                          ? activeText
-                                          : nomalGrayText,
-                                    ),
-                                  ),
-                                if (!isMobile.value)
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      _tem.playCount.toString(),
-                                      textDirection: TextDirection.rtl,
-                                      style: (value.isNotEmpty &&
-                                              value["value"] == _tem.id)
-                                          ? activeText
-                                          : nomalGrayText,
-                                    ),
-                                  ),
                               ],
                             );
                           }))));
@@ -155,6 +209,15 @@ class _SearchScreenState extends State<SearchScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Expanded(
+            flex: 1,
+            child: Container(
+              child: Text(
+                "歌词",
+                textDirection: TextDirection.ltr,
+                style: sublGrayText,
+              ),
+            )),
         Expanded(
             flex: 2,
             child: Container(
@@ -182,36 +245,6 @@ class _SearchScreenState extends State<SearchScreen> {
             style: sublGrayText,
           )),
         ),
-        if (!isMobile.value)
-          Expanded(
-            flex: 1,
-            child: Container(
-                child: Text(
-              drationLocal,
-              textDirection: TextDirection.rtl,
-              style: sublGrayText,
-            )),
-          ),
-        if (!isMobile.value)
-          Expanded(
-            flex: 1,
-            child: Container(
-                child: Text(
-              bitRangeLocal,
-              textDirection: TextDirection.rtl,
-              style: sublGrayText,
-            )),
-          ),
-        if (!isMobile.value)
-          Expanded(
-            flex: 1,
-            child: Container(
-                child: Text(
-              playCountLocal,
-              textDirection: TextDirection.rtl,
-              style: sublGrayText,
-            )),
-          )
       ],
     );
   }
@@ -223,7 +256,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         MyTextInput(
           control: searchController,
-          label: searchLocal,
+          label: "搜索歌词",
           hintLabel: "请输入歌曲名...",
           hideText: false,
           icon: Icons.search,

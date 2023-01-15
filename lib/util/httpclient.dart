@@ -196,14 +196,14 @@ getSongStreamUrl(String _id) async {
   return _sql + '&id=' + _id;
 }
 
-getConvertContent(String _content) async {
-  String _connext = _content;
+searchNeteasAPI(String _name, String _type) async {
+  String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request =
-      "https://www.mxnzp.com/api/convert/zh?content=$_connext&type=1&app_id=jptqrnicprbjfkrk&app_secret=ZVNRSjZHcy9OaXlLdWNmTStxaU9xQT09";
+      "https://neteaseapi.igerm.ee/search?limit=5&type=$_type&offset=0&keywords=$_name&timestamp=$_timestamp";
   try {
     var response = await Dio().get(_request);
-    if (response.statusCode == 1) {
-      Map _value = response.data['data'];
+    if (response.statusCode == 200) {
+      var _value = response.data['result'];
 
       return _value;
     }
@@ -213,34 +213,24 @@ getConvertContent(String _content) async {
 }
 
 getLyric(String _songName) async {
-  String _findSong =
-      "http://music.163.com/api/search/pc?s=$_songName&offset=0&limit=1&type=1";
+  String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+  var _result = await searchNeteasAPI(_songName, "1");
+  var _songs = _result["songs"];
+  var _song = _songs[0];
+  String _songId = _song["id"].toString();
+
+  String _request =
+      "https://neteaseapi.igerm.ee/lyric?id=$_songId&timestamp=$_timestamp";
   try {
-    var response = await Dio().get(_findSong,
-        options: Options(headers: {
-          "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; …) Gecko/20100101 Firefox/61.0"
-        }));
-    if (response.statusCode == 1) {
-      Map _result = response.data['result'];
-      Map _songs = response.data['songs'];
-      Map _song = _songs[0];
-      String _id = _song["id"];
-      String _findLyric = "http://music.163.com/api/song/media?id=$_id";
-      try {
-        var response = await Dio().get(_findLyric);
-        if (response.statusCode == 1) {
-          String _lyric = response.data['lyric'];
-          return _lyric;
-        }
-      } catch (e) {
-        print(e);
-        return null;
-      }
+    var response = await Dio().get(_request);
+    if (response.statusCode == 200) {
+      var _value = response.data['lrc'];
+      var _lyric = _value["lyric"];
+
+      return _lyric;
     }
-    return null;
   } catch (e) {
     print(e);
-    return null;
   }
 }

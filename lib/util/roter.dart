@@ -7,6 +7,7 @@ import '../screens/layout/favoriteScreen.dart';
 import '../screens/layout/genresScreen.dart';
 import '../screens/layout/indexScreen.dart';
 import '../screens/layout/playListScreen.dart';
+import '../screens/layout/searchLyricScreen copy.dart';
 import '../screens/layout/searchScreen.dart';
 import '../screens/layout/settings.dart';
 
@@ -35,6 +36,8 @@ class Roter extends StatelessWidget {
             return ArtistsScreen();
           case 6: //流派
             return GenresScreen();
+          case 7: //搜索歌词
+            return SearchLyricScreen();
           //不通过点击进入
           case 8: //专辑详情
             return AlbumDetailScreen();
@@ -42,6 +45,8 @@ class Roter extends StatelessWidget {
             return ArtistDetailScreen();
           case 10: //搜索
             return SearchScreen();
+          case 11: //设置
+            return Settings();
 
           default:
             return Settings();

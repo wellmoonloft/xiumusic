@@ -8,7 +8,6 @@ import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
-import '../common/myToast.dart';
 import '../common/textButtom.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
@@ -283,23 +282,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                   title: InkWell(
                       onTap: () async {
                         activeSongValue.value = _tem.id;
-
                         //歌曲所在专辑歌曲List
                         activeList.value = _songs!;
-
                         //当前歌曲队列
                         activeIndex.value = index;
-
-                        //拼装当前歌曲
-                        Map _activeSong = new Map();
-                        String _url = await getCoverArt(_tem.id);
-                        _activeSong["value"] = _tem.id;
-                        _activeSong["artist"] = _tem.artist;
-                        _activeSong["url"] = _url;
-                        _activeSong["title"] = _tem.title;
-                        _activeSong["album"] = _tem.album;
-                        _activeSong["albumId"] = _tem.albumId;
-                        activeSong.value = _activeSong;
                       },
                       child: ValueListenableBuilder<Map>(
                           valueListenable: activeSong,

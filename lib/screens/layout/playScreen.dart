@@ -3,11 +3,9 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
-import 'package:flutter_lyric/lyrics_reader_model.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/const.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/baseCSS.dart';
@@ -29,9 +27,6 @@ class PlayScreen extends StatefulWidget {
 class _PlayScreenState extends State<PlayScreen>
 // with AutomaticKeepAliveClientMixin
 {
-  var lyricModel =
-      LyricsModelBuilder.create().bindLyricToMain(normalLyric).getModel();
-
   var lyricUI = UINetease();
   var lyricPadding = 40.0;
   var playing = true;
@@ -43,7 +38,6 @@ class _PlayScreenState extends State<PlayScreen>
   initState() {
     super.initState();
     lyricUI.highlight = true;
-    //lyricUI = UINetease.clone(lyricUI);
   }
 
   Widget _buildHeader() {
@@ -104,16 +98,16 @@ class _PlayScreenState extends State<PlayScreen>
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 45,
-                    ),
                     Container(
-                        width: !isMobile.value ? _width / 2 : _width,
-                        child: Text((value.isEmpty) ? "ss" : value["title"],
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: titleText1)),
+                      height: 120,
+                      width: !isMobile.value ? _width / 2 : _width,
+                      child: Center(
+                          child: Text((value.isEmpty) ? "ss" : value["title"],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: titleText1)),
+                    ),
                     SizedBox(
                       height: 15,
                     ),
@@ -140,7 +134,7 @@ class _PlayScreenState extends State<PlayScreen>
                       ],
                     ),
                     SizedBox(
-                      height: 15,
+                      height: 20,
                     ),
                     _buildReaderWidget()
                   ],
@@ -152,53 +146,61 @@ class _PlayScreenState extends State<PlayScreen>
   }
 
   Widget _buildReaderWidget() {
-    return StreamBuilder<PositionData>(
-        stream: _positionDataStream,
-        builder: (context, snapshot) {
-          final positionData = snapshot.data;
-          final position = positionData?.position.inMilliseconds ?? 0;
-          //print("playing:" + lyricUI.enableHighlight().toString());
-          return LyricsReader(
-            padding: EdgeInsets.symmetric(horizontal: lyricPadding),
-            model: lyricModel,
-            position: position,
-            lyricUi: lyricUI,
-            playing: playing,
-            size: Size(windowsWidth.value / 2, windowsHeight.value / 2),
-            emptyBuilder: () => Center(
-              child: Text(
-                "No lyrics",
-                style: lyricUI.getOtherMainTextStyle(),
-              ),
-            ),
-            selectLineBuilder: (progress, confirm) {
-              return Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        LyricsLog.logD("点击事件");
-                        confirm.call();
-                        //setState(() {
-                        widget.player.seek(Duration(milliseconds: progress));
-                        // });
-                      },
-                      icon: Icon(Icons.play_arrow, color: kGrayColor)),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(color: kGrayColor),
-                      height: 1,
-                      width: double.infinity,
+    return ValueListenableBuilder<String>(
+        valueListenable: activeLyric,
+        builder: ((context, value, child) {
+          var _model =
+              LyricsModelBuilder.create().bindLyricToMain(value).getModel();
+          return StreamBuilder<PositionData>(
+              stream: _positionDataStream,
+              builder: (context, snapshot) {
+                final positionData = snapshot.data;
+                final position = positionData?.position.inMilliseconds ?? 0;
+
+                return LyricsReader(
+                  padding: EdgeInsets.symmetric(horizontal: lyricPadding),
+                  model: _model,
+                  position: position,
+                  lyricUi: lyricUI,
+                  playing: playing,
+                  size: Size(windowsWidth.value / 2, windowsHeight.value - 330),
+                  emptyBuilder: () => Center(
+                    child: Text(
+                      "No lyrics",
+                      style: lyricUI.getOtherMainTextStyle(),
                     ),
                   ),
-                  Text(
-                    formatDurationMilliseconds(progress),
-                    style: TextStyle(color: kGrayColor),
-                  )
-                ],
-              );
-            },
-          );
-        });
+                  selectLineBuilder: (progress, confirm) {
+                    return Row(
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              LyricsLog.logD("点击事件");
+                              confirm.call();
+                              //setState(() {
+                              widget.player
+                                  .seek(Duration(milliseconds: progress));
+                              lyricUI = UINetease.clone(lyricUI);
+                              // });
+                            },
+                            icon: Icon(Icons.play_arrow, color: kGrayColor)),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(color: kGrayColor),
+                            height: 1,
+                            width: double.infinity,
+                          ),
+                        ),
+                        Text(
+                          formatDurationMilliseconds(progress),
+                          style: TextStyle(color: kGrayColor),
+                        )
+                      ],
+                    );
+                  },
+                );
+              });
+        }));
   }
 
   Stream<PositionData> get _positionDataStream {

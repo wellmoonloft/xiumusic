@@ -3,16 +3,13 @@ import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
 import 'customSearchDelegate.dart';
 
-class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
+class MyAppBar extends StatefulWidget {
   MyAppBar({Key? key, required this.drawer}) : super(key: key);
 
   final drawer;
 
   @override
   _MyAppBarState createState() => _MyAppBarState();
-
-  @override
-  Size get preferredSize => Size.fromHeight(appBarHeight);
 }
 
 class _MyAppBarState extends State<MyAppBar> {
@@ -29,6 +26,7 @@ class _MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: appBarHeight,
       color: bkColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,7 +56,7 @@ class _MyAppBarState extends State<MyAppBar> {
                     color: kGrayColor,
                     size: 15,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     //indexValue.value = 10;
                     //TODO 快捷搜索
                     showSearch(
@@ -74,7 +72,7 @@ class _MyAppBarState extends State<MyAppBar> {
                     size: 15,
                   ),
                   onPressed: () {
-                    indexValue.value = 7;
+                    indexValue.value = 11;
                   },
                 ),
               ),

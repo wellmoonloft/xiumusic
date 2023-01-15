@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../util/localizations.dart';
 import '../common/baseCSS.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);

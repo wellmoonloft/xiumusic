@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
+import '../util/baseDB.dart';
 import '../util/httpClient.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
@@ -65,6 +66,14 @@ class _BottomScreenState extends State<BottomScreen>
       _activeSong["album"] = _tem["album"];
       _activeSong["albumId"] = _tem["albumId"];
       activeSong.value = _activeSong;
+
+      //获取歌词
+      final _lyrictem = await BaseDB.instance.getLyricById(_tem["id"]);
+      if (_lyrictem != null && _lyrictem!.isNotEmpty) {
+        activeLyric.value = _lyrictem;
+      } else {
+        activeLyric.value = "";
+      }
 
       // 更新随机状态
       //isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
@@ -179,8 +188,7 @@ class _BottomScreenState extends State<BottomScreen>
                                             context: context,
                                             builder: (BuildContext context) {
                                               return PlayScreen(
-                                                player: _player,
-                                              );
+                                                  player: _player);
                                             },
                                           );
                                         },

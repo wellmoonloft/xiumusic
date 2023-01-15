@@ -23,7 +23,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
     super.dispose();
   }
 
-  Widget _NormalPopMenu() {
+  Widget _normalPopMenu() {
     return PopupMenuButton<String>(
         icon: Icon(Icons.queue_music),
         iconSize: 16,
@@ -64,7 +64,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                   onPressed: () {},
                 ),
               ),
-              _NormalPopMenu(),
+              _normalPopMenu(),
               Container(
                 child: IconButton(
                   icon: Icon(

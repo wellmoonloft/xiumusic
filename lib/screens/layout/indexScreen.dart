@@ -106,7 +106,6 @@ class _IndexScreenState extends State<IndexScreen> {
     super.dispose();
   }
 
-  //TODO 数据库：新增歌曲10，接口：歌手热歌getTopSongs，星标？
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -153,16 +152,6 @@ class _IndexScreenState extends State<IndexScreen> {
                         activeList.value = _songs!;
                         //当前歌曲队列
                         activeIndex.value = index;
-                        //拼装当前歌曲
-                        Map _activeSong = new Map();
-                        String _url = await getCoverArt(_tem.id);
-                        _activeSong["value"] = _tem.id;
-                        _activeSong["artist"] = _tem.artist;
-                        _activeSong["url"] = _url;
-                        _activeSong["title"] = _tem.title;
-                        _activeSong["album"] = _tem.album;
-                        _activeSong["albumId"] = _tem.albumId;
-                        activeSong.value = _activeSong;
                       },
                       child: ValueListenableBuilder<Map>(
                           valueListenable: activeSong,
