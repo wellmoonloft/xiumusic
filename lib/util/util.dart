@@ -91,6 +91,20 @@ String formatDuration(int _duration) {
   }
 }
 
+String formatDurationMilliseconds(int _duration) {
+  Duration _dura = Duration(milliseconds: _duration);
+  if (_dura.inHours != 0) {
+    String hours = _dura.inHours.toString().padLeft(0, '2');
+    String minutes = _dura.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds = _dura.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
+  } else {
+    String minutes = _dura.inMinutes.remainder(60).toString().padLeft(2, '0');
+    String seconds = _dura.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
+  }
+}
+
 String formatSongDuration(Duration _tmp) {
   if (_tmp.inHours != 0) {
     String hours = _tmp.inHours.toString().padLeft(0, '2');

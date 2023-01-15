@@ -22,6 +22,10 @@
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
+歌词
+
+![](https://s2.loli.net/2023/01/15/WCFZOToQYNlg47s.jpg)
+
 ## Todo List 
 
 ### 页面  
@@ -29,9 +33,9 @@
 - [x] 首页 
   - [x] 随机专辑、最多播放歌曲、最近添加专辑...其他随便加
   
-- [ ] 正在播放  
+- [x] 正在播放  
   - [x] 正在播放页面，磨砂玻璃
-  - [ ] 歌词  
+  - [x] 歌词  
 
 - [ ] 播放列表  （最没用的倒数第二）
   - [ ] 播放列表页面
@@ -68,8 +72,9 @@
   - [x] 流播放、播放控制、静音、单曲循环
   - [x] 播放列表、全部循环
 
-- [x] 网络  
+- [ ] 网络  
   - [x] Restful请求、服务器连接等
+  - [ ] 歌手照片和信息，以及，歌词，看是否通过网易云api去抓
 
 - [ ] 数据库  
   - [x] 建表、增删改查、初始化(没做转转转)
@@ -92,9 +97,11 @@
 
 1. Clone 项目
 
-2. 在项目目录中执行 `flutter create . `
+2. 删除ios、macos重新生成
 
-3. 在项目目录中执行 `flutter packages get`
+3. 在项目目录中执行 `flutter create . `
+
+4. 在项目目录中执行 `flutter packages get`
 
 #### MacOS
 
@@ -108,17 +115,15 @@ macos-Runner-Release.entitlements
     <true/>
 
 
-## 参考
-- [Sonixd](https://github.com/jeffvli/sonixd) 模仿了Sonixd的桌面UI设计
-
 ## 依赖
 
 - [sqflite: ^2.2.25](https://pub.flutter-io.cn/packages/sqflite) 数据持久化。
 - [path: ^1.8.2 ](https://pub.flutter-io.cn/packages/path) 给数据库找位置的，也可以用于图片缓存，但是还是base64香吧。
-- [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具，差1%就超过audioplayers了。
+- [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具。
 - [dio: ^4.0.6](https://pub.dev/packages/dio) 及其简单的Restful请求工具。
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
 - [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化以及隐藏titile栏用的。
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) 实现图片缓存，使用简单。
+- [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) 整个pub上面独一份，非常稳定
   
