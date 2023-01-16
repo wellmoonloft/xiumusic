@@ -6,7 +6,7 @@
 
 ## 简介
 
-**Xiu**是我近期经常看的一个音乐主播，她名字里有个Xiu字，所以就叫**XiuMusic**了。
+**Xiu**是我近期经常看的[一个音乐主播](https://www.douyu.com/7884070)，她名字里有个Xiu字，所以就叫**XiuMusic**了。
 
 最近在NAS上搭了好多东西，其中音乐的服务器用了Navidrome，客户端选了很多，但只有[Sonixd](https://github.com/jeffvli/sonixd)感觉不错，但是没有移动端，而且有个世纪难题，不支持歌词（[issues](https://github.com/jeffvli/sonixd/issues/332)上作者说要来一个大计划飞跃到v1.0，并解决歌词的问题，而且目前的一些repo说支持了，但是我尝试好几次都不成功）
 
@@ -20,13 +20,19 @@
 
 这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic，想玩的都可以下载了试一试，如果接口相同那应该问题不大（绝大部份的DIO请求没有抛错，建议网络环境好的时候食用，等做完了再回去补用户交互）
 
-注意！！！下载了歌词是保存在APP文档的数据库里的，目前没有做导出功能，少玩一点省的歌词找不出来怪我
+注意！！！下载了歌词是保存在APP文档的数据库里的，目前没有做导出功能，少玩一点，省的歌词找不出来怪我
 
-![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
+首页
+
+![](/snapshot/index.jpg)
 
 歌词
 
-![](https://s2.loli.net/2023/01/15/WCFZOToQYNlg47s.jpg)
+![](/snapshot/play.jpg)
+
+专辑
+
+![](/snapshot/album.jpg)
 
 ## Todo List 
 
@@ -128,4 +134,3 @@ macos-Runner-Release.entitlements
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) 实现图片缓存，使用简单。
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) 整个pub上面独一份，非常稳定
-  
