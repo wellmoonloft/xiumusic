@@ -57,10 +57,10 @@ class _MyAppBarState extends State<MyAppBar> {
                     size: 15,
                   ),
                   onPressed: () async {
-                    //indexValue.value = 10;
+                    indexValue.value = 10;
                     //TODO 快捷搜索
-                    showSearch(
-                        context: context, delegate: CustomSearchDelegate());
+                    // showSearch(
+                    //     context: context, delegate: CustomSearchDelegate());
                   },
                 ),
               ),

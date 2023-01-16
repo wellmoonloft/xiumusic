@@ -82,7 +82,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                                 Offset(
                                     windowsWidth.value, windowsHeight.value)),
                             Size(100, 200)),
-                        elevation: 10,
+                        //elevation: 10,
                         items: <PopupMenuItem<String>>[
                           PopupMenuItem<String>(
                             value: 'Item01',

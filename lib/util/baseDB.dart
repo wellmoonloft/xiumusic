@@ -49,7 +49,8 @@ class BaseDB {
                 baseurl TEXT NOT NULL,
                 username TEXT NOT NULL,
                 salt TEXT NOT NULL,
-                hash TEXT NOT NULL
+                hash TEXT NOT NULL,
+                neteaseapi TEXT
               )
         ''');
     await _database.execute('''
@@ -142,6 +143,18 @@ class BaseDB {
       final db = await instance.db;
       Batch batch = db.batch();
       batch.insert(ServerInfoTable, _info.toJson());
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  updateServerInfo(ServerInfo _info) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.update(ServerInfoTable, _info.toJson());
       var res = await batch.commit(noResult: true);
       return res;
     } catch (err) {
@@ -358,7 +371,7 @@ class BaseDB {
       List<ServerInfo> lists = res.map((e) => ServerInfo.fromJson(e)).toList();
       return lists[0];
     } catch (err) {
-      print('err is 👉 $err');
+      print('err1 is 👉 $err');
     }
   }
 

@@ -11,18 +11,21 @@ class ServerInfo {
   late String username;
   late String salt;
   late String hash;
+  late String neteaseapi;
 
   ServerInfo(
       {required this.baseurl,
       required this.username,
       required this.salt,
-      required this.hash});
+      required this.hash,
+      required this.neteaseapi});
 
   ServerInfo.fromJson(Map<String, dynamic> json) {
     baseurl = json['baseurl'];
     username = json['username'];
     salt = json['salt'];
     hash = json['hash'];
+    neteaseapi = json['neteaseapi'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +34,7 @@ class ServerInfo {
     _data['username'] = this.username;
     _data['salt'] = this.salt;
     _data['hash'] = this.hash;
+    _data['neteaseapi'] = this.neteaseapi;
     return _data;
   }
 }

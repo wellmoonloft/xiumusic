@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
+import '../common/myToast.dart';
 
 class PlayerControBar extends StatefulWidget {
   final AudioPlayer player;
@@ -26,6 +27,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 setState(() {
                   loopMode = 1;
                 });
+                showMyToast(context, "单曲循环");
               },
             ));
       case 1:
@@ -40,6 +42,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 setState(() {
                   loopMode = 2;
                 });
+                showMyToast(context, "随机循环");
               },
             ));
       case 2:
@@ -53,6 +56,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 setState(() {
                   loopMode = 0;
                 });
+                showMyToast(context, "全部循环");
               },
             ));
       default:

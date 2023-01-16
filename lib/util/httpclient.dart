@@ -197,31 +197,32 @@ getSongStreamUrl(String _id) async {
 }
 
 searchNeteasAPI(String _name, String _type) async {
+  final _infoList = await BaseDB.instance.getServerInfo();
+  String _neteaseapi = _infoList.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-  String _request =
-      "https://neteaseapi.igerm.ee/search?limit=5&type=$_type&offset=0&keywords=$_name&timestamp=$_timestamp";
+  String _request = _neteaseapi +
+      "/search?limit=5&type=$_type&offset=0&keywords=$_name&timestamp=$_timestamp";
+  print(_request);
   try {
     var response = await Dio().get(_request);
     if (response.statusCode == 200) {
       var _value = response.data['result'];
 
       return _value;
+    } else {
+      return null;
     }
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
-getLyric(String _songName) async {
+getLyric(String _songId) async {
+  final _infoList = await BaseDB.instance.getServerInfo();
+  String _neteaseapi = _infoList.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-
-  var _result = await searchNeteasAPI(_songName, "1");
-  var _songs = _result["songs"];
-  var _song = _songs[0];
-  String _songId = _song["id"].toString();
-
-  String _request =
-      "https://neteaseapi.igerm.ee/lyric?id=$_songId&timestamp=$_timestamp";
+  String _request = _neteaseapi + "/lyric?id=$_songId&timestamp=$_timestamp";
   try {
     var response = await Dio().get(_request);
     if (response.statusCode == 200) {
@@ -229,8 +230,11 @@ getLyric(String _songName) async {
       var _lyric = _value["lyric"];
 
       return _lyric;
+    } else {
+      return null;
     }
   } catch (e) {
     print(e);
+    return null;
   }
 }

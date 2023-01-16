@@ -7,7 +7,7 @@ import '../screens/layout/favoriteScreen.dart';
 import '../screens/layout/genresScreen.dart';
 import '../screens/layout/indexScreen.dart';
 import '../screens/layout/playListScreen.dart';
-import '../screens/layout/searchLyricScreen copy.dart';
+import '../screens/layout/searchLyricScreen.dart';
 import '../screens/layout/searchScreen.dart';
 import '../screens/layout/settings.dart';
 

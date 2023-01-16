@@ -1,29 +1,49 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import '../../models/notifierValue.dart';
 import 'baseCSS.dart';
 
-class ToastWidget extends StatelessWidget {
-  ToastWidget({Key? key, required this.msg}) : super(key: key);
+class MyToast extends StatelessWidget {
+  final String _titile;
+  const MyToast(this._titile);
 
-  ///toast msg
-  final String msg;
+  _showTimer(context) {
+    Timer.periodic(Duration(milliseconds: 1000), (t) {
+      Navigator.pop(context);
+      t.cancel();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return UnconstrainedBox(
-      constrainedAxis: Axis.vertical,
-      child: SizedBox(
-          // margin: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-          // padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-
-          width: 100,
-          child: Dialog(
+    _showTimer(context);
+    return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.only(top: windowsHeight.value - 220),
+        child: UnconstrainedBox(
             child: Container(
-              color: badgeDark,
-              height: 100,
-              child: Text('$msg', style: TextStyle(color: Colors.white)),
-            ),
-          )),
-    );
+          width: _titile.length * 20,
+          height: 40,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: badgeDark,
+          ),
+          child: Text(
+            _titile,
+            style: nomalGrayText,
+          ),
+        )));
   }
+}
+
+showMyToast(BuildContext _context, String _title) {
+  showDialog(
+    barrierDismissible: false,
+    context: _context,
+    builder: (_context) {
+      return MyToast(_title);
+    },
+  );
 }
