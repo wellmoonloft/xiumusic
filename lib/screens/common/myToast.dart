@@ -9,7 +9,7 @@ class MyToast extends StatelessWidget {
   const MyToast(this._titile);
 
   _showTimer(context) {
-    Timer.periodic(Duration(milliseconds: 1000), (t) {
+    Timer.periodic(Duration(milliseconds: 500), (t) {
       Navigator.pop(context);
       t.cancel();
     });
@@ -41,6 +41,7 @@ class MyToast extends StatelessWidget {
 showMyToast(BuildContext _context, String _title) {
   showDialog(
     barrierDismissible: false,
+    barrierColor: Colors.white.withOpacity(0),
     context: _context,
     builder: (_context) {
       return MyToast(_title);

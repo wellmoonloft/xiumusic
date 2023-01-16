@@ -65,6 +65,12 @@ class _BottomScreenState extends State<BottomScreen>
       _activeSong["title"] = _tem["title"];
       _activeSong["album"] = _tem["album"];
       _activeSong["albumId"] = _tem["albumId"];
+      var _favorite = await BaseDB.instance.getFavoritebyId(_tem["id"]);
+      if (_favorite != null) {
+        _activeSong["starred"] = true;
+      } else {
+        _activeSong["starred"] = false;
+      }
       activeSong.value = _activeSong;
 
       //获取歌词
@@ -138,7 +144,7 @@ class _BottomScreenState extends State<BottomScreen>
           }
 
           return Container(
-              height: 90,
+              height: bottomHeight,
               color: bkColor,
               child: Column(
                 children: [

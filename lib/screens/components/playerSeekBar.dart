@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:xiumusic/screens/common/baseCSS.dart';
-import '../../models/notifierValue.dart';
-import '../../util/util.dart';
 
 class PlayerSeekBar extends StatefulWidget {
   final Duration duration;
@@ -37,16 +35,6 @@ class PlayerSeekBarState extends State<PlayerSeekBar> {
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      if (isMobile.value)
-        Text(
-          formatSongDuration(widget.position),
-          style: TextStyle(
-              color: borderColor, fontFamily: 'ChivoMono', fontSize: 12),
-        ),
-      if (isMobile.value)
-        SizedBox(
-          width: 10,
-        ),
       SliderTheme(
         data: SliderTheme.of(context).copyWith(
             activeTrackColor: kGrayColor,
@@ -79,16 +67,6 @@ class PlayerSeekBarState extends State<PlayerSeekBar> {
           ),
         ),
       ),
-      if (isMobile.value)
-        SizedBox(
-          width: 10,
-        ),
-      if (isMobile.value)
-        Text(
-          formatSongDuration(widget.duration),
-          style: TextStyle(
-              color: borderColor, fontFamily: 'ChivoMono', fontSize: 12),
-        )
     ]);
   }
 

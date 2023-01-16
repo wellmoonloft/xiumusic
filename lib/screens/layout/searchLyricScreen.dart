@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../models/notifierValue.dart';
 import '../../util/baseDB.dart';
 import '../../models/myModel.dart';
 import '../../util/util.dart';
 import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
-import '../../util/localizations.dart';
 import '../common/myAlertDialog.dart';
-import '../common/myLoadingDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
 import '../common/textButtom.dart';
@@ -219,6 +216,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                             flex: 1,
                             child: Checkbox(
                               value: _isChecked[index],
+                              activeColor: badgeRed,
                               onChanged: (value) {
                                 setState(() {
                                   _isChecked[index] = value!;

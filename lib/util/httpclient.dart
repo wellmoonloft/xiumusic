@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../models/myModel.dart';
 import 'baseDB.dart';
 
 testServer(String _baseUrl, String _username, String _password) async {
@@ -236,5 +237,74 @@ getLyric(String _songId) async {
   } catch (e) {
     print(e);
     return null;
+  }
+}
+
+addStarred(Favorite _starred) async {
+  String _sql = await _getServerInfo("star");
+  switch (_starred.type) {
+    case "song":
+      _sql = _sql + '&id=' + _starred.id;
+      break;
+    case "album":
+      _sql = _sql + '&albumId=' + _starred.id;
+      break;
+    case "artist":
+      _sql = _sql + '&artistId=' + _starred.id;
+      break;
+    default:
+      _sql = _sql + '&id=' + _starred.id;
+  }
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+
+      return _response;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+getStarred() async {
+  String _sql = await _getServerInfo("getStarred");
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _starred = _response['starred'];
+
+      return _starred;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+delStarred(Favorite _starred) async {
+  String _sql = await _getServerInfo("unstar");
+  switch (_starred.type) {
+    case "song":
+      _sql = _sql + '&id=' + _starred.id;
+      break;
+    case "album":
+      _sql = _sql + '&albumId=' + _starred.id;
+      break;
+    case "artist":
+      _sql = _sql + '&artistId=' + _starred.id;
+      break;
+    default:
+      _sql = _sql + '&id=' + _starred.id;
+  }
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+
+      return _response;
+    }
+  } catch (e) {
+    print(e);
   }
 }

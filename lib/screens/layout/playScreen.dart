@@ -99,7 +99,7 @@ class _PlayScreenState extends State<PlayScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 120,
+                      height: 140,
                       width: !isMobile.value ? _width / 2 : _width,
                       child: Center(
                           child: Text((value.isEmpty) ? "ss" : value["title"],
@@ -163,7 +163,9 @@ class _PlayScreenState extends State<PlayScreen>
                   position: position,
                   lyricUi: lyricUI,
                   playing: playing,
-                  size: Size(windowsWidth.value / 2, windowsHeight.value - 330),
+                  size: !isMobile.value
+                      ? Size(windowsWidth.value / 2, windowsHeight.value - 350)
+                      : Size(windowsWidth.value, windowsHeight.value - 385),
                   emptyBuilder: () => Center(
                     child: Text(
                       "No lyrics",
@@ -355,9 +357,7 @@ class _PlayScreenState extends State<PlayScreen>
                               final positionData = snapshot.data;
 
                               return PlayerSeekBar(
-                                trackWidth: isMobile.value
-                                    ? windowsWidth.value - 80
-                                    : windowsWidth.value,
+                                trackWidth: windowsWidth.value,
                                 duration:
                                     positionData?.duration ?? Duration.zero,
                                 position:

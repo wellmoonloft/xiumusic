@@ -30,13 +30,20 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
   String _artist = "";
   int _year = 0;
+  bool _star = false;
 
   _getSongs(String albumId) async {
-    final _songsList = await BaseDB.instance.getSongsById(albumId);
+    final _songsList = await BaseDB.instance.getSongsByAlbumId(albumId);
 
     if (_songsList != null) {
       String _xx = await getCoverArt(albumId);
       final xx = await BaseDB.instance.getAlbumsByID(albumId);
+      var _favorite = await BaseDB.instance.getFavoritebyId(albumId);
+      if (_favorite != null) {
+        _star = true;
+      } else {
+        _star = false;
+      }
       Albums _albums = xx[0];
       if (mounted) {
         setState(() {
@@ -214,6 +221,45 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           ),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 5),
+                    child: (_star)
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.favorite,
+                              color: badgeRed,
+                              size: 16,
+                            ),
+                            onPressed: () async {
+                              Favorite _favorite =
+                                  Favorite(id: activeID.value, type: 'album');
+                              await delStarred(_favorite);
+                              await BaseDB.instance.delFavorite(activeID.value);
+                              setState(() {
+                                _star = false;
+                              });
+                            },
+                          )
+                        : IconButton(
+                            icon: Icon(
+                              Icons.favorite_border,
+                              color: kTextColor,
+                              size: 16,
+                            ),
+                            onPressed: () async {
+                              Favorite _favorite =
+                                  Favorite(id: activeID.value, type: 'album');
+                              await addStarred(_favorite);
+                              await BaseDB.instance.addFavorite(_favorite);
+                              setState(() {
+                                _star = true;
+                              });
+                            },
+                          ),
                   )
                 ],
               ),

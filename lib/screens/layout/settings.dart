@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
@@ -15,7 +13,6 @@ import '../common/myAlertDialog.dart';
 import '../common/myLoadingDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
-import '../common/myToast.dart';
 import '../common/textButtom.dart';
 
 class Settings extends StatefulWidget {
@@ -69,6 +66,7 @@ class _SettingsState extends State<Settings>
         await getGenresFromNet();
         await getArtistsFromNet();
         await sacnServerStatus();
+        await getFavoriteFromNet();
         Navigator.pop(context);
 
         isServers.value = true;
@@ -156,14 +154,15 @@ class _SettingsState extends State<Settings>
               children: [
                 TextButtom(
                   press: () async {
-                    showMyLoadingDialog(context, "更新中...");
+                    showMyLoadingDialog(context, "刷新中...");
                     //初始化服务器
                     await getGenresFromNet();
                     await getArtistsFromNet();
                     await sacnServerStatus();
+                    await getFavoriteFromNet();
                     Navigator.pop(context);
                   },
-                  title: "强制更新",
+                  title: "强制刷新",
                   isActive: false,
                 ),
                 SizedBox(

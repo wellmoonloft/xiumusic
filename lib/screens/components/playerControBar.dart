@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
+import '../../util/baseDB.dart';
+import '../../util/httpClient.dart';
 import '../common/baseCSS.dart';
 import '../common/myToast.dart';
 
@@ -197,14 +200,43 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 },
               );
             }),
-        IconButton(
-          icon: Icon(
-            Icons.favorite_border,
-            color: kTextColor,
-            size: 16,
-          ),
-          onPressed: () {},
-        ),
+        ValueListenableBuilder<Map>(
+            valueListenable: activeSong,
+            builder: (context, _song, child) {
+              return (_song.isNotEmpty && _song["starred"])
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.favorite,
+                        color: badgeRed,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _song["value"], type: 'song');
+                        await delStarred(_favorite);
+                        await BaseDB.instance.delFavorite(_song["value"]);
+                        setState(() {
+                          activeSong.value["starred"] = false;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.favorite_border,
+                        color: kTextColor,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _song["value"], type: 'song');
+                        await addStarred(_favorite);
+                        await BaseDB.instance.addFavorite(_favorite);
+                        setState(() {
+                          activeSong.value["starred"] = true;
+                        });
+                      },
+                    );
+            })
       ],
     );
   }

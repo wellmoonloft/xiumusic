@@ -44,14 +44,8 @@ class MainScreen extends StatelessWidget {
           ),
           Container(
               height: isMobile.value
-                  ? windowsHeight.value -
-                      bottomHeight -
-                      appBarHeight -
-                      0.01 -
-                      40 -
-                      25 -
-                      8
-                  : windowsHeight.value - bottomHeight - appBarHeight - 0.01,
+                  ? windowsHeight.value - bottomHeight - appBarHeight - 40 - 25
+                  : windowsHeight.value - bottomHeight - appBarHeight,
               child: Row(
                 children: [
                   if (!isMobile.value)

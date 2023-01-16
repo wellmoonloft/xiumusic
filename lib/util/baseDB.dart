@@ -26,8 +26,8 @@ class BaseDB {
   final String SongsTable = "songs";
   // ignore: non_constant_identifier_names
   final String SongsAndLyricTable = "songsAndLyric";
-
-  //TODO 收藏，入口放在当前歌曲，专辑以及艺人页面，然后数据库和页面，这个不涉及接口
+  // ignore: non_constant_identifier_names
+  final String FavoriteTable = "favorite";
 
   Future<Database> get db async {
     if (_db != null) return _db!;
@@ -136,6 +136,13 @@ class BaseDB {
                 songId TEXT NOT NULL
               )
         ''');
+    await _database.execute('''
+              create table $FavoriteTable (
+                uid INTEGER PRIMARY KEY AUTOINCREMENT,
+                id TEXT NOT NULL,
+                type TEXT NOT NULL
+              )
+        ''');
   }
 
   addServerInfo(ServerInfo _info) async {
@@ -162,6 +169,37 @@ class BaseDB {
     }
   }
 
+  deleteServerInfo() async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(ServerInfoTable);
+      //清空数据库，后面前端加个提示
+      batch.delete(ServerStatusTable);
+      batch.delete(GenresTable);
+      batch.delete(ArtistsTable);
+      batch.delete(AlbumsTable);
+      batch.delete(SongsTable);
+      var res = await batch.commit();
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  // 查
+  getServerInfo() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(ServerInfoTable);
+      if (res.length == 0) return null;
+      List<ServerInfo> lists = res.map((e) => ServerInfo.fromJson(e)).toList();
+      return lists[0];
+    } catch (err) {
+      print('err1 is 👉 $err');
+    }
+  }
+
   addServerStatus(ServerStatus _info) async {
     try {
       final db = await instance.db;
@@ -171,6 +209,19 @@ class BaseDB {
       batch.insert(ServerStatusTable, _info.toJson());
       var res = await batch.commit(noResult: true);
       return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getServerStatus() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(ServerStatusTable);
+      if (res.length == 0) return null;
+      List<ServerStatus> lists =
+          res.map((e) => ServerStatus.fromJson(e)).toList();
+      return lists[0];
     } catch (err) {
       print('err is 👉 $err');
     }
@@ -202,6 +253,18 @@ class BaseDB {
       }
       var res = await batch.commit(noResult: true);
       return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getGenres() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(GenresTable);
+      if (res.length == 0) return null;
+      List<Genres> lists = res.map((e) => Genres.fromJson(e)).toList();
+      return lists;
     } catch (err) {
       print('err is 👉 $err');
     }
@@ -255,18 +318,6 @@ class BaseDB {
     }
   }
 
-  addSongsAndLyricTable(SongsAndLyric _artists) async {
-    try {
-      final db = await instance.db;
-      Batch batch = db.batch();
-      batch.insert(SongsAndLyricTable, _artists.toJson());
-      var res = await batch.commit(noResult: true);
-      return res;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
   updateArtists(List<Artists> _artists) async {
     try {
       final db = await instance.db;
@@ -277,6 +328,31 @@ class BaseDB {
       }
       var res = await batch.commit(noResult: true);
       return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getArtists() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(ArtistsTable);
+      if (res.length == 0) return null;
+      List<Artists> lists = res.map((e) => Artists.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getArtistsByID(String artistId) async {
+    try {
+      final db = await instance.db;
+      var res =
+          await db.query(ArtistsTable, where: "id = ?", whereArgs: [artistId]);
+      if (res.length == 0) return null;
+      List<Artists> lists = res.map((e) => Artists.fromJson(e)).toList();
+      return lists;
     } catch (err) {
       print('err is 👉 $err');
     }
@@ -308,151 +384,6 @@ class BaseDB {
       }
       var res = await batch.commit(noResult: true);
       return res;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  addSongs(List<Songs> _songs, String albumId) async {
-    try {
-      final db = await instance.db;
-      Batch batch = db.batch();
-      batch.delete(SongsTable, where: "albumId = ?", whereArgs: [albumId]);
-      await batch.commit(noResult: true);
-      for (Songs element in _songs) {
-        batch.insert(SongsTable, element.toJson());
-      }
-      var res = await batch.commit(noResult: true);
-      return res;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  updateSongs(List<Songs> _songs) async {
-    try {
-      final db = await instance.db;
-      Batch batch = db.batch();
-      for (Songs element in _songs) {
-        batch.update(SongsTable, element.toJson(),
-            where: "id = ?", whereArgs: [element.id]);
-      }
-      var res = await batch.commit(noResult: true);
-      return res;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  deleteServerInfo() async {
-    try {
-      final db = await instance.db;
-      Batch batch = db.batch();
-      batch.delete(ServerInfoTable);
-      //清空数据库，后面前端加个提示
-      batch.delete(ServerStatusTable);
-      batch.delete(GenresTable);
-      batch.delete(ArtistsTable);
-      batch.delete(AlbumsTable);
-      batch.delete(SongsTable);
-      var res = await batch.commit();
-      return res;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  // 查
-  getServerInfo() async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(ServerInfoTable);
-      if (res.length == 0) return null;
-      List<ServerInfo> lists = res.map((e) => ServerInfo.fromJson(e)).toList();
-      return lists[0];
-    } catch (err) {
-      print('err1 is 👉 $err');
-    }
-  }
-
-  getServerStatus() async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(ServerStatusTable);
-      if (res.length == 0) return null;
-      List<ServerStatus> lists =
-          res.map((e) => ServerStatus.fromJson(e)).toList();
-      return lists[0];
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  getGenres() async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(GenresTable);
-      if (res.length == 0) return null;
-      List<Genres> lists = res.map((e) => Genres.fromJson(e)).toList();
-      return lists;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  getPlaylists() async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(PlaylistTable);
-      if (res.length == 0) return null;
-      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
-      return lists;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-//TODO 写新增播放列表库，然后httpClinent里面写获取接口的方法
-  getPlaylistSongS(String _playlistId) async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(PlaylistAndSongTable,
-          where: "playlistId = ?", whereArgs: [_playlistId]);
-      if (res.length == 0) return null;
-      List<PlaylistAndSong> lists =
-          res.map((e) => PlaylistAndSong.fromJson(e)).toList();
-      List<Songs> songs = [];
-      for (PlaylistAndSong element in lists) {
-        Songs song = await getSong(element.songId);
-        songs.add(song);
-      }
-
-      return songs;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  getArtists() async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(ArtistsTable);
-      if (res.length == 0) return null;
-      List<Artists> lists = res.map((e) => Artists.fromJson(e)).toList();
-      return lists;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  getArtistsByID(String artistId) async {
-    try {
-      final db = await instance.db;
-      var res =
-          await db.query(ArtistsTable, where: "id = ?", whereArgs: [artistId]);
-      if (res.length == 0) return null;
-      List<Artists> lists = res.map((e) => Artists.fromJson(e)).toList();
-      return lists;
     } catch (err) {
       print('err is 👉 $err');
     }
@@ -511,6 +442,37 @@ class BaseDB {
     }
   }
 
+  addSongs(List<Songs> _songs, String albumId) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(SongsTable, where: "albumId = ?", whereArgs: [albumId]);
+      await batch.commit(noResult: true);
+      for (Songs element in _songs) {
+        batch.insert(SongsTable, element.toJson());
+      }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  updateSongs(List<Songs> _songs) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      for (Songs element in _songs) {
+        batch.update(SongsTable, element.toJson(),
+            where: "id = ?", whereArgs: [element.id]);
+      }
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   getSongsByOrder(int _order) async {
     try {
       final db = await instance.db;
@@ -526,7 +488,7 @@ class BaseDB {
     }
   }
 
-  getSongsById(String albumId) async {
+  getSongsByAlbumId(String albumId) async {
     try {
       final db = await instance.db;
       var res = await db
@@ -539,7 +501,7 @@ class BaseDB {
     }
   }
 
-  getSong(String id) async {
+  getSongById(String id) async {
     try {
       final db = await instance.db;
       var res = await db.query(SongsTable, where: "id = ?", whereArgs: [id]);
@@ -566,6 +528,51 @@ class BaseDB {
     }
   }
 
+  getPlaylists() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(PlaylistTable);
+      if (res.length == 0) return null;
+      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+//TODO 写新增播放列表库，然后httpClinent里面写获取接口的方法
+  getPlaylistSongS(String _playlistId) async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(PlaylistAndSongTable,
+          where: "playlistId = ?", whereArgs: [_playlistId]);
+      if (res.length == 0) return null;
+      List<PlaylistAndSong> lists =
+          res.map((e) => PlaylistAndSong.fromJson(e)).toList();
+      List<Songs> songs = [];
+      for (PlaylistAndSong element in lists) {
+        Songs song = await getSongById(element.songId);
+        songs.add(song);
+      }
+
+      return songs;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addSongsAndLyricTable(SongsAndLyric _artists) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.insert(SongsAndLyricTable, _artists.toJson());
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   getLyricById(String _songId) async {
     try {
       final db = await instance.db;
@@ -576,6 +583,55 @@ class BaseDB {
           res.map((e) => SongsAndLyric.fromJson(e)).toList();
       SongsAndLyric _result = lists[0];
       return _result.lyric;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addFavorite(Favorite _favorite) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.insert(FavoriteTable, _favorite.toJson());
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  delFavorite(String _id) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(FavoriteTable, where: "id = ?", whereArgs: [_id]);
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getFavorite() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(FavoriteTable);
+      if (res.length == 0) return null;
+      List<Favorite> lists = res.map((e) => Favorite.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getFavoritebyId(String _id) async {
+    try {
+      final db = await instance.db;
+      var res =
+          await db.query(FavoriteTable, where: "id = ?", whereArgs: [_id]);
+      if (res.length == 0) return null;
+      List<Favorite> lists = res.map((e) => Favorite.fromJson(e)).toList();
+      return lists[0];
     } catch (err) {
       print('err is 👉 $err');
     }

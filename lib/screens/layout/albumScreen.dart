@@ -49,7 +49,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
     double _rightWidth = 0;
     if (isMobile.value) {
-      _rightWidth = windowsHeight.value / screenImageWidthAndHeight;
+      _rightWidth =
+          (windowsHeight.value - bottomHeight - appBarHeight - 40 - 25 - 80) /
+              screenImageWidthAndHeight;
     } else {
       _rightWidth =
           (windowsWidth.value - drawerWidth) / screenImageWidthAndHeight;
@@ -94,12 +96,17 @@ class _AlbumScreenState extends State<AlbumScreen> {
                         ),
                         Container(
                             child: Text(
-                                _tem.title + "(" + _tem.year.toString() + ")",
-                                style: nomalGrayText)),
+                          _tem.title + "(" + _tem.year.toString() + ")",
+                          style: nomalGrayText,
+                          textAlign: TextAlign.center,
+                        )),
                         SizedBox(
                           height: 5,
                         ),
-                        Container(child: Text(_tem.artist, style: sublGrayText))
+                        Container(
+                            child: Text(_tem.artist,
+                                style: sublGrayText,
+                                textAlign: TextAlign.center))
                       ],
                     ));
               },

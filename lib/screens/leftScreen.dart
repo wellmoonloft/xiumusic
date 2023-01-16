@@ -16,7 +16,6 @@ class LeftScreen extends StatefulWidget {
 class _LeftScreenState extends State<LeftScreen> {
   @override
   Widget build(BuildContext context) {
-    //TODO 做移动端适配的时候，把这个改成横向的，放到bottomBar里面，调整高度，然后就可以把侧滑拿掉了
     return Container(
         color: bkColor,
         padding: leftrightPadding,
@@ -26,6 +25,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 0;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: indexLocal,
               icon: Icons.home,
@@ -34,6 +34,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 2;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: playlistLocal,
               icon: Icons.queue_music,
@@ -42,6 +43,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 3;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: favoriteLocal,
               icon: Icons.favorite,
@@ -50,6 +52,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 4;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: albumLocal,
               icon: Icons.album,
@@ -58,6 +61,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 5;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: artistLocal,
               icon: Icons.people_alt,
@@ -66,6 +70,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 6;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: genresLocal,
               icon: Icons.public,
@@ -74,6 +79,7 @@ class _LeftScreenState extends State<LeftScreen> {
             TextIconButtom(
               press: () {
                 indexValue.value = 7;
+                if (isMobile.value) Navigator.pop(context);
               },
               title: "搜索歌词",
               icon: Icons.public,

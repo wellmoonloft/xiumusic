@@ -87,3 +87,31 @@ getSongsFromNet(String albumId) async {
   }
   await BaseDB.instance.addSongs(_list, albumId);
 }
+
+//4.流派
+getFavoriteFromNet() async {
+  final _favoriteList = await getStarred();
+
+  var songs = _favoriteList["song"];
+  var albums = _favoriteList["album"];
+  var artists = _favoriteList["artist"];
+
+  if (songs != null && songs.length > 0) {
+    for (var _song in songs) {
+      Favorite _tem = Favorite(id: _song['id'], type: 'song');
+      await BaseDB.instance.addFavorite(_tem);
+    }
+  }
+  if (albums != null && albums.length > 0) {
+    for (var _album in albums) {
+      Favorite _tem = Favorite(id: _album['id'], type: 'album');
+      await BaseDB.instance.addFavorite(_tem);
+    }
+  }
+  if (artists != null && artists.length > 0) {
+    for (var _artist in artists) {
+      Favorite _tem = Favorite(id: _artist['id'], type: 'artist');
+      await BaseDB.instance.addFavorite(_tem);
+    }
+  }
+}
