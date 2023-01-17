@@ -156,7 +156,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Container(
                     padding: leftrightPadding,
@@ -178,7 +178,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                   ),
                   if (isMobile.value)
                     SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                   if (isMobile.value)
                     Container(
@@ -199,68 +199,56 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         ],
                       ),
                     ),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Container(
                     padding: leftrightPadding,
                     child: Row(
                       children: [
-                        Text(
-                          "创建: " + timeISOtoString(_createDate),
-                          style: nomalGrayText,
-                        ),
-                        if (!isMobile.value)
-                          SizedBox(
-                            width: 10,
-                          ),
                         if (!isMobile.value)
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
                             style: nomalGrayText,
                           ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: (_star)
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: badgeRed,
+                                    size: 16,
+                                  ),
+                                  onPressed: () async {
+                                    Favorite _favorite = Favorite(
+                                        id: activeID.value, type: 'album');
+                                    await delStarred(_favorite);
+                                    await BaseDB.instance
+                                        .delFavorite(activeID.value);
+                                    setState(() {
+                                      _star = false;
+                                    });
+                                  },
+                                )
+                              : IconButton(
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: kTextColor,
+                                    size: 16,
+                                  ),
+                                  onPressed: () async {
+                                    Favorite _favorite = Favorite(
+                                        id: activeID.value, type: 'album');
+                                    await addStarred(_favorite);
+                                    await BaseDB.instance
+                                        .addFavorite(_favorite);
+                                    setState(() {
+                                      _star = true;
+                                    });
+                                  },
+                                ),
+                        )
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 5),
-                    child: (_star)
-                        ? IconButton(
-                            icon: Icon(
-                              Icons.favorite,
-                              color: badgeRed,
-                              size: 16,
-                            ),
-                            onPressed: () async {
-                              Favorite _favorite =
-                                  Favorite(id: activeID.value, type: 'album');
-                              await delStarred(_favorite);
-                              await BaseDB.instance.delFavorite(activeID.value);
-                              setState(() {
-                                _star = false;
-                              });
-                            },
-                          )
-                        : IconButton(
-                            icon: Icon(
-                              Icons.favorite_border,
-                              color: kTextColor,
-                              size: 16,
-                            ),
-                            onPressed: () async {
-                              Favorite _favorite =
-                                  Favorite(id: activeID.value, type: 'album');
-                              await addStarred(_favorite);
-                              await BaseDB.instance.addFavorite(_favorite);
-                              setState(() {
-                                _star = true;
-                              });
-                            },
-                          ),
-                  )
                 ],
               ),
             )
@@ -317,77 +305,83 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
   Widget _itemBuildWidget() {
     return _songs != null && _songs!.length > 0
-        ? ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: _songs!.length,
-            itemExtent: 50.0, //强制高度为50.0
-            itemBuilder: (BuildContext context, int index) {
-              Songs _tem = _songs![index];
-              return ListTile(
-                  title: InkWell(
-                      onTap: () async {
-                        activeSongValue.value = _tem.id;
-                        //歌曲所在专辑歌曲List
-                        activeList.value = _songs!;
-                        //当前歌曲队列
-                        activeIndex.value = index;
-                      },
-                      child: ValueListenableBuilder<Map>(
-                          valueListenable: activeSong,
-                          builder: ((context, value, child) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    _tem.title,
-                                    textDirection: TextDirection.ltr,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    formatDuration(_tem.duration),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.bitRate.toString(),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.playCount.toString(),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }))));
-            })
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _songs!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Songs _tem = _songs![index];
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () async {
+                            activeSongValue.value = _tem.id;
+                            //歌曲所在专辑歌曲List
+                            activeList.value = _songs!;
+                            //当前歌曲队列
+                            activeIndex.value = index;
+                          },
+                          child: ValueListenableBuilder<Map>(
+                              valueListenable: activeSong,
+                              builder: ((context, value, child) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        _tem.title,
+                                        textDirection: TextDirection.ltr,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        formatDuration(_tem.duration),
+                                        textDirection: TextDirection.rtl,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        _tem.bitRate.toString(),
+                                        textDirection: TextDirection.rtl,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        _tem.playCount.toString(),
+                                        textDirection: TextDirection.rtl,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }))));
+                }))
         : Container();
   }
 

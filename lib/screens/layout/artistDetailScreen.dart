@@ -24,12 +24,19 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   int _songs = 0;
   int _playCount = 0;
   int _duration = 0;
+  bool _star = false;
 
   _getAlbums(String artistId) async {
     final _albumsList = await BaseDB.instance.getAlbums(artistId);
     if (_albumsList != null) {
       String _artURL = await getCoverArt(artistId);
       final _artistList = await BaseDB.instance.getArtistsByID(artistId);
+      var _favorite = await BaseDB.instance.getFavoritebyId(artistId);
+      if (_favorite != null) {
+        _star = true;
+      } else {
+        _star = false;
+      }
 
       for (var element in _albumsList) {
         Albums _xx = element;
@@ -57,66 +64,69 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
 
   Widget _itemBuildWidget() {
     return _albums != null && _albums!.length > 0
-        ? ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: _albums!.length,
-            itemExtent: 50.0, //强制高度为50.0
-            itemBuilder: (BuildContext context, int index) {
-              Albums _tem = _albums![index];
-              return ListTile(
-                  title: InkWell(
-                      onTap: () {
-                        activeID.value = _tem.id;
-                        indexValue.value = 8;
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              _tem.title,
-                              textDirection: TextDirection.ltr,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              _tem.year.toString(),
-                              textDirection: TextDirection.rtl,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              _tem.songCount.toString(),
-                              textDirection: TextDirection.rtl,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              formatDuration(_tem.duration),
-                              textDirection: TextDirection.rtl,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              _tem.playCount.toString(),
-                              textDirection: TextDirection.rtl,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                        ],
-                      )));
-            })
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _albums!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Albums _tem = _albums![index];
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () {
+                            activeID.value = _tem.id;
+                            indexValue.value = 8;
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  _tem.title,
+                                  textDirection: TextDirection.ltr,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  _tem.year.toString(),
+                                  textDirection: TextDirection.rtl,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  _tem.songCount.toString(),
+                                  textDirection: TextDirection.rtl,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  formatDuration(_tem.duration),
+                                  textDirection: TextDirection.rtl,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  _tem.playCount.toString(),
+                                  textDirection: TextDirection.rtl,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                            ],
+                          )));
+                }))
         : Container();
   }
 
@@ -178,6 +188,44 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                           "$albumLocal: " + _albumsnum.toString(),
                           style: nomalGrayText,
                         ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5),
+                          child: (_star)
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: badgeRed,
+                                    size: 16,
+                                  ),
+                                  onPressed: () async {
+                                    Favorite _favorite = Favorite(
+                                        id: activeID.value, type: 'artist');
+                                    await delStarred(_favorite);
+                                    await BaseDB.instance
+                                        .delFavorite(activeID.value);
+                                    setState(() {
+                                      _star = false;
+                                    });
+                                  },
+                                )
+                              : IconButton(
+                                  icon: Icon(
+                                    Icons.favorite_border,
+                                    color: kTextColor,
+                                    size: 16,
+                                  ),
+                                  onPressed: () async {
+                                    Favorite _favorite = Favorite(
+                                        id: activeID.value, type: 'artist');
+                                    await addStarred(_favorite);
+                                    await BaseDB.instance
+                                        .addFavorite(_favorite);
+                                    setState(() {
+                                      _star = true;
+                                    });
+                                  },
+                                ),
+                        )
                       ],
                     ),
                   ),

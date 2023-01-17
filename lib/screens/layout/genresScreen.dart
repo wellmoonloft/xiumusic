@@ -155,14 +155,17 @@ class _GenresScreenState extends State<GenresScreen> {
       ),
       contentWidget: _genres != null && _genres!.length > 0
           ? Container(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: _genres!.length,
-                  itemExtent: 50.0, //强制高度为50.0
-                  itemBuilder: (BuildContext context, int index) {
-                    return _itemBuildWidget(context, index, _genres!);
-                  }))
+              child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: _genres!.length,
+                      itemExtent: 50.0, //强制高度为50.0
+                      itemBuilder: (BuildContext context, int index) {
+                        return _itemBuildWidget(context, index, _genres!);
+                      })))
           : Container(),
     );
   }

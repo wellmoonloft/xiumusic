@@ -67,6 +67,7 @@ class _SettingsState extends State<Settings>
         await getArtistsFromNet();
         await sacnServerStatus();
         await getFavoriteFromNet();
+        await getPlaylistsFromNet();
         Navigator.pop(context);
 
         isServers.value = true;
@@ -89,6 +90,7 @@ class _SettingsState extends State<Settings>
 
       _myServerInfo.neteaseapi = _serverURL;
       await BaseDB.instance.updateServerInfo(_myServerInfo);
+      showMyAlertDialog(context, "成功", "保存成功");
     } else {
       showMyAlertDialog(context, noticeLocal, contenterrLocal);
     }
@@ -121,6 +123,7 @@ class _SettingsState extends State<Settings>
         neteasecontroller.text = "";
       });
     }
+    showMyAlertDialog(context, "成功", "服务器已删除");
   }
 
   @override
@@ -143,7 +146,7 @@ class _SettingsState extends State<Settings>
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-      top: 110,
+      top: 106,
       headerWidget: Column(children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,6 +163,7 @@ class _SettingsState extends State<Settings>
                     await getArtistsFromNet();
                     await sacnServerStatus();
                     await getFavoriteFromNet();
+                    await getPlaylistsFromNet();
                     Navigator.pop(context);
                   },
                   title: "强制刷新",
@@ -189,7 +193,7 @@ class _SettingsState extends State<Settings>
                 unselectedLabelColor: borderColor,
                 tabs: myTabs,
                 isScrollable: true,
-                indicatorColor: badgeDark)),
+                indicatorColor: badgeRed)),
       ]),
       contentWidget: TabBarView(controller: tabController, children: [
         Container(

@@ -5,6 +5,7 @@ import '../../util/util.dart';
 import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
 import '../common/myAlertDialog.dart';
+import '../common/myLoadingDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
 import '../common/textButtom.dart';
@@ -138,127 +139,135 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
 
   Widget _itemSongsWidget() {
     return (_netsongs != null && _netsongs!.length > 0)
-        ? ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: _netsongs!.length,
-            itemExtent: 50.0, //强制高度为50.0
-            itemBuilder: (BuildContext context, int index) {
-              Map _tem = _netsongs![index];
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _netsongs!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Map _tem = _netsongs![index];
 
-              var _artistlist = _tem["artists"];
-              Map _artist = _artistlist[0];
+                  var _artistlist = _tem["artists"];
+                  Map _artist = _artistlist[0];
 
-              return ListTile(
-                  title: InkWell(
-                      onTap: () async {
-                        var _lyritem = await getLyric(_tem["id"].toString());
-                        if (_lyritem != null) {
-                          print(_lyritem);
-                          setState(() {
-                            _lyric = _lyritem;
-                          });
-                          tabController.animateTo(0);
-                          showMyAlertDialog(context, "成功", "歌词下载成功，请检查并绑定");
-                        }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              _tem["name"],
-                              textDirection: TextDirection.ltr,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              _artist["name"],
-                              textDirection: TextDirection.ltr,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                        ],
-                      )));
-            })
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () async {
+                            showMyLoadingDialog(context, "搜索中...");
+                            var _lyritem =
+                                await getLyric(_tem["id"].toString());
+                            Navigator.pop(context);
+                            if (_lyritem != null) {
+                              setState(() {
+                                _lyric = _lyritem;
+                              });
+                              tabController.animateTo(0);
+                              showMyAlertDialog(context, "成功", "歌词下载成功，请检查并绑定");
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  _tem["name"],
+                                  textDirection: TextDirection.ltr,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  _artist["name"],
+                                  textDirection: TextDirection.ltr,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                            ],
+                          )));
+                }))
         : Container();
   }
 
   Widget _itemBuildWidget() {
     return _songs != null && _songs!.length > 0
-        ? ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: _songs!.length,
-            itemExtent: 50.0, //强制高度为50.0
-            itemBuilder: (BuildContext context, int index) {
-              Songs _tem = _songs![index];
-              String _islyr = _isLyric[index] ? "有" : "无";
-              _isChecked.add(false);
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _songs!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Songs _tem = _songs![index];
+                  String _islyr = _isLyric[index] ? "有" : "无";
+                  _isChecked.add(false);
 
-              return ListTile(
-                  title: InkWell(
-                      onTap: () async {
-                        artistController.text = _tem.artist;
-                        songController.text = _tem.title;
-                        await findNetSong(_tem);
-                        tabController.animateTo(1);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Checkbox(
-                              value: _isChecked[index],
-                              activeColor: badgeRed,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isChecked[index] = value!;
-                                });
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              _islyr,
-                              textDirection: TextDirection.ltr,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              _tem.title,
-                              textDirection: TextDirection.ltr,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              _tem.album,
-                              textDirection: TextDirection.rtl,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Text(
-                              _tem.artist,
-                              textDirection: TextDirection.rtl,
-                              style: nomalGrayText,
-                            ),
-                          ),
-                        ],
-                      )));
-            })
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () async {
+                            artistController.text = _tem.artist;
+                            songController.text = _tem.title;
+                            await findNetSong(_tem);
+                            tabController.animateTo(1);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Checkbox(
+                                  value: _isChecked[index],
+                                  activeColor: badgeRed,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _isChecked[index] = value!;
+                                    });
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  _islyr,
+                                  textDirection: TextDirection.ltr,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  _tem.title,
+                                  textDirection: TextDirection.ltr,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  _tem.album,
+                                  textDirection: TextDirection.rtl,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  _tem.artist,
+                                  textDirection: TextDirection.rtl,
+                                  style: nomalGrayText,
+                                ),
+                              ),
+                            ],
+                          )));
+                }))
         : Container();
   }
 
@@ -303,9 +312,9 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                           SongsAndLyric(lyric: _lyric, songId: _song.id);
                       await BaseDB.instance
                           .addSongsAndLyricTable(_songsAndLyric);
-                      showMyAlertDialog(context, "成功", "绑定成功");
                     }
                   }
+                  showMyAlertDialog(context, "成功", "绑定成功");
                 }
               },
             )
@@ -318,7 +327,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 140,
+        top: 136,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
@@ -331,7 +340,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                     unselectedLabelColor: borderColor,
                     tabs: myTabs,
                     isScrollable: true,
-                    indicatorColor: badgeDark)),
+                    indicatorColor: badgeRed)),
           ],
         ),
         contentWidget: TabBarView(controller: tabController, children: [

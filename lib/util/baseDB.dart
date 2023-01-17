@@ -274,7 +274,7 @@ class BaseDB {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(PlaylistTable);
+      batch.delete(PlaylistTable, where: "id=?", whereArgs: [_playlist.id]);
       await batch.commit(noResult: true);
       batch.insert(PlaylistTable, _playlist.toJson());
 
@@ -285,18 +285,77 @@ class BaseDB {
     }
   }
 
-  addPlaylistSongS(List<PlaylistAndSong> _playlistAndSong) async {
+  delPlaylistById(String _playlistId) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(PlaylistTable);
-      await batch.commit(noResult: true);
-      for (PlaylistAndSong element in _playlistAndSong) {
-        batch.insert(PlaylistTable, element.toJson());
-      }
+      batch.delete(PlaylistAndSongTable,
+          where: "playlistId=?", whereArgs: [_playlistId]);
+      batch.delete(PlaylistTable, where: "id=?", whereArgs: [_playlistId]);
 
       var res = await batch.commit(noResult: true);
       return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addPlaylistSongs(PlaylistAndSong _playlistAndSong) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(PlaylistAndSongTable,
+          where: "playlistId=?", whereArgs: [_playlistAndSong.playlistId]);
+      await batch.commit(noResult: true);
+      batch.insert(PlaylistAndSongTable, _playlistAndSong.toJson());
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getPlaylistById(String _playlistId) async {
+    try {
+      final db = await instance.db;
+      var res = await db
+          .query(PlaylistTable, where: "id=?", whereArgs: [_playlistId]);
+      if (res.length == 0) return null;
+      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
+      return lists[0];
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getPlaylists() async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(PlaylistTable);
+      if (res.length == 0) return null;
+      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
+      return lists;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  getPlaylistSongs(String _playlistId) async {
+    try {
+      final db = await instance.db;
+      var res = await db.query(PlaylistAndSongTable,
+          where: "playlistId = ?", whereArgs: [_playlistId]);
+      if (res.length == 0) return null;
+      List<PlaylistAndSong> lists =
+          res.map((e) => PlaylistAndSong.fromJson(e)).toList();
+      List<Songs> songs = [];
+      for (PlaylistAndSong element in lists) {
+        Songs song = await getSongById(element.songId);
+        songs.add(song);
+      }
+
+      return songs;
     } catch (err) {
       print('err is 👉 $err');
     }
@@ -318,7 +377,7 @@ class BaseDB {
     }
   }
 
-  updateArtists(List<Artists> _artists) async {
+  updateArtists1(List<Artists> _artists) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
@@ -528,39 +587,6 @@ class BaseDB {
     }
   }
 
-  getPlaylists() async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(PlaylistTable);
-      if (res.length == 0) return null;
-      List<Playlist> lists = res.map((e) => Playlist.fromJson(e)).toList();
-      return lists;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-//TODO 写新增播放列表库，然后httpClinent里面写获取接口的方法
-  getPlaylistSongS(String _playlistId) async {
-    try {
-      final db = await instance.db;
-      var res = await db.query(PlaylistAndSongTable,
-          where: "playlistId = ?", whereArgs: [_playlistId]);
-      if (res.length == 0) return null;
-      List<PlaylistAndSong> lists =
-          res.map((e) => PlaylistAndSong.fromJson(e)).toList();
-      List<Songs> songs = [];
-      for (PlaylistAndSong element in lists) {
-        Songs song = await getSongById(element.songId);
-        songs.add(song);
-      }
-
-      return songs;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
   addSongsAndLyricTable(SongsAndLyric _artists) async {
     try {
       final db = await instance.db;
@@ -592,6 +618,8 @@ class BaseDB {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
+      batch.delete(FavoriteTable, where: "id = ?", whereArgs: [_favorite.id]);
+      await batch.commit(noResult: true);
       batch.insert(FavoriteTable, _favorite.toJson());
       var res = await batch.commit(noResult: true);
       return res;

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
+import '../common/myToast.dart';
+import 'activePlaylistDialog.dart';
 
 class PlayerVolumeBar extends StatefulWidget {
   final AudioPlayer player;
@@ -23,29 +25,10 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
     super.dispose();
   }
 
-  Widget _normalPopMenu() {
-    return PopupMenuButton<String>(
-        icon: Icon(Icons.queue_music),
-        iconSize: 16,
-        offset: Offset(50, 0),
-        padding: EdgeInsets.all(0),
-        tooltip: "播放列表",
-        itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-              PopupMenuItem<String>(value: 'Item01', child: Text('Item One')),
-              PopupMenuItem<String>(value: 'Item02', child: Text('Item Two')),
-              PopupMenuItem<String>(value: 'Item03', child: Text('Item Three')),
-              PopupMenuItem<String>(value: 'Item04', child: Text('Item Four'))
-            ],
-        onSelected: (String value) {
-          print("you know you love me");
-          //ToastUtil.show(value.toString());
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: windowsWidth.value / 4,
+      width: isMobile.value ? windowsWidth.value : windowsWidth.value / 4,
       padding: EdgeInsets.only(right: 15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -61,103 +44,89 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                     color: kTextColor,
                     size: 16,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    RenderBox? renderBox =
+                        context.findRenderObject() as RenderBox?;
+                    Offset offset = renderBox!.localToGlobal(Offset.zero);
+                    print(offset);
+                  },
                 ),
               ),
-              _normalPopMenu(),
               Container(
                 child: IconButton(
                   icon: Icon(
-                    Icons.queue_music,
+                    Icons.playlist_add_check,
                     color: kTextColor,
                     size: 16,
                   ),
                   onPressed: () {
-                    showMenu(
-                        context: context,
-                        position: RelativeRect.fromSize(
-                            Rect.fromPoints(
-                                Offset(windowsWidth.value - 100,
-                                    windowsHeight.value - 285),
-                                Offset(
-                                    windowsWidth.value, windowsHeight.value)),
-                            Size(100, 200)),
-                        //elevation: 10,
-                        items: <PopupMenuItem<String>>[
-                          PopupMenuItem<String>(
-                            value: 'Item01',
-                            child: Text('Item One'),
-                          ),
-                          PopupMenuItem<String>(
-                              value: 'Item02', child: Text('Item Two')),
-                          PopupMenuItem<String>(
-                              value: 'Item03', child: Text('Item Three')),
-                          PopupMenuItem<String>(
-                              value: 'Item04', child: Text('Item Four'))
-                        ]).then((value) {
-                      if (null == value) {
-                        return;
-                      }
-                      // ToastUtil.show(value.toString());
-                    });
+                    if (activeList.value.length > 0) {
+                      RenderBox? renderBox =
+                          context.findRenderObject() as RenderBox?;
+                      Offset offset = renderBox!.localToGlobal(Offset.zero);
+                      showActivePlaylistDialog(context, offset);
+                    } else {
+                      showMyToast(context, "没有播放队列");
+                    }
                   },
                 ),
               ),
             ],
           ),
-          StreamBuilder<double>(
-              stream: widget.player.volumeStream,
-              builder: (context, snapshot) => Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 16,
-                        child: widget.player.volume == 0.0
-                            ? IconButton(
-                                padding: EdgeInsets.only(bottom: 10),
-                                icon: Icon(
-                                  Icons.volume_mute,
-                                  color: kTextColor,
-                                  size: 16,
+          if (!isMobile.value)
+            StreamBuilder<double>(
+                stream: widget.player.volumeStream,
+                builder: (context, snapshot) => Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          height: 16,
+                          child: widget.player.volume == 0.0
+                              ? IconButton(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  icon: Icon(
+                                    Icons.volume_mute,
+                                    color: kTextColor,
+                                    size: 16,
+                                  ),
+                                  onPressed: () {
+                                    widget.player.setVolume(_activevolume);
+                                  },
+                                )
+                              : IconButton(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  icon: Icon(
+                                    Icons.volume_up,
+                                    color: kTextColor,
+                                    size: 16,
+                                  ),
+                                  onPressed: () {
+                                    _activevolume = widget.player.volume;
+                                    widget.player.setVolume(0.0);
+                                  },
                                 ),
-                                onPressed: () {
-                                  widget.player.setVolume(_activevolume);
-                                },
-                              )
-                            : IconButton(
-                                padding: EdgeInsets.only(bottom: 10),
-                                icon: Icon(
-                                  Icons.volume_up,
-                                  color: kTextColor,
-                                  size: 16,
-                                ),
-                                onPressed: () {
-                                  _activevolume = widget.player.volume;
-                                  widget.player.setVolume(0.0);
-                                },
-                              ),
-                      ),
-                      SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                              activeTrackColor: kGrayColor,
-                              inactiveTrackColor: borderColor,
-                              trackHeight: 1.0,
-                              thumbColor: kTextColor,
-                              thumbShape:
-                                  RoundSliderThumbShape(enabledThumbRadius: 5),
-                              overlayShape: SliderComponentShape.noThumb),
-                          child: Container(
-                              width: windowsWidth.value / 8,
-                              child: Slider(
-                                divisions: 10,
-                                min: 0.0,
-                                max: 1.0,
-                                value: widget.player.volume,
-                                onChanged: widget.player.setVolume,
-                              ))),
-                    ],
-                  )),
+                        ),
+                        SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: kGrayColor,
+                                inactiveTrackColor: borderColor,
+                                trackHeight: 1.0,
+                                thumbColor: kTextColor,
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 5),
+                                overlayShape: SliderComponentShape.noThumb),
+                            child: Container(
+                                width: windowsWidth.value / 8,
+                                child: Slider(
+                                  divisions: 10,
+                                  min: 0.0,
+                                  max: 1.0,
+                                  value: widget.player.volume,
+                                  onChanged: widget.player.setVolume,
+                                ))),
+                      ],
+                    )),
         ],
       ),
     );

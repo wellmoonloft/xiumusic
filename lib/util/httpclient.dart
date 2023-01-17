@@ -89,6 +89,82 @@ getMusicFolders() async {
   }
 }
 
+//playlistId Yes (if updating) || name Yes (if creating)
+createPlaylist(int _type, String _nameOrId, String _songId) async {
+  String _sql = await _getServerInfo("createPlaylist");
+  //0 新建 1 更新
+  if (_type == 0) {
+    if (_songId == "") {
+      _sql = _sql + '&name=' + _nameOrId;
+    } else {
+      _sql = _sql + '&name=' + _nameOrId + '&songId=' + _songId;
+    }
+  } else if (_type == 1) {
+    if (_songId == "") {
+      _sql = _sql + '&playlistId=' + _nameOrId;
+    } else {
+      _sql = _sql + '&playlistId=' + _nameOrId + '&songId=' + _songId;
+    }
+  }
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      var _response = response.data['subsonic-response'];
+
+      return _response;
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+getPlaylists() async {
+  String _sql = await _getServerInfo("getPlaylists");
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _playlists = _response['playlists'];
+      List _playlist = _playlists['playlist'];
+
+      return _playlist;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+getPlaylist(String _id) async {
+  String _sql = await _getServerInfo("getPlaylist");
+  try {
+    var response = await Dio().get(_sql + "&id=" + _id);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _playlist = _response['playlist'];
+      List _songs = _playlist['entry'];
+
+      return _songs;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+deletePlaylist(String _id) async {
+  String _sql = await _getServerInfo("deletePlaylist");
+  try {
+    var response = await Dio().get(_sql + "&id=" + _id);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+
+      return _response;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
 getArtists() async {
   String _sql = await _getServerInfo("getArtists");
   try {

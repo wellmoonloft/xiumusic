@@ -13,6 +13,8 @@ import '../components/playerControBar.dart';
 import '../components/playerSeekBar.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../components/playerVolumeBar.dart';
+
 class PlayScreen extends StatefulWidget {
   final AudioPlayer player;
 
@@ -216,8 +218,6 @@ class _PlayScreenState extends State<PlayScreen>
 
   @override
   Widget build(BuildContext context) {
-    //super.build(context);
-
     return InkWell(
       onTap: () async {
         Navigator.of(context).pop();
@@ -262,95 +262,7 @@ class _PlayScreenState extends State<PlayScreen>
                       child: Column(
                         children: [
                           _buildHeader(),
-                          Container(
-                            //width: windowsWidth / 4,
-                            padding: EdgeInsets.only(right: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                // Row(
-                                //   mainAxisAlignment:
-                                //       MainAxisAlignment.end,
-                                //   crossAxisAlignment:
-                                //       CrossAxisAlignment.center,
-                                //   children: [
-                                //     Container(
-                                //       child: IconButton(
-                                //         icon: Icon(
-                                //           Icons.favorite_border,
-                                //           color: kTextColor,
-                                //           size: 16,
-                                //         ),
-                                //         onPressed: () {},
-                                //       ),
-                                //     ),
-                                //     Container(
-                                //       child: IconButton(
-                                //         icon: Icon(
-                                //           Icons.playlist_add,
-                                //           color: kTextColor,
-                                //           size: 16,
-                                //         ),
-                                //         onPressed: () {},
-                                //       ),
-                                //     ),
-                                //     // Container(
-                                //     //   child: IconButton(
-                                //     //     icon: Icon(
-                                //     //       Icons.queue_music,
-                                //     //       color: kTextColor,
-                                //     //       size: 16,
-                                //     //     ),
-                                //     //     onPressed: null,
-                                //     //   ),
-                                //     // ),
-                                //   ],
-                                // ),
-                                // StreamBuilder<double>(
-                                //     stream: widget.player.volumeStream,
-                                //     builder: (context, snapshot) => Row(
-                                //           mainAxisAlignment:
-                                //               MainAxisAlignment.end,
-                                //           crossAxisAlignment:
-                                //               CrossAxisAlignment.center,
-                                //           children: [
-                                //             SliderTheme(
-                                //                 data: SliderTheme.of(context).copyWith(
-                                //                     activeTrackColor:
-                                //                         kGrayColor,
-                                //                     inactiveTrackColor:
-                                //                         borderColor,
-                                //                     trackHeight: 1.0,
-                                //                     thumbColor:
-                                //                         kTextColor,
-                                //                     thumbShape:
-                                //                         RoundSliderThumbShape(
-                                //                             enabledThumbRadius:
-                                //                                 5),
-                                //                     overlayShape:
-                                //                         SliderComponentShape
-                                //                             .noThumb),
-                                //                 child: Container(
-                                //                     width:
-                                //                         windowsWidth / 8,
-                                //                     child: Slider(
-                                //                       divisions: 10,
-                                //                       min: 0.0,
-                                //                       max: 1.0,
-                                //                       value: widget
-                                //                           .player.volume,
-                                //                       onChanged: widget
-                                //                           .player
-                                //                           .setVolume,
-                                //                     ))),
-                                //           ],
-                                //         )),
-                              ],
-                            ),
-                          ),
+                          PlayerVolumeBar(widget.player),
                           StreamBuilder<PositionData>(
                             stream: _positionDataStream,
                             builder: (context, snapshot) {

@@ -61,56 +61,59 @@ class _AlbumScreenState extends State<AlbumScreen> {
     return Container(
       color: bkColor,
       child: _albums != null && _albums!.length > 0
-          ? MasonryGridView.count(
-              crossAxisCount: _count,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              itemCount: _albums!.length,
-              itemBuilder: (context, index) {
-                Albums _tem = _albums![index];
-                String _temURL = _imageURL![index];
-                return InkWell(
-                    onTap: () {
-                      //_getAlbums(_tem.id);
-                      activeID.value = _tem.id;
-                      indexValue.value = 8;
-                    },
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: CachedNetworkImage(
-                            imageUrl: _temURL,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) {
-                              return AnimatedSwitcher(
-                                child: Image.asset("assets/images/logo.jpg"),
-                                duration:
-                                    const Duration(milliseconds: imageMilli),
-                              );
-                            },
+          ? MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: MasonryGridView.count(
+                crossAxisCount: _count,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                itemCount: _albums!.length,
+                itemBuilder: (context, index) {
+                  Albums _tem = _albums![index];
+                  String _temURL = _imageURL![index];
+                  return InkWell(
+                      onTap: () {
+                        //_getAlbums(_tem.id);
+                        activeID.value = _tem.id;
+                        indexValue.value = 8;
+                      },
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: CachedNetworkImage(
+                              imageUrl: _temURL,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) {
+                                return AnimatedSwitcher(
+                                  child: Image.asset("assets/images/logo.jpg"),
+                                  duration:
+                                      const Duration(milliseconds: imageMilli),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                            child: Text(
-                          _tem.title + "(" + _tem.year.toString() + ")",
-                          style: nomalGrayText,
-                          textAlign: TextAlign.center,
-                        )),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Container(
-                            child: Text(_tem.artist,
-                                style: sublGrayText,
-                                textAlign: TextAlign.center))
-                      ],
-                    ));
-              },
-            )
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                              child: Text(
+                            _tem.title + "(" + _tem.year.toString() + ")",
+                            style: nomalGrayText,
+                            textAlign: TextAlign.center,
+                          )),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                              child: Text(_tem.artist,
+                                  style: sublGrayText,
+                                  textAlign: TextAlign.center))
+                        ],
+                      ));
+                },
+              ))
           : Container(),
     );
   }

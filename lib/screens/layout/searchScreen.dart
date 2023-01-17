@@ -51,102 +51,106 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _itemBuildWidget() {
     return _songs != null && _songs!.length > 0
-        ? ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: _songs!.length,
-            itemExtent: 50.0, //强制高度为50.0
-            itemBuilder: (BuildContext context, int index) {
-              Songs _tem = _songs![index];
-              return ListTile(
-                  title: InkWell(
-                      onTap: () async {
-                        activeSongValue.value = _tem.id;
-                        //歌曲所在专辑歌曲List
-                        activeList.value = _songs!;
-                        //当前歌曲队列
-                        activeIndex.value = index;
-                      },
-                      child: ValueListenableBuilder<Map>(
-                          valueListenable: activeSong,
-                          builder: ((context, value, child) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    _tem.title,
-                                    textDirection: TextDirection.ltr,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    _tem.album,
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.artist,
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                if (!isMobile.value)
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      formatDuration(_tem.duration),
-                                      textDirection: TextDirection.rtl,
-                                      style: (value.isNotEmpty &&
-                                              value["value"] == _tem.id)
-                                          ? activeText
-                                          : nomalGrayText,
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _songs!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Songs _tem = _songs![index];
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () async {
+                            activeSongValue.value = _tem.id;
+                            //歌曲所在专辑歌曲List
+                            activeList.value = _songs!;
+                            //当前歌曲队列
+                            activeIndex.value = index;
+                          },
+                          child: ValueListenableBuilder<Map>(
+                              valueListenable: activeSong,
+                              builder: ((context, value, child) {
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        _tem.title,
+                                        textDirection: TextDirection.ltr,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
                                     ),
-                                  ),
-                                if (!isMobile.value)
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      _tem.bitRate.toString(),
-                                      textDirection: TextDirection.rtl,
-                                      style: (value.isNotEmpty &&
-                                              value["value"] == _tem.id)
-                                          ? activeText
-                                          : nomalGrayText,
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        _tem.album,
+                                        textDirection: TextDirection.rtl,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
                                     ),
-                                  ),
-                                if (!isMobile.value)
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text(
-                                      _tem.playCount.toString(),
-                                      textDirection: TextDirection.rtl,
-                                      style: (value.isNotEmpty &&
-                                              value["value"] == _tem.id)
-                                          ? activeText
-                                          : nomalGrayText,
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        _tem.artist,
+                                        textDirection: TextDirection.rtl,
+                                        style: (value.isNotEmpty &&
+                                                value["value"] == _tem.id)
+                                            ? activeText
+                                            : nomalGrayText,
+                                      ),
                                     ),
-                                  ),
-                              ],
-                            );
-                          }))));
-            })
+                                    if (!isMobile.value)
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          formatDuration(_tem.duration),
+                                          textDirection: TextDirection.rtl,
+                                          style: (value.isNotEmpty &&
+                                                  value["value"] == _tem.id)
+                                              ? activeText
+                                              : nomalGrayText,
+                                        ),
+                                      ),
+                                    if (!isMobile.value)
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          _tem.bitRate.toString(),
+                                          textDirection: TextDirection.rtl,
+                                          style: (value.isNotEmpty &&
+                                                  value["value"] == _tem.id)
+                                              ? activeText
+                                              : nomalGrayText,
+                                        ),
+                                      ),
+                                    if (!isMobile.value)
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          _tem.playCount.toString(),
+                                          textDirection: TextDirection.rtl,
+                                          style: (value.isNotEmpty &&
+                                                  value["value"] == _tem.id)
+                                              ? activeText
+                                              : nomalGrayText,
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              }))));
+                }))
         : Container();
   }
 

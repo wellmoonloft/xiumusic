@@ -88,7 +88,7 @@ getSongsFromNet(String albumId) async {
   await BaseDB.instance.addSongs(_list, albumId);
 }
 
-//4.流派
+//4.收藏
 getFavoriteFromNet() async {
   final _favoriteList = await getStarred();
 
@@ -112,6 +112,35 @@ getFavoriteFromNet() async {
     for (var _artist in artists) {
       Favorite _tem = Favorite(id: _artist['id'], type: 'artist');
       await BaseDB.instance.addFavorite(_tem);
+    }
+  }
+}
+
+//5.播放列表
+getPlaylistsFromNet() async {
+  final _playlistsList = await getPlaylists();
+  if (_playlistsList != null && _playlistsList.length > 0) {
+    for (var _playlists in _playlistsList) {
+      var _playlistList = await getPlaylist(_playlists['id']);
+      if (_playlistList != null && _playlistList.length > 0) {
+        //写playlist表
+        Playlist _playlist = Playlist(
+            id: _playlists['id'],
+            name: _playlists['name'],
+            songCount: _playlists['songCount'],
+            duration: _playlists['duration'],
+            public: _playlists['public'] ? 0 : 1,
+            owner: _playlists['owner'],
+            created: _playlists['created'],
+            changed: _playlists['changed']);
+        await BaseDB.instance.addPlaylists(_playlist);
+        for (var _song in _playlistList) {
+          //写歌对应表
+          PlaylistAndSong _playlistandsong = PlaylistAndSong(
+              playlistId: _playlists['id'], songId: _song['id']);
+          await BaseDB.instance.addPlaylistSongs(_playlistandsong);
+        }
+      }
     }
   }
 }
