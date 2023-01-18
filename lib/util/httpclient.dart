@@ -41,6 +41,18 @@ _getServerInfo(String _api) async {
   return _request;
 }
 
+getServerInfo(String _api) async {
+  final _infoList = await BaseDB.instance.getServerInfo();
+  String _request = _infoList.baseurl +
+      '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
+      _infoList.username +
+      '&s=' +
+      _infoList.salt +
+      '&t=' +
+      _infoList.hash;
+  return _request;
+}
+
 getServerStatus() async {
   String _sql = await _getServerInfo("getScanStatus");
   try {
@@ -265,11 +277,6 @@ getSong(String _id) async {
 
 getCoverArt(String _id) async {
   String _sql = await _getServerInfo("getCoverArt");
-  return _sql + '&id=' + _id;
-}
-
-getSongStreamUrl(String _id) async {
-  String _sql = await _getServerInfo("stream");
   return _sql + '&id=' + _id;
 }
 

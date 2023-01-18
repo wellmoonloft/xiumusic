@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
 
 class ActivePlaylistDialog extends StatelessWidget {
   final Offset _offset;
-  const ActivePlaylistDialog(this._offset);
+  final AudioPlayer _player;
+  const ActivePlaylistDialog(this._offset, this._player);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,6 @@ class ActivePlaylistDialog extends StatelessWidget {
             top: _offset.dy - _height - 50, left: _offset.dx - _width + 220),
         child: UnconstrainedBox(
             child: Container(
-                //padding: EdgeInsets.all(5),
                 width: _width,
                 height: _height,
                 alignment: Alignment.center,
@@ -67,11 +68,8 @@ class ActivePlaylistDialog extends StatelessWidget {
                                   return ListTile(
                                       title: InkWell(
                                           onTap: () async {
-                                            activeSongValue.value = _tem.id;
-                                            //歌曲所在专辑歌曲List
-                                            activeList.value = _songs;
-                                            //当前歌曲队列
-                                            activeIndex.value = index;
+                                            await _player.seek(Duration.zero,
+                                                index: index);
                                           },
                                           child: ValueListenableBuilder<Map>(
                                               valueListenable: activeSong,
@@ -100,13 +98,14 @@ class ActivePlaylistDialog extends StatelessWidget {
   }
 }
 
-showActivePlaylistDialog(BuildContext _context, Offset _offset) {
+showActivePlaylistDialog(
+    BuildContext _context, Offset _offset, AudioPlayer _player) {
   showDialog(
     barrierDismissible: true,
     barrierColor: Colors.white.withOpacity(0),
     context: _context,
     builder: (_context) {
-      return ActivePlaylistDialog(_offset);
+      return ActivePlaylistDialog(_offset, _player);
     },
   );
 }

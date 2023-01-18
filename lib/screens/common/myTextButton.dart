@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
 import 'baseCSS.dart';
 
-class TextButtom extends StatelessWidget {
-  const TextButtom({
+class MyTextButton extends StatelessWidget {
+  const MyTextButton({
     Key? key,
     required this.isActive,
     required this.title,
@@ -31,8 +31,8 @@ class TextButtom extends StatelessWidget {
   }
 }
 
-class TextIconButtom extends StatelessWidget {
-  const TextIconButtom({
+class MyTextIconButton extends StatelessWidget {
+  const MyTextIconButton({
     Key? key,
     required this.title,
     required this.icon,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/notifierValue.dart';
 import 'common/baseCSS.dart';
 import '../util/localizations.dart';
-import 'common/textButtom.dart';
+import 'common/myTextButton.dart';
 
 class LeftScreen extends StatefulWidget {
   const LeftScreen({
@@ -22,7 +22,7 @@ class _LeftScreenState extends State<LeftScreen> {
         child: Column(
           children: [
             SizedBox(height: isMobile.value ? 30 : 0),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 0;
                 if (isMobile.value) Navigator.pop(context);
@@ -31,7 +31,7 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.home,
               color: kGrayColor,
             ),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 2;
                 if (isMobile.value) Navigator.pop(context);
@@ -40,7 +40,7 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.queue_music,
               color: kGrayColor,
             ),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 3;
                 if (isMobile.value) Navigator.pop(context);
@@ -49,7 +49,7 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.favorite,
               color: kGrayColor,
             ),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 4;
                 if (isMobile.value) Navigator.pop(context);
@@ -58,7 +58,7 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.album,
               color: kGrayColor,
             ),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 5;
                 if (isMobile.value) Navigator.pop(context);
@@ -67,7 +67,7 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.people_alt,
               color: kGrayColor,
             ),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 6;
                 if (isMobile.value) Navigator.pop(context);
@@ -76,7 +76,7 @@ class _LeftScreenState extends State<LeftScreen> {
               icon: Icons.public,
               color: kGrayColor,
             ),
-            TextIconButtom(
+            MyTextIconButton(
               press: () {
                 indexValue.value = 7;
                 if (isMobile.value) Navigator.pop(context);

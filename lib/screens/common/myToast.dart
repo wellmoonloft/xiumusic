@@ -1,50 +1,32 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import '../../models/notifierValue.dart';
 import 'baseCSS.dart';
 
-class MyToast extends StatelessWidget {
-  final String _titile;
-  const MyToast(this._titile);
+class MyToast {
+  static void show({required BuildContext context, required String message}) {
+    OverlayEntry overlayEntry = new OverlayEntry(builder: (context) {
+      return Positioned(
+          bottom: 95,
+          child: Container(
+            color: Colors.transparent,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: Card(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  message,
+                  style: nomalGrayText,
+                ),
+              ),
+              color: badgeDark,
+            ),
+          ));
+    });
 
-  _showTimer(context) {
-    Timer.periodic(Duration(milliseconds: 500), (t) {
-      Navigator.pop(context);
-      t.cancel();
+    Overlay.of(context)?.insert(overlayEntry);
+    Future.delayed(Duration(seconds: 1)).then((value) {
+      overlayEntry.remove();
     });
   }
-
-  @override
-  Widget build(BuildContext context) {
-    _showTimer(context);
-    return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.only(top: windowsHeight.value - 220),
-        child: UnconstrainedBox(
-            child: Container(
-          width: _titile.length * 20,
-          height: 40,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: badgeDark,
-          ),
-          child: Text(
-            _titile,
-            style: nomalGrayText,
-          ),
-        )));
-  }
-}
-
-showMyToast(BuildContext _context, String _title) {
-  showDialog(
-    barrierDismissible: false,
-    barrierColor: Colors.white.withOpacity(0),
-    context: _context,
-    builder: (_context) {
-      return MyToast(_title);
-    },
-  );
 }

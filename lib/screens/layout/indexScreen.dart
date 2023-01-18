@@ -141,6 +141,12 @@ class _IndexScreenState extends State<IndexScreen> {
           SliverList(
             delegate: SliverChildBuilderDelegate((content, index) {
               Songs _tem = _songs![index];
+              List<String> _title = [
+                _tem.title,
+                _tem.album,
+                _tem.artist,
+                _tem.playCount.toString(),
+              ];
               return Container(
                   padding: leftrightPadding,
                   height: 50,
@@ -156,56 +162,11 @@ class _IndexScreenState extends State<IndexScreen> {
                       child: ValueListenableBuilder<Map>(
                           valueListenable: activeSong,
                           builder: ((context, value, child) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    _tem.title,
-                                    textDirection: TextDirection.ltr,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    _tem.album,
-                                    textDirection: TextDirection.ltr,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.artist,
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.playCount.toString(),
-                                    textDirection: TextDirection.rtl,
-                                    style: (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalGrayText,
-                                  ),
-                                ),
-                              ],
-                            );
+                            return myRowList(
+                                _title,
+                                (value.isNotEmpty && value["value"] == _tem.id)
+                                    ? activeText
+                                    : nomalGrayText);
                           }))));
             }, childCount: _songs!.length),
           ),

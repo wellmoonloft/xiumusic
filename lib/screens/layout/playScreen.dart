@@ -262,7 +262,7 @@ class _PlayScreenState extends State<PlayScreen>
                       child: Column(
                         children: [
                           _buildHeader(),
-                          PlayerVolumeBar(widget.player),
+                          if (isMobile.value) PlayerVolumeBar(widget.player),
                           StreamBuilder<PositionData>(
                             stream: _positionDataStream,
                             builder: (context, snapshot) {

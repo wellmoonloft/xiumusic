@@ -7,6 +7,7 @@ import '../util/httpClient.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import 'common/baseCSS.dart';
+import 'common/myToast.dart';
 import 'components/playerControBar.dart';
 import 'components/playerSeekBar.dart';
 import 'components/playerVolumeBar.dart';
@@ -21,51 +22,38 @@ class _BottomScreenState extends State<BottomScreen>
     with TickerProviderStateMixin {
   final _player = AudioPlayer();
 
-  // // Create a controller
-  // late final AnimationController _controller = AnimationController(
-  //   duration: const Duration(seconds: 20),
-  //   vsync: this,
-  // )..repeat(reverse: false);
-
-  // // Create an animation with value of type "double"
-  // late final Animation<double> _animation = CurvedAnimation(
-  //   parent: _controller,
-  //   curve: Curves.linear,
-  // );
-
   @override
   initState() {
     super.initState();
-    _listenForChangesInSequenceState();
-    //_controller.stop();
+    _listenforcurrentIndexStream();
+    _listenforsequenceStream();
   }
 
   @override
   void dispose() {
     _player.dispose();
-    //_controller.dispose();
     super.dispose();
   }
 
-  void _listenForChangesInSequenceState() {
-    _player.sequenceStateStream.listen((sequenceState) async {
-      if (sequenceState == null) return;
+  //收听歌曲变化
+  void _listenforcurrentIndexStream() {
+    _player.currentIndexStream.listen((event) async {
+      if (_player.sequenceState == null) return;
 
       // 更新当前歌曲
-      final currentItem = sequenceState.currentSource;
+      final currentItem = _player.sequenceState!.currentSource;
       final _title = currentItem?.tag as String?;
-      final _tem = await getSong(_title.toString());
-
+      Songs _song = await BaseDB.instance.getSongById(_title.toString());
       //拼装当前歌曲
       Map _activeSong = new Map();
-      String _url = await getCoverArt(_tem["id"]);
-      _activeSong["value"] = _tem["id"];
-      _activeSong["artist"] = _tem["artist"];
+      String _url = await getCoverArt(_song.id);
+      _activeSong["value"] = _song.id;
+      _activeSong["artist"] = _song.artist;
       _activeSong["url"] = _url;
-      _activeSong["title"] = _tem["title"];
-      _activeSong["album"] = _tem["album"];
-      _activeSong["albumId"] = _tem["albumId"];
-      var _favorite = await BaseDB.instance.getFavoritebyId(_tem["id"]);
+      _activeSong["title"] = _song.title;
+      _activeSong["album"] = _song.album;
+      _activeSong["albumId"] = _song.albumId;
+      var _favorite = await BaseDB.instance.getFavoritebyId(_song.id);
       if (_favorite != null) {
         _activeSong["starred"] = true;
       } else {
@@ -74,17 +62,58 @@ class _BottomScreenState extends State<BottomScreen>
       activeSong.value = _activeSong;
 
       //获取歌词
-      final _lyrictem = await BaseDB.instance.getLyricById(_tem["id"]);
+      final _lyrictem = await BaseDB.instance.getLyricById(_song.id);
       if (_lyrictem != null && _lyrictem!.isNotEmpty) {
         activeLyric.value = _lyrictem;
       } else {
         activeLyric.value = "";
       }
+      final playlist = _player.sequenceState!.effectiveSequence;
+      //更新上下首歌曲
+      if (playlist.isEmpty || currentItem == null) {
+        isFirstSongNotifier.value = true;
+        isLastSongNotifier.value = true;
+      } else {
+        isFirstSongNotifier.value = playlist.first == currentItem;
+        isLastSongNotifier.value = playlist.last == currentItem;
+      }
+    });
+  }
 
-      // 更新随机状态
-      //isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
+  //创建列表监听，只有第一次
+  void _listenforsequenceStream() {
+    _player.sequenceStream.listen((event) async {
+      if (_player.sequenceState == null) return;
 
-      final playlist = sequenceState.effectiveSequence;
+      // 更新当前歌曲
+      final currentItem = _player.sequenceState!.currentSource;
+      final _title = currentItem?.tag as String?;
+      Songs _song = await BaseDB.instance.getSongById(_title.toString());
+      //拼装当前歌曲
+      Map _activeSong = new Map();
+      String _url = await getCoverArt(_song.id);
+      _activeSong["value"] = _song.id;
+      _activeSong["artist"] = _song.artist;
+      _activeSong["url"] = _url;
+      _activeSong["title"] = _song.title;
+      _activeSong["album"] = _song.album;
+      _activeSong["albumId"] = _song.albumId;
+      var _favorite = await BaseDB.instance.getFavoritebyId(_song.id);
+      if (_favorite != null) {
+        _activeSong["starred"] = true;
+      } else {
+        _activeSong["starred"] = false;
+      }
+      activeSong.value = _activeSong;
+
+      //获取歌词
+      final _lyrictem = await BaseDB.instance.getLyricById(_song.id);
+      if (_lyrictem != null && _lyrictem!.isNotEmpty) {
+        activeLyric.value = _lyrictem;
+      } else {
+        activeLyric.value = "";
+      }
+      final playlist = _player.sequenceState!.effectiveSequence;
       //更新上下首歌曲
       if (playlist.isEmpty || currentItem == null) {
         isFirstSongNotifier.value = true;
@@ -99,11 +128,14 @@ class _BottomScreenState extends State<BottomScreen>
   _getPlayList() async {
     List<AudioSource> children = [];
     List _songs = activeList.value;
+    print("1");
+    String _sql = await getServerInfo("stream");
     for (var element in _songs) {
       Songs _song = element;
-      String _url = await getSongStreamUrl(_song.id);
+      String _url = _sql + '&id=' + _song.id;
       children.add(AudioSource.uri(Uri.parse(_url), tag: _song.id));
     }
+
     return children;
   }
 
@@ -116,6 +148,12 @@ class _BottomScreenState extends State<BottomScreen>
 
     await _player.setAudioSource(playlist,
         initialIndex: activeIndex.value, initialPosition: Duration.zero);
+    print("2");
+
+    MyToast.show(
+        context: context,
+        message: "加入" + activeList.value.length.toString() + "首歌");
+
     _player.play();
   }
 
@@ -140,7 +178,6 @@ class _BottomScreenState extends State<BottomScreen>
             isShuffleModeEnabledNotifier.value = false;
 
             _player.setLoopMode(LoopMode.all);
-            // _controller.repeat();
           }
 
           return Container(
@@ -198,11 +235,7 @@ class _BottomScreenState extends State<BottomScreen>
                                             },
                                           );
                                         },
-                                        child:
-                                            // RotationTransition(
-                                            //     turns: _animation,
-                                            //     child:
-                                            Container(
+                                        child: Container(
                                           margin: leftrightPadding,
                                           height: bottomImageWidthAndHeight,
                                           width: bottomImageWidthAndHeight,

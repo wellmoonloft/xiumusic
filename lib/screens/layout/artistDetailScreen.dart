@@ -7,7 +7,7 @@ import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
+import '../common/myTextButton.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
   const ArtistDetailScreen({Key? key}) : super(key: key);
@@ -62,74 +62,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     _getAlbums(activeID.value);
   }
 
-  Widget _itemBuildWidget() {
-    return _albums != null && _albums!.length > 0
-        ? MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _albums!.length,
-                itemExtent: 50.0, //强制高度为50.0
-                itemBuilder: (BuildContext context, int index) {
-                  Albums _tem = _albums![index];
-                  return ListTile(
-                      title: InkWell(
-                          onTap: () {
-                            activeID.value = _tem.id;
-                            indexValue.value = 8;
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  _tem.title,
-                                  textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.year.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.songCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  formatDuration(_tem.duration),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.playCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                            ],
-                          )));
-                }))
-        : Container();
-  }
-
   Widget _buildTopWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,7 +106,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     padding: leftrightPadding,
                     child: Row(
                       children: [
-                        TextButtom(
+                        MyTextButton(
                           press: () {
                             indexValue.value = 5;
                           },
@@ -282,57 +214,44 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   }
 
   Widget _buildHeaderWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-            flex: 2,
-            child: Container(
-              child: Text(
-                albumLocal,
-                textDirection: TextDirection.ltr,
-                style: sublGrayText,
-              ),
-            )),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            yearLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            songLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            drationLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            playCountLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        )
-      ],
-    );
+    List<String> _title = [
+      albumLocal,
+      yearLocal,
+      songLocal,
+      drationLocal,
+      playCountLocal
+    ];
+    return myRowList(_title, sublGrayText);
+  }
+
+  Widget _itemBuildWidget() {
+    return _albums != null && _albums!.length > 0
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _albums!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Albums _tem = _albums![index];
+                  List<String> _title = [
+                    _tem.title,
+                    _tem.year.toString(),
+                    _tem.songCount.toString(),
+                    formatDuration(_tem.duration),
+                    _tem.playCount.toString(),
+                  ];
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () {
+                            activeID.value = _tem.id;
+                            indexValue.value = 8;
+                          },
+                          child: myRowList(_title, nomalGrayText)));
+                }))
+        : Container();
   }
 
   @override

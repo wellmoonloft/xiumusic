@@ -61,6 +61,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _tem = _songs![index];
+                  List<String> _title = [
+                    _tem.title,
+                    _tem.album,
+                    _tem.artist,
+                    if (!isMobile.value) formatDuration(_tem.duration),
+                    if (!isMobile.value) _tem.bitRate.toString(),
+                    if (!isMobile.value) _tem.playCount.toString(),
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
@@ -73,151 +81,27 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
                               builder: ((context, value, child) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        _tem.title,
-                                        textDirection: TextDirection.ltr,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        _tem.album,
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.artist,
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    if (!isMobile.value)
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          formatDuration(_tem.duration),
-                                          textDirection: TextDirection.rtl,
-                                          style: (value.isNotEmpty &&
-                                                  value["value"] == _tem.id)
-                                              ? activeText
-                                              : nomalGrayText,
-                                        ),
-                                      ),
-                                    if (!isMobile.value)
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          _tem.bitRate.toString(),
-                                          textDirection: TextDirection.rtl,
-                                          style: (value.isNotEmpty &&
-                                                  value["value"] == _tem.id)
-                                              ? activeText
-                                              : nomalGrayText,
-                                        ),
-                                      ),
-                                    if (!isMobile.value)
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          _tem.playCount.toString(),
-                                          textDirection: TextDirection.rtl,
-                                          style: (value.isNotEmpty &&
-                                                  value["value"] == _tem.id)
-                                              ? activeText
-                                              : nomalGrayText,
-                                        ),
-                                      ),
-                                  ],
-                                );
+                                return myRowList(
+                                    _title,
+                                    (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
+                                        ? activeText
+                                        : nomalGrayText);
                               }))));
                 }))
         : Container();
   }
 
   Widget _buildHeaderWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-            flex: 2,
-            child: Container(
-              child: Text(
-                songLocal,
-                textDirection: TextDirection.ltr,
-                style: sublGrayText,
-              ),
-            )),
-        Expanded(
-          flex: 2,
-          child: Container(
-              child: Text(
-            albumLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            artistLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        if (!isMobile.value)
-          Expanded(
-            flex: 1,
-            child: Container(
-                child: Text(
-              drationLocal,
-              textDirection: TextDirection.rtl,
-              style: sublGrayText,
-            )),
-          ),
-        if (!isMobile.value)
-          Expanded(
-            flex: 1,
-            child: Container(
-                child: Text(
-              bitRangeLocal,
-              textDirection: TextDirection.rtl,
-              style: sublGrayText,
-            )),
-          ),
-        if (!isMobile.value)
-          Expanded(
-            flex: 1,
-            child: Container(
-                child: Text(
-              playCountLocal,
-              textDirection: TextDirection.rtl,
-              style: sublGrayText,
-            )),
-          )
-      ],
-    );
+    List<String> _title = [
+      songLocal,
+      albumLocal,
+      artistLocal,
+      if (!isMobile.value) drationLocal,
+      if (!isMobile.value) bitRangeLocal,
+      if (!isMobile.value) playCountLocal
+    ];
+    return myRowList(_title, sublGrayText);
   }
 
   Widget _buildTopWidget() {

@@ -41,78 +41,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
     _getArtists();
   }
 
-  Widget _buildHeaderWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-            flex: 1,
-            child: Container(
-              child: Text(
-                artistLocal,
-                textDirection: TextDirection.ltr,
-                style: sublGrayText,
-              ),
-            )),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            albumLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        )
-      ],
-    );
-  }
-
-  Widget _itemBuildWidget() {
-    return _artists != null && _artists!.length > 0
-        ? MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _artists!.length,
-                itemExtent: 50.0, //强制高度为50.0
-                itemBuilder: (BuildContext context, int index) {
-                  Artists _tem = _artists![index];
-                  return ListTile(
-                      title: InkWell(
-                          onTap: () {
-                            //_getAlbums(_tem.id);
-                            activeID.value = _tem.id;
-                            indexValue.value = 9;
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.name,
-                                  textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.albumCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                            ],
-                          )));
-                }))
-        : Container();
-  }
-
   Widget _buildTopWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,6 +64,36 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
         ),
       ],
     );
+  }
+
+  Widget _buildHeaderWidget() {
+    List<String> _title = [artistLocal, albumLocal];
+    return myRowList(_title, sublGrayText);
+  }
+
+  Widget _itemBuildWidget() {
+    return _artists != null && _artists!.length > 0
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _artists!.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Artists _tem = _artists![index];
+                  List<String> _title = [_tem.name, _tem.albumCount.toString()];
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () {
+                            //_getAlbums(_tem.id);
+                            activeID.value = _tem.id;
+                            indexValue.value = 9;
+                          },
+                          child: myRowList(_title, nomalGrayText)));
+                }))
+        : Container();
   }
 
   @override

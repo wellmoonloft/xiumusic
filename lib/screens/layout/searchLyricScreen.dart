@@ -8,7 +8,7 @@ import '../common/myAlertDialog.dart';
 import '../common/myLoadingDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
+import '../common/myTextButton.dart';
 
 class SearchLyricScreen extends StatefulWidget {
   const SearchLyricScreen({Key? key}) : super(key: key);
@@ -80,7 +80,9 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: const Text('请确认查询信息'),
+            backgroundColor: rightColor,
+            title: Text('请确认查询信息', style: nomalGrayText),
+            contentPadding: EdgeInsets.only(left: 20, bottom: 20),
             children: <Widget>[
               MyTextInput(
                 control: songController,
@@ -91,7 +93,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 press: () {},
                 titleStyle: nomalGrayText,
                 mainaxis: MainAxisAlignment.start,
-                crossaxis: CrossAxisAlignment.end,
+                crossaxis: CrossAxisAlignment.center,
               ),
               MyTextInput(
                 control: artistController,
@@ -102,22 +104,23 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 press: () {},
                 titleStyle: nomalGrayText,
                 mainaxis: MainAxisAlignment.start,
-                crossaxis: CrossAxisAlignment.end,
+                crossaxis: CrossAxisAlignment.center,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButtom(
+                  MyTextButton(
                     title: "取消",
                     isActive: false,
                     press: () {
                       Navigator.of(context).pop();
                     },
                   ),
-                  TextButtom(
+                  MyTextButton(
                     title: "搜索",
                     isActive: false,
                     press: () async {
+                      showMyLoadingDialog(context, "搜索中...");
                       var _result = await searchNeteasAPI(
                           songController.text + " " + artistController.text,
                           "1");
@@ -127,6 +130,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                           _netsongs = _netresult;
                         });
                       }
+                      Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     },
                   ),
@@ -298,7 +302,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                     ? Text("结果:" + _songs!.length.toString(),
                         style: nomalGrayText)
                     : Text("结果: 0", style: nomalGrayText)),
-            TextButtom(
+            MyTextButton(
               isActive: false,
               title: "绑定歌词",
               press: () async {

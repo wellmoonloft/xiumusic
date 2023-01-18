@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:xiumusic/screens/common/textButtom.dart';
+import 'package:xiumusic/screens/common/myTextButton.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseDB.dart';
 import '../../util/util.dart';
 import '../common/baseCSS.dart';
 import '../common/myStructure.dart';
+import '../common/myToast.dart';
 
 class PlayListScreen extends StatefulWidget {
   const PlayListScreen({Key? key}) : super(key: key);
@@ -69,6 +70,13 @@ class _PlayListScreenState extends State<PlayListScreen> {
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _tem = _songs[index];
+                  List<String> _title = [
+                    _tem.title,
+                    _tem.album,
+                    _tem.artist,
+                    formatDuration(_tem.duration),
+                    if (!isMobile.value) _tem.playCount.toString(),
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
@@ -81,69 +89,12 @@ class _PlayListScreenState extends State<PlayListScreen> {
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
                               builder: ((context, value, child) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        _tem.title,
-                                        textDirection: TextDirection.ltr,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        _tem.album,
-                                        textDirection: TextDirection.ltr,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.artist,
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        formatDuration(_tem.duration),
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    if (!isMobile.value)
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          _tem.playCount.toString(),
-                                          textDirection: TextDirection.rtl,
-                                          style: (value.isNotEmpty &&
-                                                  value["value"] == _tem.id)
-                                              ? activeText
-                                              : nomalGrayText,
-                                        ),
-                                      ),
-                                  ],
-                                );
+                                return myRowList(
+                                    _title,
+                                    (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
+                                        ? activeText
+                                        : nomalGrayText);
                               }))));
                 }))
         : Container();
@@ -152,7 +103,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 120,
+        top: 110,
         headerWidget: Column(
           children: [
             Row(
@@ -180,28 +131,59 @@ class _PlayListScreenState extends State<PlayListScreen> {
                   width: 200,
                   height: 35,
                   child: isInit
-                      ? DropdownButton(
-                          value: _selectedSort,
-                          items: _sortItems,
-                          isDense: true,
-                          isExpanded: true,
-                          underline: Container(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedSort = value.toString();
-                              _getSongs(value.toString());
-                            });
-                          },
-                        )
+                      ? Theme(
+                          data: Theme.of(context).copyWith(
+                            canvasColor: rightColor,
+                          ),
+                          // DropdownButtonHideUnderline 没有下划线的下拉栏
+                          child: DropdownButton(
+                            value: _selectedSort,
+                            items: _sortItems,
+                            isDense: true,
+                            isExpanded: true,
+                            underline: Container(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedSort = value.toString();
+                                _getSongs(value.toString());
+                              });
+                            },
+                          ))
                       : Container(),
                 ),
+                //TODO 新增播放列表
                 Container(
                   padding: EdgeInsets.all(15),
-                  child: TextButtom(
+                  child: MyTextButton(
                     isActive: false,
-                    press: () {},
+                    press: () {
+                      showMenu(
+                          context: context,
+                          position: RelativeRect.fill,
+                          items: <PopupMenuEntry>[
+                            PopupMenuItem(child: Text('语文')),
+                            PopupMenuDivider(),
+                            CheckedPopupMenuItem(
+                              child: Text('数学'),
+                              checked: true,
+                            ),
+                            PopupMenuDivider(),
+                            PopupMenuItem(child: Text('英语')),
+                          ]);
+                    },
                     title: '新建',
                   ),
+                ),
+
+                IconButton(
+                  icon: Icon(
+                    Icons.playlist_add_check,
+                    color: kTextColor,
+                    size: 16,
+                  ),
+                  onPressed: () {
+                    MyToast.show(context: context, message: "message");
+                  },
                 )
               ],
             ),

@@ -51,10 +51,6 @@ class MyTextInput extends StatelessWidget {
                 press();
               }
             },
-            // onEditingComplete: () {
-            //   press();
-            //   print("onEditingComplete");
-            // },
             decoration: InputDecoration(
                 hintText: hintLabel,
                 labelStyle: nomalGrayText,

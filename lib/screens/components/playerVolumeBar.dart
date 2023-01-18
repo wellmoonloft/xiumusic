@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
+import '../../util/baseDB.dart';
 import '../common/baseCSS.dart';
+import '../common/myStatefulButtom.dart';
 import '../common/myToast.dart';
 import 'activePlaylistDialog.dart';
 
@@ -15,9 +18,23 @@ class PlayerVolumeBar extends StatefulWidget {
 
 class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
   double _activevolume = 1.0;
+  bool islistShow = true;
+  List<Playlist> _listplaylist = [];
+
+  _getPlaylist() async {
+    final _playlists = await BaseDB.instance.getPlaylists();
+    if (_playlists != null && _playlists.length > 0) {
+      for (var i = 0; i < _playlists.length; i++) {
+        Playlist _playlist = _playlists[i];
+        _listplaylist.add(_playlist);
+      }
+    }
+  }
+
   @override
   initState() {
     super.initState();
+    _getPlaylist();
   }
 
   @override
@@ -37,21 +54,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.playlist_add,
-                    color: kTextColor,
-                    size: 16,
-                  ),
-                  onPressed: () {
-                    RenderBox? renderBox =
-                        context.findRenderObject() as RenderBox?;
-                    Offset offset = renderBox!.localToGlobal(Offset.zero);
-                    print(offset);
-                  },
-                ),
-              ),
+              MyStatefulButtom(),
               Container(
                 child: IconButton(
                   icon: Icon(
@@ -64,9 +67,9 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                       RenderBox? renderBox =
                           context.findRenderObject() as RenderBox?;
                       Offset offset = renderBox!.localToGlobal(Offset.zero);
-                      showActivePlaylistDialog(context, offset);
+                      showActivePlaylistDialog(context, offset, widget.player);
                     } else {
-                      showMyToast(context, "没有播放队列");
+                      MyToast.show(context: context, message: "没有播放队列");
                     }
                   },
                 ),

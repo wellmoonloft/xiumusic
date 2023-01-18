@@ -1,6 +1,7 @@
 //抽取所有文本条目，也许将来会国际化，省的到时候再整理
-final String version = "v0.0.3";
+final String version = "v0.0.4";
 
+//页面
 final String configLocal = "确定";
 final String saveLocal = "保存";
 final String cancelLocal = "取消";
@@ -35,3 +36,5 @@ final String activeSongLocal = "正在播放";
 final String playlistLocal = "播放列表";
 final String favoriteLocal = "收藏";
 final String searchLocal = "搜索";
+
+//弹窗

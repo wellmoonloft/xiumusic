@@ -30,7 +30,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 setState(() {
                   loopMode = 1;
                 });
-                showMyToast(context, "单曲循环");
+                MyToast.show(context: context, message: "单曲循环");
               },
             ));
       case 1:
@@ -45,7 +45,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 setState(() {
                   loopMode = 2;
                 });
-                showMyToast(context, "随机循环");
+
+                MyToast.show(context: context, message: "随机循环");
               },
             ));
       case 2:
@@ -59,7 +60,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 setState(() {
                   loopMode = 0;
                 });
-                showMyToast(context, "全部循环");
+                MyToast.show(context: context, message: "全部循环");
               },
             ));
       default:

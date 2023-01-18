@@ -13,7 +13,7 @@ import '../common/myAlertDialog.dart';
 import '../common/myLoadingDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
+import '../common/myTextButton.dart';
 
 class Settings extends StatefulWidget {
   const Settings({
@@ -155,7 +155,7 @@ class _SettingsState extends State<Settings>
             Text(settingsLocal, style: titleText1),
             Row(
               children: [
-                TextButtom(
+                MyTextButton(
                   press: () async {
                     showMyLoadingDialog(context, "刷新中...");
                     //初始化服务器
@@ -172,7 +172,7 @@ class _SettingsState extends State<Settings>
                 SizedBox(
                   width: 10,
                 ),
-                TextButtom(
+                MyTextButton(
                   press: () {
                     showMyAlertDialog(context, "尚未完工", "敬请期待");
                     //showMyToast(context, "sssss");
@@ -214,7 +214,7 @@ class _SettingsState extends State<Settings>
                     ValueListenableBuilder<bool>(
                         valueListenable: isServers,
                         builder: ((context, _value, child) {
-                          return TextButtom(
+                          return MyTextButton(
                             press: () {
                               _value ? _deleteServer() : _saveServer();
                             },
@@ -276,7 +276,7 @@ class _SettingsState extends State<Settings>
                       "歌词服务器",
                       style: titleText2,
                     ),
-                    TextButtom(
+                    MyTextButton(
                       press: () async {
                         _saveNetease();
                       },

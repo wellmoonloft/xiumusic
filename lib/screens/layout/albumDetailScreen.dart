@@ -8,7 +8,7 @@ import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
-import '../common/textButtom.dart';
+import '../common/myTextButton.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
   const AlbumDetailScreen({
@@ -26,7 +26,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   String _albumsname = "";
   String _artistID = "";
   String _genre = "";
-  String _createDate = "2022-11-29T03:15:15.065292936Z";
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
   String _artist = "";
   int _year = 0;
@@ -56,11 +55,17 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
           _artist = _albums.artist;
           _artistID = _albums.artistId;
           _genre = _albums.genre;
-          _createDate = _albums.created;
           _arturl = _xx;
         });
       }
     }
+  }
+
+  @override
+  initState() {
+    super.initState();
+    _getSongs(activeID.value);
+    print("object");
   }
 
   Widget _buildTopWidget() {
@@ -103,7 +108,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     padding: leftrightPadding,
                     child: Row(
                       children: [
-                        TextButtom(
+                        MyTextButton(
                           press: () {
                             indexValue.value = 5;
                           },
@@ -113,7 +118,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         SizedBox(
                           width: 10,
                         ),
-                        TextButtom(
+                        MyTextButton(
                           press: () {
                             activeID.value = _artistID;
                             indexValue.value = 9;
@@ -135,7 +140,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         ),
                         _genre == "0"
                             ? Container()
-                            : TextButtom(
+                            : MyTextButton(
                                 press: () {},
                                 title: "$genresLocal",
                                 isActive: false,
@@ -147,7 +152,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               ),
                         _genre == "0"
                             ? Container()
-                            : TextButtom(
+                            : MyTextButton(
                                 press: () {},
                                 title: _genre,
                                 isActive: false,
@@ -259,48 +264,13 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   }
 
   Widget _buildHeaderWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-            flex: 2,
-            child: Container(
-              child: Text(
-                songLocal,
-                textDirection: TextDirection.ltr,
-                style: sublGrayText,
-              ),
-            )),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            drationLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            bitRangeLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              child: Text(
-            playCountLocal,
-            textDirection: TextDirection.rtl,
-            style: sublGrayText,
-          )),
-        )
-      ],
-    );
+    List<String> _title = [
+      songLocal,
+      drationLocal,
+      bitRangeLocal,
+      playCountLocal
+    ];
+    return myRowList(_title, sublGrayText);
   }
 
   Widget _itemBuildWidget() {
@@ -315,6 +285,12 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _tem = _songs![index];
+                  List<String> _title = [
+                    _tem.title,
+                    formatDuration(_tem.duration),
+                    _tem.bitRate.toString(),
+                    _tem.playCount.toString(),
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
@@ -327,68 +303,15 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
                               builder: ((context, value, child) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        _tem.title,
-                                        textDirection: TextDirection.ltr,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        formatDuration(_tem.duration),
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.bitRate.toString(),
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.playCount.toString(),
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                  ],
-                                );
+                                return myRowList(
+                                    _title,
+                                    (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
+                                        ? activeText
+                                        : nomalGrayText);
                               }))));
                 }))
         : Container();
-  }
-
-  @override
-  initState() {
-    super.initState();
-    _getSongs(activeID.value);
   }
 
   @override

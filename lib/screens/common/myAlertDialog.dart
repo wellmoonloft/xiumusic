@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../util/localizations.dart';
 import 'baseCSS.dart';
-import 'textButtom.dart';
+import 'myTextButton.dart';
 
 class MyAlertDialog extends StatelessWidget {
   final String _titile;
@@ -23,7 +23,7 @@ class MyAlertDialog extends StatelessWidget {
         _content,
       ),
       actions: <Widget>[
-        TextButtom(
+        MyTextButton(
           title: configLocal,
           isActive: false,
           press: () {

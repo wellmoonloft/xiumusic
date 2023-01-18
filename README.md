@@ -73,7 +73,7 @@
 ### 基础  
 
 - [x] 播放  
-  - [x] 流播放、播放控制、静音、单曲循环
+  - [x] 音乐播放、播放控制、静音、单曲循环
   - [x] 播放列表、全部循环
 
 - [x] 网络  
@@ -118,6 +118,11 @@ macos-Runner-Release.entitlements
     <key>com.apple.security.network.client</key>
     <true/>
 
+#### 使用歌词搜索功能
+
+需要设置网易云的api，根据这里设置[NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)的说明在[vercel](https://vercel.com/)上配置一个之后，把api的域名保存在设置的歌词服务器里面就可以使用了。
+
+![WechatIMG673](https://s2.loli.net/2023/01/18/GPbWiBRjT3LHl8K.png)
 
 ## 依赖
 

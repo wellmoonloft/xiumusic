@@ -80,6 +80,12 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _tem = _songs[index];
+                  List<String> _title = [
+                    _tem.title,
+                    _tem.artist,
+                    _tem.bitRate.toString(),
+                    _tem.playCount.toString(),
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
@@ -92,57 +98,12 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
                               builder: ((context, value, child) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        _tem.title,
-                                        textDirection: TextDirection.ltr,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.artist,
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.bitRate.toString(),
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Text(
-                                        _tem.playCount.toString(),
-                                        textDirection: TextDirection.rtl,
-                                        style: (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalGrayText,
-                                      ),
-                                    ),
-                                  ],
-                                );
+                                return myRowList(
+                                    _title,
+                                    (value.isNotEmpty &&
+                                            value["value"] == _tem.id)
+                                        ? activeText
+                                        : nomalGrayText);
                               }))));
                 }))
         : Container();
@@ -160,58 +121,20 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Albums _tem = _albums[index];
+                  List<String> _title = [
+                    _tem.title,
+                    _tem.artist.toString(),
+                    _tem.songCount.toString(),
+                    formatDuration(_tem.duration),
+                    _tem.playCount.toString(),
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () {
                             activeID.value = _tem.id;
                             indexValue.value = 8;
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  _tem.title,
-                                  textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.artist.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.songCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  formatDuration(_tem.duration),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.playCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                            ],
-                          )));
+                          child: myRowList(_title, nomalGrayText)));
                 }))
         : Container();
   }
@@ -228,35 +151,14 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Artists _tem = _artists[index];
+                  List<String> _title = [_tem.name, _tem.albumCount.toString()];
                   return ListTile(
                       title: InkWell(
                           onTap: () {
-                            //_getAlbums(_tem.id);
                             activeID.value = _tem.id;
                             indexValue.value = 9;
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.name,
-                                  textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _tem.albumCount.toString(),
-                                  textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
-                                ),
-                              ),
-                            ],
-                          )));
+                          child: myRowList(_title, nomalGrayText)));
                 }))
         : Container();
   }
