@@ -5,7 +5,6 @@ import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../common/baseCSS.dart';
 import '../../util/baseDB.dart';
-import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
@@ -17,24 +16,19 @@ class AlbumScreen extends StatefulWidget {
 
 class _AlbumScreenState extends State<AlbumScreen> {
   List<Albums>? _albums;
-  List<String>? _imageURL;
   int _albumsnum = 0;
 
   _getAllAlbums() async {
     final _albumsList = await BaseDB.instance.getAllAlbums();
     List<Albums> _list = [];
-    List<String> _listURL = [];
     for (var element in _albumsList) {
-      Albums _xx = element;
-      String _yy = await getCoverArt(_xx.id);
-      _list.add(_xx);
-      _listURL.add(_yy);
+      Albums _album = element;
+      _list.add(_album);
       _albumsnum++;
     }
     if (mounted) {
       setState(() {
         _albums = _albumsList;
-        _imageURL = _listURL;
       });
     }
   }
@@ -71,10 +65,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 itemCount: _albums!.length,
                 itemBuilder: (context, index) {
                   Albums _tem = _albums![index];
-                  String _temURL = _imageURL![index];
                   return InkWell(
                       onTap: () {
-                        //_getAlbums(_tem.id);
                         activeID.value = _tem.id;
                         indexValue.value = 8;
                       },
@@ -83,7 +75,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: CachedNetworkImage(
-                              imageUrl: _temURL,
+                              imageUrl: _tem.coverUrl,
                               fit: BoxFit.cover,
                               placeholder: (context, url) {
                                 return AnimatedSwitcher(

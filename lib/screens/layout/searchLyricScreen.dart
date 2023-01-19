@@ -66,6 +66,10 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
     tabController = TabController(length: myTabs.length, vsync: this);
   }
 
+  _confirm() {
+    Navigator.of(context).pop();
+  }
+
   @override
   void dispose() {
     searchController.dispose();

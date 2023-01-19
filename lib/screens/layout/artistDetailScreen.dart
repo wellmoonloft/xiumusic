@@ -29,7 +29,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   _getAlbums(String artistId) async {
     final _albumsList = await BaseDB.instance.getAlbums(artistId);
     if (_albumsList != null) {
-      String _artURL = await getCoverArt(artistId);
       final _artistList = await BaseDB.instance.getArtistsByID(artistId);
       var _favorite = await BaseDB.instance.getFavoritebyId(artistId);
       if (_favorite != null) {
@@ -50,7 +49,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
           _albumsnum = _albumsList.length;
           _artilstname = _artistList[0].name;
 
-          _arturl = _artURL;
+          _arturl = _artistList[0].artistImageUrl;
         });
       }
     }

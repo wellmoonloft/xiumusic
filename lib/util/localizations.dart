@@ -2,7 +2,7 @@
 final String version = "v0.0.4";
 
 //页面
-final String configLocal = "确定";
+final String confirmLocal = "确定";
 final String saveLocal = "保存";
 final String cancelLocal = "取消";
 final String noticeLocal = "提示";

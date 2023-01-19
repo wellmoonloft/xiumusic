@@ -71,7 +71,8 @@ class BaseDB {
                 public INTEGER NOT NULL,
                 owner TEXT NOT NULL,
                 created TEXT NOT NULL,
-                changed TEXT NOT NULL
+                changed TEXT NOT NULL,
+                imageUrl TEXT
               )
         ''');
     await _database.execute('''
@@ -110,7 +111,8 @@ class BaseDB {
                 duration INTEGER NOT NULL,
                 playCount INTEGER,
                 songCount INTEGER NOT NULL,
-                created TEXT NOT NULL
+                created TEXT NOT NULL,
+                coverUrl TEXT
               )
         ''');
     await _database.execute('''
@@ -126,7 +128,9 @@ class BaseDB {
                 bitRate INTEGER NOT NULL,
                 path TEXT NOT NULL,
                 playCount INTEGER,
-                created TEXT NOT NULL
+                created TEXT NOT NULL,
+                stream TEXT,
+                coverUrl TEXT
               )
         ''');
     await _database.execute('''
@@ -285,6 +289,47 @@ class BaseDB {
     }
   }
 
+  updatePlaylists(Playlist _playlist) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.update(PlaylistTable, _playlist.toJson(),
+          where: "id=?", whereArgs: [_playlist.id]);
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  delAllPlaylists() async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(PlaylistTable);
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  checkPlaylistById(String _playlistId, String songId) async {
+    try {
+      final db = await instance.db;
+
+      var res = db.rawQuery(
+          "SELECT * FROM $PlaylistAndSongTable WHERE playlistId='$_playlistId' AND songId='$songId'");
+      print(
+          "SELECT * FROM $PlaylistAndSongTable WHERE playlistId='$_playlistId' AND songId='$songId'");
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   delPlaylistById(String _playlistId) async {
     try {
       final db = await instance.db;
@@ -300,14 +345,44 @@ class BaseDB {
     }
   }
 
+  delAllPlaylistSongs() async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(PlaylistAndSongTable);
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
   addPlaylistSongs(PlaylistAndSong _playlistAndSong) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(PlaylistAndSongTable,
-          where: "playlistId=?", whereArgs: [_playlistAndSong.playlistId]);
-      await batch.commit(noResult: true);
+
       batch.insert(PlaylistAndSongTable, _playlistAndSong.toJson());
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addForcePlaylistSongs(
+      List<PlaylistAndSong> _playlistAndSong, String _playlistId) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+
+      batch.delete(PlaylistAndSongTable,
+          where: "playlistId=?", whereArgs: [_playlistId]);
+      await batch.commit(noResult: true);
+      for (PlaylistAndSong _element in _playlistAndSong) {
+        batch.insert(PlaylistAndSongTable, _element.toJson());
+      }
 
       var res = await batch.commit(noResult: true);
       return res;

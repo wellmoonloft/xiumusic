@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseDB.dart';
-import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../common/baseCSS.dart';
 import '../common/mySliverControlBar.dart';
@@ -20,15 +19,12 @@ class _IndexScreenState extends State<IndexScreen> {
   ScrollController _lastAlbumcontroller = ScrollController();
   ScrollController _randomAlbumcontroller = ScrollController();
   List<Albums>? _albums;
-  List<String>? _imageURL;
   List<Albums>? _lastalbums;
-  List<String>? _lastimageURL;
   List<Songs>? _songs;
 
   _getRandomAlbums() async {
     final _albumsList = await BaseDB.instance.getAllAlbums();
     List<Albums> _list = [];
-    List<String> _listURL = [];
     List<int> _indexList = [];
     int _count = 0;
     while (_count < 10) {
@@ -41,14 +37,11 @@ class _IndexScreenState extends State<IndexScreen> {
 
     for (var element in _indexList) {
       Albums _xx = _albumsList[element];
-      String _yy = await getCoverArt(_xx.id);
       _list.add(_xx);
-      _listURL.add(_yy);
     }
     if (mounted) {
       setState(() {
         _albums = _list;
-        _imageURL = _listURL;
       });
     }
   }
@@ -56,18 +49,14 @@ class _IndexScreenState extends State<IndexScreen> {
   _getLastAlbums() async {
     final _albumsList = await BaseDB.instance.getAlbumsByOrder(1);
     List<Albums> _list = [];
-    List<String> _listURL = [];
 
     for (var element in _albumsList) {
       Albums _xx = element;
-      String _yy = await getCoverArt(_xx.id);
       _list.add(_xx);
-      _listURL.add(_yy);
     }
     if (mounted) {
       setState(() {
         _lastalbums = _list;
-        _lastimageURL = _listURL;
       });
     }
   }
@@ -75,13 +64,10 @@ class _IndexScreenState extends State<IndexScreen> {
   _getRandomSongs() async {
     final _songsList = await BaseDB.instance.getSongsByOrder(0);
     List<Songs> _list = [];
-    List<String> _listURL = [];
 
     for (var element in _songsList) {
       Songs _xx = element;
-      String _yy = await getCoverArt(_xx.id);
       _list.add(_xx);
-      _listURL.add(_yy);
     }
     if (mounted) {
       setState(() {
@@ -124,10 +110,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_albums != null && _albums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlList(
-            controller: _randomAlbumcontroller,
-            albums: _albums!,
-            url: _imageURL!,
-          )),
+                  controller: _randomAlbumcontroller, albums: _albums!)),
         if (_songs != null && _songs!.length > 0)
           SliverToBoxAdapter(
               child: Container(
@@ -179,10 +162,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_lastalbums != null && _lastalbums!.length > 0)
           SliverToBoxAdapter(
             child: MySliverControlList(
-              controller: _lastAlbumcontroller,
-              albums: _lastalbums!,
-              url: _lastimageURL!,
-            ),
+                controller: _lastAlbumcontroller, albums: _lastalbums!),
           ),
       ],
     );

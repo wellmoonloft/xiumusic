@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import '../util/baseDB.dart';
-import '../util/httpClient.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import 'common/baseCSS.dart';
@@ -39,17 +38,16 @@ class _BottomScreenState extends State<BottomScreen>
   void _listenforcurrentIndexStream() {
     _player.currentIndexStream.listen((event) async {
       if (_player.sequenceState == null) return;
-
+      print("4");
       // 更新当前歌曲
       final currentItem = _player.sequenceState!.currentSource;
       final _title = currentItem?.tag as String?;
       Songs _song = await BaseDB.instance.getSongById(_title.toString());
       //拼装当前歌曲
       Map _activeSong = new Map();
-      String _url = await getCoverArt(_song.id);
       _activeSong["value"] = _song.id;
       _activeSong["artist"] = _song.artist;
-      _activeSong["url"] = _url;
+      _activeSong["url"] = _song.coverUrl;
       _activeSong["title"] = _song.title;
       _activeSong["album"] = _song.album;
       _activeSong["albumId"] = _song.albumId;
@@ -84,17 +82,16 @@ class _BottomScreenState extends State<BottomScreen>
   void _listenforsequenceStream() {
     _player.sequenceStream.listen((event) async {
       if (_player.sequenceState == null) return;
-
+      print("3");
       // 更新当前歌曲
       final currentItem = _player.sequenceState!.currentSource;
       final _title = currentItem?.tag as String?;
       Songs _song = await BaseDB.instance.getSongById(_title.toString());
       //拼装当前歌曲
       Map _activeSong = new Map();
-      String _url = await getCoverArt(_song.id);
       _activeSong["value"] = _song.id;
       _activeSong["artist"] = _song.artist;
-      _activeSong["url"] = _url;
+      _activeSong["url"] = _song.coverUrl;
       _activeSong["title"] = _song.title;
       _activeSong["album"] = _song.album;
       _activeSong["albumId"] = _song.albumId;
@@ -125,25 +122,18 @@ class _BottomScreenState extends State<BottomScreen>
     });
   }
 
-  _getPlayList() async {
+  Future<void> setAudioSource() async {
     List<AudioSource> children = [];
     List _songs = activeList.value;
-    print("1");
-    String _sql = await getServerInfo("stream");
     for (var element in _songs) {
       Songs _song = element;
-      String _url = _sql + '&id=' + _song.id;
-      children.add(AudioSource.uri(Uri.parse(_url), tag: _song.id));
+      children.add(AudioSource.uri(Uri.parse(_song.stream), tag: _song.id));
     }
 
-    return children;
-  }
-
-  Future<void> setAudioSource() async {
     final playlist = ConcatenatingAudioSource(
       useLazyPreparation: true,
       shuffleOrder: DefaultShuffleOrder(),
-      children: await _getPlayList(),
+      children: children,
     );
 
     await _player.setAudioSource(playlist,
@@ -172,12 +162,12 @@ class _BottomScreenState extends State<BottomScreen>
         valueListenable: activeSongValue,
         builder: ((context, value, child) {
           if (value != "1") {
-            setAudioSource();
             //新加列表的时候关闭乱序，避免出错
             _player.setShuffleModeEnabled(false);
             isShuffleModeEnabledNotifier.value = false;
 
             _player.setLoopMode(LoopMode.all);
+            setAudioSource();
           }
 
           return Container(

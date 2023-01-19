@@ -8,13 +8,9 @@ import 'baseCSS.dart';
 class MySliverControlList extends StatelessWidget {
   final controller;
   final List<Albums> albums;
-  final List<String> url;
 
   const MySliverControlList(
-      {Key? key,
-      required this.controller,
-      required this.albums,
-      required this.url});
+      {Key? key, required this.controller, required this.albums});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +30,7 @@ class MySliverControlList extends StatelessWidget {
         controller: controller,
         itemBuilder: (context, index) {
           Albums _tem = albums[index];
-          String _temURL = url[index];
+
           return Container(
             padding: leftrightPadding,
             child: InkWell(
@@ -51,7 +47,7 @@ class MySliverControlList extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: CachedNetworkImage(
-                          imageUrl: _temURL,
+                          imageUrl: _tem.coverUrl,
                           fit: BoxFit.cover,
                           placeholder: (context, url) {
                             return AnimatedSwitcher(

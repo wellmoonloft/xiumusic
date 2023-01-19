@@ -16,7 +16,7 @@ const allPadding = EdgeInsets.all(15);
 const titleText1 =
     TextStyle(fontSize: 40, color: kGrayColor, fontWeight: FontWeight.bold);
 const titleText2 = TextStyle(
-  fontSize: 20,
+  fontSize: 24,
   color: kGrayColor,
 );
 const activeText = TextStyle(color: badgeRed, fontSize: 14);

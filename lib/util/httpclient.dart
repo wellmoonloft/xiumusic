@@ -131,6 +131,39 @@ createPlaylist(int _type, String _nameOrId, String _songId) async {
   }
 }
 
+updatePlaylist(String playlistId, String songIdToAdd) async {
+  String _sql = await _getServerInfo("updatePlaylist");
+
+  _sql = _sql + '&playlistId=' + playlistId + '&songIdToAdd=' + songIdToAdd;
+
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      var _response = response.data['subsonic-response'];
+
+      return _response;
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+getPlaylistbyId(String _id) async {
+  String _sql = await _getServerInfo("getPlaylist");
+  try {
+    var response = await Dio().get(_sql + "&id=" + _id);
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _playlist = _response['playlist'];
+
+      return _playlist;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
 getPlaylists() async {
   String _sql = await _getServerInfo("getPlaylists");
   try {

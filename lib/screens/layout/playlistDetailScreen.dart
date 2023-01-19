@@ -3,61 +3,53 @@ import 'package:flutter/material.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../util/baseDB.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
 import '../../util/httpClient.dart';
+import '../common/baseCSS.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 
-class AlbumDetailScreen extends StatefulWidget {
-  const AlbumDetailScreen({
+class PlaylistDetailScreen extends StatefulWidget {
+  const PlaylistDetailScreen({
     Key? key,
   }) : super(key: key);
   @override
-  _AlbumDetailScreenState createState() => _AlbumDetailScreenState();
+  _PlaylistDetailScreenState createState() => _PlaylistDetailScreenState();
 }
 
-class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
-  List? _songs;
+class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
+  List<Songs> _songslist = [];
+
   int _songsnum = 0;
   int _playCount = 0;
   int _duration = 0;
   String _albumsname = "";
-  String _artistID = "";
-  String _genre = "";
+  String _palylistId = "";
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
   String _artist = "";
   int _year = 0;
-  bool _star = false;
+  String _changed = "2023-01-18T16:37:18Z";
 
-  _getSongs(String albumId) async {
-    final _albumtem = await BaseDB.instance.getAlbumsByID(albumId);
-    if (_albumtem != null && _albumtem.length > 0) {
-      final _songsList = await BaseDB.instance.getSongsByAlbumId(albumId);
-
-      if (_songsList != null) {
-        var _favorite = await BaseDB.instance.getFavoritebyId(albumId);
-        if (_favorite != null) {
-          _star = true;
-        } else {
-          _star = false;
-        }
-        Albums _albums = _albumtem[0];
-        if (mounted) {
-          setState(() {
-            _songs = _songsList;
-            _songsnum = _albums.songCount;
-            _albumsname = _albums.title;
-            _playCount = _albums.playCount;
-            _duration = _albums.duration;
-            _year = _albums.year;
-            _artist = _albums.artist;
-            _artistID = _albums.artistId;
-            _genre = _albums.genre;
-            _arturl = _albums.coverUrl;
-          });
-        }
+  _getSongs(String _playlistId) async {
+    final _playlisttem = await BaseDB.instance.getPlaylistById(_playlistId);
+    if (_playlisttem != null) {
+      Playlist _playlist = _playlisttem;
+      final _songlist = await BaseDB.instance.getPlaylistSongs(_playlisttem.id);
+      setState(() {
+        _songsnum = _playlist.songCount;
+        _albumsname = _playlist.name;
+        _duration = _playlist.duration;
+        _artist = _playlist.owner;
+        _changed = _playlist.changed;
+        _arturl = _playlist.imageUrl;
+        _palylistId = _playlist.id;
+      });
+      if (_songlist != null && _songlist.length > 0) {
+        setState(() {
+          _songslist = _songlist;
+        });
       }
     }
   }
@@ -110,53 +102,18 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       children: [
                         MyTextButton(
                           press: () {
-                            indexValue.value = 5;
+                            indexValue.value = 2;
                           },
-                          title: "$artistLocal",
+                          title: "$playlistLocal",
                           isActive: false,
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        MyTextButton(
-                          press: () {
-                            activeID.value = _artistID;
-                            indexValue.value = 9;
-                          },
-                          title: _artist,
-                          isActive: false,
+                        Text(
+                          "创建人: " + _artist,
+                          style: nomalGrayText,
                         ),
-                        if (!isMobile.value)
-                          SizedBox(
-                            width: 10,
-                          ),
-                        if (!isMobile.value)
-                          Text(
-                            "$yearLocal: " + _year.toString(),
-                            style: nomalGrayText,
-                          ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        _genre == "0"
-                            ? Container()
-                            : MyTextButton(
-                                press: () {},
-                                title: "$genresLocal",
-                                isActive: false,
-                              ),
-                        _genre == "0"
-                            ? Container()
-                            : SizedBox(
-                                width: 10,
-                              ),
-                        _genre == "0"
-                            ? Container()
-                            : MyTextButton(
-                                press: () {},
-                                title: _genre,
-                                isActive: false,
-                              ),
                       ],
                     ),
                   ),
@@ -211,48 +168,54 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     padding: leftrightPadding,
                     child: Row(
                       children: [
-                        if (!isMobile.value)
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalGrayText,
-                          ),
-                        Container(
-                          padding: EdgeInsets.only(left: 5),
-                          child: (_star)
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.favorite,
-                                    color: badgeRed,
-                                    size: 16,
+                        Text(
+                          "修改日期: " + timeISOtoString(_changed),
+                          style: nomalGrayText,
+                        ),
+                        MyTextButton(
+                          press: () async {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_context) {
+                                return AlertDialog(
+                                  titlePadding: EdgeInsets.all(10),
+                                  contentPadding: EdgeInsets.all(10),
+                                  titleTextStyle: nomalGrayText,
+                                  contentTextStyle: nomalGrayText,
+                                  backgroundColor: badgeDark,
+                                  title: Text(
+                                    "删除",
                                   ),
-                                  onPressed: () async {
-                                    Favorite _favorite = Favorite(
-                                        id: activeID.value, type: 'album');
-                                    await delStarred(_favorite);
-                                    await BaseDB.instance
-                                        .delFavorite(activeID.value);
-                                    setState(() {
-                                      _star = false;
-                                    });
-                                  },
-                                )
-                              : IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    color: kTextColor,
-                                    size: 16,
+                                  content: Text(
+                                    "是否删除" + _albumsname + "?",
                                   ),
-                                  onPressed: () async {
-                                    Favorite _favorite = Favorite(
-                                        id: activeID.value, type: 'album');
-                                    await addStarred(_favorite);
-                                    await BaseDB.instance
-                                        .addFavorite(_favorite);
-                                    setState(() {
-                                      _star = true;
-                                    });
-                                  },
-                                ),
+                                  actions: <Widget>[
+                                    MyTextButton(
+                                      title: cancelLocal,
+                                      isActive: false,
+                                      press: () {
+                                        Navigator.of(_context).pop();
+                                      },
+                                    ),
+                                    MyTextButton(
+                                      title: confirmLocal,
+                                      isActive: false,
+                                      press: () async {
+                                        await deletePlaylist(_palylistId);
+                                        await BaseDB.instance
+                                            .delPlaylistById(_palylistId);
+                                        Navigator.of(_context).pop();
+                                        indexValue.value = 2;
+                                      },
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          title: "删除",
+                          isActive: false,
                         )
                       ],
                     ),
@@ -277,29 +240,29 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   }
 
   Widget _itemBuildWidget() {
-    return _songs != null && _songs!.length > 0
+    return _songslist.length > 0
         ? MediaQuery.removePadding(
             context: context,
             removeTop: true,
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: _songs!.length,
+                itemCount: _songslist.length,
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
-                  Songs _tem = _songs![index];
+                  Songs _song = _songslist[index];
                   List<String> _title = [
-                    _tem.title,
-                    formatDuration(_tem.duration),
-                    _tem.bitRate.toString(),
-                    _tem.playCount.toString(),
+                    _song.title,
+                    formatDuration(_song.duration),
+                    _song.bitRate.toString(),
+                    _song.playCount.toString(),
                   ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
-                            activeSongValue.value = _tem.id;
+                            activeSongValue.value = _song.id;
                             //歌曲所在专辑歌曲List
-                            activeList.value = _songs!;
+                            activeList.value = _songslist;
                             //当前歌曲队列
                             activeIndex.value = index;
                           },
@@ -309,7 +272,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                 return myRowList(
                                     _title,
                                     (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
+                                            value["value"] == _song.id)
                                         ? activeText
                                         : nomalGrayText);
                               }))));

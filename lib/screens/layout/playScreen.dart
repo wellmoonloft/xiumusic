@@ -97,44 +97,43 @@ class _PlayScreenState extends State<PlayScreen>
                     : windowsHeight.value - 95 - 35,
                 width: !isMobile.value ? _width / 2 : _width,
                 child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      height: 140,
+                      height: 50,
                       width: !isMobile.value ? _width / 2 : _width,
-                      child: Center(
-                          child: Text((value.isEmpty) ? "ss" : value["title"],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: titleText1)),
+                      child: Text((value.isEmpty) ? "未知" : value["title"],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: titleText2),
                     ),
+                    Container(
+                        width: !isMobile.value ? _width / 2 : _width,
+                        child: Text(
+                          (value.isEmpty)
+                              ? "未知"
+                              : artistLocal + ": " + value["artist"],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: nomalGrayText,
+                          textAlign: TextAlign.center,
+                        )),
                     SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
+                    Container(
+                        width: !isMobile.value ? _width / 2 : _width,
+                        child: Text(
                           (value.isEmpty)
-                              ? "ss"
+                              ? "未知"
                               : albumLocal + ": " + value["album"],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: nomalGrayText,
                           textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          (value.isEmpty)
-                              ? "ss"
-                              : artistLocal + ": " + value["artist"],
-                          style: nomalGrayText,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+                        )),
                     SizedBox(
                       height: 20,
                     ),

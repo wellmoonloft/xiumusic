@@ -36,6 +36,10 @@ class _SettingsState extends State<Settings>
     Tab(text: '歌词服务器'),
   ];
 
+  _confirm() {
+    Navigator.of(context).pop();
+  }
+
   _saveServer() async {
     if (servercontroller.text != "" &&
         usernamecontroller.text != "" &&

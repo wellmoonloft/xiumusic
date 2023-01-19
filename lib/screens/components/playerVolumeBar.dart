@@ -3,8 +3,11 @@ import 'package:just_audio/just_audio.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/baseDB.dart';
+import '../../util/httpClient.dart';
 import '../common/baseCSS.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStatefulButtom.dart';
+import '../common/myTextButton.dart';
 import '../common/myToast.dart';
 import 'activePlaylistDialog.dart';
 
@@ -18,23 +21,145 @@ class PlayerVolumeBar extends StatefulWidget {
 
 class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
   double _activevolume = 1.0;
-  bool islistShow = true;
-  List<Playlist> _listplaylist = [];
 
-  _getPlaylist() async {
+  Future<List> _getPlaylist() async {
     final _playlists = await BaseDB.instance.getPlaylists();
-    if (_playlists != null && _playlists.length > 0) {
-      for (var i = 0; i < _playlists.length; i++) {
-        Playlist _playlist = _playlists[i];
-        _listplaylist.add(_playlist);
+
+    return _playlists;
+  }
+
+  Future<int> _newDialog(List _playlists1) async {
+    String _selectedSort = '';
+    List<DropdownMenuItem<String>> _sortItems = [];
+    if (_playlists1.length > 0) {
+      for (var i = 0; i < _playlists1.length; i++) {
+        Playlist _playlist = _playlists1[i];
+        _sortItems.add(
+            DropdownMenuItem(value: _playlist.id, child: Text(_playlist.name)));
+        if (i == 0) {
+          _selectedSort = _playlist.id;
+        }
       }
     }
+    var sss = await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return Dialog(
+              backgroundColor: Colors.transparent,
+              child: UnconstrainedBox(
+                  child: Container(
+                width: 250,
+                height: 120,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: badgeDark,
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          decoration: circularBorder,
+                          padding: EdgeInsets.only(
+                              left: 10, top: 5, right: 10, bottom: 5),
+                          width: 200,
+                          height: 35,
+                          child: Theme(
+                              data: Theme.of(context).copyWith(
+                                canvasColor: rightColor,
+                              ),
+                              child: DropdownButton(
+                                value: _selectedSort,
+                                items: _sortItems,
+                                isDense: true,
+                                isExpanded: true,
+                                underline: Container(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedSort = value.toString();
+                                  });
+                                },
+                              ))),
+                      Container(
+                        padding: allPadding,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            MyTextButton(
+                              isActive: false,
+                              press: () async {
+                                Navigator.of(context).pop(3);
+                              },
+                              title: '取消',
+                            ),
+                            MyTextButton(
+                              isActive: false,
+                              press: () async {
+                                if (activeSong.value.isNotEmpty) {
+                                  var _reco = await BaseDB.instance
+                                      .checkPlaylistById(_selectedSort,
+                                          activeSong.value["value"]);
+                                  if (_reco == null) {
+                                    for (Playlist _playlists in _playlists1) {
+                                      if (_playlists.id == _selectedSort) {
+                                        await updatePlaylist(_selectedSort,
+                                            activeSong.value["value"]);
+
+                                        var _playlisttem =
+                                            await getPlaylistbyId(
+                                                _selectedSort);
+
+                                        String _url =
+                                            await getCoverArt(_selectedSort);
+                                        Playlist _playlist = Playlist(
+                                            id: _playlisttem['id'],
+                                            name: _playlisttem['name'],
+                                            songCount:
+                                                _playlisttem['songCount'],
+                                            duration: _playlisttem['duration'],
+                                            public:
+                                                _playlisttem['public'] ? 0 : 1,
+                                            owner: _playlisttem['owner'],
+                                            created: _playlisttem['created'],
+                                            changed: _playlisttem['changed'],
+                                            imageUrl: _url);
+                                        await BaseDB.instance
+                                            .updatePlaylists(_playlist);
+                                      }
+                                    }
+                                    PlaylistAndSong _palylistandsong =
+                                        PlaylistAndSong(
+                                      playlistId: _selectedSort,
+                                      songId: activeSong.value["value"],
+                                    );
+                                    await BaseDB.instance
+                                        .addPlaylistSongs(_palylistandsong);
+                                    Navigator.of(context).pop(0);
+                                  } else {
+                                    Navigator.of(context).pop(1);
+                                  }
+                                } else {
+                                  Navigator.of(context).pop(2);
+                                }
+                              },
+                              title: '添加',
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )));
+        });
+    return sss;
   }
 
   @override
   initState() {
     super.initState();
-    _getPlaylist();
   }
 
   @override
@@ -54,7 +179,43 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              MyStatefulButtom(),
+              Container(
+                  child: ValueListenableBuilder<Map>(
+                      valueListenable: activeSong,
+                      builder: (context, _song, child) {
+                        return IconButton(
+                          icon: Icon(
+                            Icons.playlist_add,
+                            color: (_song.isNotEmpty) ? kTextColor : badgeDark,
+                            size: 16,
+                          ),
+                          onPressed: _song.isEmpty
+                              ? null
+                              : () async {
+                                  await _getPlaylist().then((value) async {
+                                    await _newDialog(value).then((_value) {
+                                      switch (_value) {
+                                        case 0:
+                                          showMyAlertDialog(
+                                              context, "成功", "新建成功");
+                                          break;
+                                        case 1:
+                                          showMyAlertDialog(
+                                              context, "失败", "歌曲已存在");
+                                          break;
+                                        case 0:
+                                          showMyAlertDialog(
+                                              context, "失败", "没有歌曲");
+                                          break;
+                                        default:
+                                          showMyAlertDialog(
+                                              context, "成功", "新建成功");
+                                      }
+                                    });
+                                  });
+                                },
+                        );
+                      })),
               Container(
                 child: IconButton(
                   icon: Icon(

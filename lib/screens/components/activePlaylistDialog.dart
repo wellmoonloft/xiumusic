@@ -13,8 +13,8 @@ class ActivePlaylistDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     List _songs = activeList.value;
     double _height = (_songs.length * 50 > windowsHeight.value / 2)
-        ? windowsHeight.value / 2
-        : _songs.length * 50;
+        ? windowsHeight.value / 2 + 40
+        : _songs.length * 50 + 40;
     double _width = 200;
 
     return Dialog(

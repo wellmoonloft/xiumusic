@@ -50,8 +50,12 @@ getArtistsFromNet() async {
   for (var _element in _genresList["index"]) {
     var _temp = _element["artist"];
     for (dynamic _element1 in _temp) {
-      if (_element1["artistImageUrl"] == null)
-        _element1["artistImageUrl"] = "1";
+      //这个lastfm的网址开始报错了，暂时这么写
+      if (_element1["artistImageUrl"] == null ||
+          _element1["artistImageUrl"] ==
+              "https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png")
+        _element1["artistImageUrl"] =
+            "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
       Artists _tem = Artists.fromJson(_element1);
       _list.add(_tem);
       getAlbumsFromNet(_tem.id);
@@ -64,9 +68,11 @@ getAlbumsFromNet(String artistId) async {
   List<Albums> _list = [];
   Map _genresList = await getAlbums(artistId);
   for (dynamic _element in _genresList["album"]) {
+    String _url = await getCoverArt(_element["id"]);
     if (_element["playCount"] == null) _element["playCount"] = 0;
     if (_element["year"] == null) _element["year"] = 0;
     if (_element["genre"] == null) _element["genre"] = "0";
+    _element["coverUrl"] = _url;
     Albums _tem = Albums.fromJson(_element);
     _list.add(_tem);
     getSongsFromNet(_tem.id);
@@ -79,9 +85,13 @@ getSongsFromNet(String albumId) async {
   Map _songsList = await getSongs(albumId);
 
   for (dynamic _element in _songsList["song"]) {
+    String _stream = await getServerInfo("stream");
+    String _url = await getCoverArt(_element["id"]);
     if (_element["playCount"] == null) _element["playCount"] = 0;
     if (_element["year"] == null) _element["year"] = 0;
     if (_element["genre"] == null) _element["genre"] = "0";
+    _element["stream"] = _stream + '&id=' + _element["id"];
+    _element["coverUrl"] = _url;
     Songs _tem = Songs.fromJson(_element);
     _list.add(_tem);
   }
@@ -120,26 +130,32 @@ getFavoriteFromNet() async {
 getPlaylistsFromNet() async {
   final _playlistsList = await getPlaylists();
   if (_playlistsList != null && _playlistsList.length > 0) {
+    await BaseDB.instance.delAllPlaylists();
     for (var _playlists in _playlistsList) {
-      var _playlistList = await getPlaylist(_playlists['id']);
-      if (_playlistList != null && _playlistList.length > 0) {
-        //写playlist表
-        Playlist _playlist = Playlist(
-            id: _playlists['id'],
-            name: _playlists['name'],
-            songCount: _playlists['songCount'],
-            duration: _playlists['duration'],
-            public: _playlists['public'] ? 0 : 1,
-            owner: _playlists['owner'],
-            created: _playlists['created'],
-            changed: _playlists['changed']);
-        await BaseDB.instance.addPlaylists(_playlist);
-        for (var _song in _playlistList) {
+      //写playlist表
+      String _url = await getCoverArt(_playlists['id']);
+      Playlist _playlist = Playlist(
+          id: _playlists['id'],
+          name: _playlists['name'],
+          songCount: _playlists['songCount'],
+          duration: _playlists['duration'],
+          public: _playlists['public'] ? 0 : 1,
+          owner: _playlists['owner'],
+          created: _playlists['created'],
+          changed: _playlists['changed'],
+          imageUrl: _url);
+      await BaseDB.instance.addPlaylists(_playlist);
+      var _songsList = await getPlaylist(_playlists['id']);
+      if (_songsList != null && _songsList.length > 0) {
+        List<PlaylistAndSong> _playlistandsongList = [];
+        for (var _song in _songsList) {
           //写歌对应表
           PlaylistAndSong _playlistandsong = PlaylistAndSong(
               playlistId: _playlists['id'], songId: _song['id']);
-          await BaseDB.instance.addPlaylistSongs(_playlistandsong);
+          _playlistandsongList.add(_playlistandsong);
         }
+        await BaseDB.instance
+            .addForcePlaylistSongs(_playlistandsongList, _playlists['id']);
       }
     }
   }

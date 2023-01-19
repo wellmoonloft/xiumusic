@@ -7,6 +7,7 @@ import '../screens/layout/favoriteScreen.dart';
 import '../screens/layout/genresScreen.dart';
 import '../screens/layout/indexScreen.dart';
 import '../screens/layout/playListScreen.dart';
+import '../screens/layout/playlistDetailScreen.dart';
 import '../screens/layout/searchLyricScreen.dart';
 import '../screens/layout/searchScreen.dart';
 import '../screens/layout/settings.dart';
@@ -47,6 +48,8 @@ class Roter extends StatelessWidget {
             return SearchScreen();
           case 11: //设置
             return Settings();
+          case 12: //播放列表详细
+            return PlaylistDetailScreen();
 
           default:
             return Settings();

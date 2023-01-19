@@ -71,6 +71,7 @@ class Playlist {
   late String owner;
   late String created;
   late String changed;
+  late String imageUrl;
 
   Playlist(
       {required this.id,
@@ -80,7 +81,8 @@ class Playlist {
       required this.public,
       required this.owner,
       required this.created,
-      required this.changed});
+      required this.changed,
+      required this.imageUrl});
 
   Playlist.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -91,6 +93,7 @@ class Playlist {
     owner = json['owner'];
     created = json['created'];
     changed = json['changed'];
+    imageUrl = json['imageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +106,7 @@ class Playlist {
     _data['owner'] = this.owner;
     _data['created'] = this.created;
     _data['changed'] = this.changed;
+    _data['imageUrl'] = this.imageUrl;
 
     return _data;
   }
@@ -193,6 +197,7 @@ class Albums {
   late int playCount;
   late int songCount;
   late String created;
+  late String coverUrl;
 
   Albums(
       {required this.id,
@@ -204,7 +209,8 @@ class Albums {
       required this.duration,
       required this.playCount,
       required this.songCount,
-      required this.created});
+      required this.created,
+      required this.coverUrl});
 
   Albums.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -217,6 +223,7 @@ class Albums {
     playCount = json['playCount'];
     songCount = json['songCount'];
     created = json['created'];
+    coverUrl = json['coverUrl'];
   }
 
   get length => null;
@@ -233,6 +240,7 @@ class Albums {
     _data['playCount'] = this.playCount;
     _data['songCount'] = this.songCount;
     _data['created'] = this.created;
+    _data['coverUrl'] = this.coverUrl;
     return _data;
   }
 }
@@ -249,6 +257,8 @@ class Songs {
   late String path;
   late int playCount;
   late String created;
+  late String stream;
+  late String coverUrl;
 
   Songs(
       {required this.id,
@@ -261,7 +271,9 @@ class Songs {
       required this.bitRate,
       required this.path,
       required this.playCount,
-      required this.created});
+      required this.created,
+      required this.stream,
+      required this.coverUrl});
 
   Songs.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -275,6 +287,8 @@ class Songs {
     path = json['path'];
     playCount = json['playCount'];
     created = json['created'];
+    stream = json['stream'];
+    coverUrl = json['coverUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -290,6 +304,8 @@ class Songs {
     _data['path'] = this.path;
     _data['playCount'] = this.playCount;
     _data['created'] = this.created;
+    _data['stream'] = this.stream;
+    _data['coverUrl'] = this.coverUrl;
     return _data;
   }
 }
