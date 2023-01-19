@@ -8,7 +8,7 @@ import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../components/playerControBar.dart';
 import '../components/playerSeekBar.dart';
 import 'package:rxdart/rxdart.dart';
@@ -117,7 +117,7 @@ class _PlayScreenState extends State<PlayScreen>
                               : artistLocal + ": " + value["artist"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: nomalGrayText,
+                          style: nomalText,
                           textAlign: TextAlign.center,
                         )),
                     SizedBox(
@@ -131,7 +131,7 @@ class _PlayScreenState extends State<PlayScreen>
                               : albumLocal + ": " + value["album"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: nomalGrayText,
+                          style: nomalText,
                           textAlign: TextAlign.center,
                         )),
                     SizedBox(
@@ -186,17 +186,17 @@ class _PlayScreenState extends State<PlayScreen>
                               lyricUI = UINetease.clone(lyricUI);
                               // });
                             },
-                            icon: Icon(Icons.play_arrow, color: kGrayColor)),
+                            icon: Icon(Icons.play_arrow, color: textGray)),
                         Expanded(
                           child: Container(
-                            decoration: BoxDecoration(color: kGrayColor),
+                            decoration: BoxDecoration(color: textGray),
                             height: 1,
                             width: double.infinity,
                           ),
                         ),
                         Text(
                           formatDurationMilliseconds(progress),
-                          style: TextStyle(color: kGrayColor),
+                          style: TextStyle(color: textGray),
                         )
                       ],
                     );

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:xiumusic/models/myModel.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
@@ -32,12 +32,12 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   bool _star = false;
 
   _getSongs(String albumId) async {
-    final _albumtem = await BaseDB.instance.getAlbumsByID(albumId);
+    final _albumtem = await DbProvider.instance.getAlbumsByID(albumId);
     if (_albumtem != null && _albumtem.length > 0) {
-      final _songsList = await BaseDB.instance.getSongsByAlbumId(albumId);
+      final _songsList = await DbProvider.instance.getSongsByAlbumId(albumId);
 
       if (_songsList != null) {
-        var _favorite = await BaseDB.instance.getFavoritebyId(albumId);
+        var _favorite = await DbProvider.instance.getFavoritebyId(albumId);
         if (_favorite != null) {
           _star = true;
         } else {
@@ -109,23 +109,19 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     child: Row(
                       children: [
                         MyTextButton(
-                          press: () {
-                            indexValue.value = 5;
-                          },
-                          title: "$artistLocal",
-                          isActive: false,
-                        ),
+                            press: () {
+                              indexValue.value = 5;
+                            },
+                            title: "$artistLocal"),
                         SizedBox(
                           width: 10,
                         ),
                         MyTextButton(
-                          press: () {
-                            activeID.value = _artistID;
-                            indexValue.value = 9;
-                          },
-                          title: _artist,
-                          isActive: false,
-                        ),
+                            press: () {
+                              activeID.value = _artistID;
+                              indexValue.value = 9;
+                            },
+                            title: _artist),
                         if (!isMobile.value)
                           SizedBox(
                             width: 10,
@@ -133,18 +129,14 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         if (!isMobile.value)
                           Text(
                             "$yearLocal: " + _year.toString(),
-                            style: nomalGrayText,
+                            style: nomalText,
                           ),
                         SizedBox(
                           width: 10,
                         ),
                         _genre == "0"
                             ? Container()
-                            : MyTextButton(
-                                press: () {},
-                                title: "$genresLocal",
-                                isActive: false,
-                              ),
+                            : MyTextButton(press: () {}, title: "$genresLocal"),
                         _genre == "0"
                             ? Container()
                             : SizedBox(
@@ -152,11 +144,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               ),
                         _genre == "0"
                             ? Container()
-                            : MyTextButton(
-                                press: () {},
-                                title: _genre,
-                                isActive: false,
-                              ),
+                            : MyTextButton(press: () {}, title: _genre),
                       ],
                     ),
                   ),
@@ -169,14 +157,14 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       children: [
                         Text(
                           "$songLocal: " + _songsnum.toString(),
-                          style: nomalGrayText,
+                          style: nomalText,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
                           "$drationLocal: " + formatDuration(_duration),
-                          style: nomalGrayText,
+                          style: nomalText,
                         ),
                       ],
                     ),
@@ -192,14 +180,14 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         children: [
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
-                            style: nomalGrayText,
+                            style: nomalText,
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           Text(
                             "$yearLocal: " + _year.toString(),
-                            style: nomalGrayText,
+                            style: nomalText,
                           ),
                         ],
                       ),
@@ -214,7 +202,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         if (!isMobile.value)
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
-                            style: nomalGrayText,
+                            style: nomalText,
                           ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
@@ -229,7 +217,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                     Favorite _favorite = Favorite(
                                         id: activeID.value, type: 'album');
                                     await delStarred(_favorite);
-                                    await BaseDB.instance
+                                    await DbProvider.instance
                                         .delFavorite(activeID.value);
                                     setState(() {
                                       _star = false;
@@ -239,14 +227,14 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               : IconButton(
                                   icon: Icon(
                                     Icons.favorite_border,
-                                    color: kTextColor,
+                                    color: textGray,
                                     size: 16,
                                   ),
                                   onPressed: () async {
                                     Favorite _favorite = Favorite(
                                         id: activeID.value, type: 'album');
                                     await addStarred(_favorite);
-                                    await BaseDB.instance
+                                    await DbProvider.instance
                                         .addFavorite(_favorite);
                                     setState(() {
                                       _star = true;
@@ -273,7 +261,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       bitRangeLocal,
       playCountLocal
     ];
-    return myRowList(_title, sublGrayText);
+    return myRowList(_title, subText);
   }
 
   Widget _itemBuildWidget() {
@@ -311,7 +299,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                     (value.isNotEmpty &&
                                             value["value"] == _tem.id)
                                         ? activeText
-                                        : nomalGrayText);
+                                        : nomalText);
                               }))));
                 }))
         : Container();

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MyToast {
   static void show({required BuildContext context, required String message}) {
@@ -16,7 +16,7 @@ class MyToast {
                 padding: EdgeInsets.all(10),
                 child: Text(
                   message,
-                  style: nomalGrayText,
+                  style: nomalText,
                 ),
               ),
               color: badgeDark,

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MyTextButton extends StatelessWidget {
   const MyTextButton({
     Key? key,
-    required this.isActive,
     required this.title,
     required this.press,
   }) : super(key: key);
 
-  final bool isActive;
   final String title;
   final VoidCallback press;
 
@@ -23,9 +21,7 @@ class MyTextButton extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                decoration: TextDecoration.underline,
-                color: (isActive) ? kTextColor : kGrayColor,
-                fontWeight: (isActive) ? FontWeight.w400 : FontWeight.w100)),
+                decoration: TextDecoration.underline, color: textGray)),
       ),
     );
   }

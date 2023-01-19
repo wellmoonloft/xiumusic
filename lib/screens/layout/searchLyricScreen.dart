@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../util/util.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myLoadingDialog.dart';
@@ -38,14 +38,15 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
     String _title2 = "";
     List<Songs> _list = [];
     _title2 = await converToTraditional(_title1);
-    final _songsList = await BaseDB.instance.getSongByName(_title1, _title2);
+    final _songsList =
+        await DbProvider.instance.getSongByName(_title1, _title2);
     if (_songsList != null) {
       for (var element in _songsList) {
         Songs _tem = element;
 
         _list.add(_tem);
 
-        final _lyric = await BaseDB.instance.getLyricById(_tem.id);
+        final _lyric = await DbProvider.instance.getLyricById(_tem.id);
         if (_lyric != null && _lyric!.isNotEmpty) {
           _isLyric.add(true);
         } else {
@@ -66,10 +67,6 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
     tabController = TabController(length: myTabs.length, vsync: this);
   }
 
-  _confirm() {
-    Navigator.of(context).pop();
-  }
-
   @override
   void dispose() {
     searchController.dispose();
@@ -85,7 +82,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
         builder: (BuildContext context) {
           return SimpleDialog(
             backgroundColor: rightColor,
-            title: Text('请确认查询信息', style: nomalGrayText),
+            title: Text('请确认查询信息', style: nomalText),
             contentPadding: EdgeInsets.only(left: 20, bottom: 20),
             children: <Widget>[
               MyTextInput(
@@ -95,7 +92,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 hideText: false,
                 icon: Icons.search,
                 press: () {},
-                titleStyle: nomalGrayText,
+                titleStyle: nomalText,
                 mainaxis: MainAxisAlignment.start,
                 crossaxis: CrossAxisAlignment.center,
               ),
@@ -106,7 +103,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 hideText: false,
                 icon: Icons.search,
                 press: () {},
-                titleStyle: nomalGrayText,
+                titleStyle: nomalText,
                 mainaxis: MainAxisAlignment.start,
                 crossaxis: CrossAxisAlignment.center,
               ),
@@ -115,14 +112,12 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 children: [
                   MyTextButton(
                     title: "取消",
-                    isActive: false,
                     press: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MyTextButton(
                     title: "搜索",
-                    isActive: false,
                     press: () async {
                       showMyLoadingDialog(context, "搜索中...");
                       var _result = await searchNeteasAPI(
@@ -185,7 +180,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 child: Text(
                                   _tem["name"],
                                   textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
+                                  style: nomalText,
                                 ),
                               ),
                               Expanded(
@@ -193,7 +188,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 child: Text(
                                   _artist["name"],
                                   textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
+                                  style: nomalText,
                                 ),
                               ),
                             ],
@@ -246,7 +241,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 child: Text(
                                   _islyr,
                                   textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
+                                  style: nomalText,
                                 ),
                               ),
                               Expanded(
@@ -254,7 +249,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 child: Text(
                                   _tem.title,
                                   textDirection: TextDirection.ltr,
-                                  style: nomalGrayText,
+                                  style: nomalText,
                                 ),
                               ),
                               Expanded(
@@ -262,7 +257,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 child: Text(
                                   _tem.album,
                                   textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
+                                  style: nomalText,
                                 ),
                               ),
                               Expanded(
@@ -270,7 +265,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 child: Text(
                                   _tem.artist,
                                   textDirection: TextDirection.rtl,
-                                  style: nomalGrayText,
+                                  style: nomalText,
                                 ),
                               ),
                             ],
@@ -303,11 +298,9 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
           children: [
             Container(
                 child: (_songs != null && _songs!.length > 0)
-                    ? Text("结果:" + _songs!.length.toString(),
-                        style: nomalGrayText)
-                    : Text("结果: 0", style: nomalGrayText)),
+                    ? Text("结果:" + _songs!.length.toString(), style: nomalText)
+                    : Text("结果: 0", style: nomalText)),
             MyTextButton(
-              isActive: false,
               title: "绑定歌词",
               press: () async {
                 if (_lyric == "") {
@@ -318,7 +311,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                       Songs _song = _songs![i];
                       SongsAndLyric _songsAndLyric =
                           SongsAndLyric(lyric: _lyric, songId: _song.id);
-                      await BaseDB.instance
+                      await DbProvider.instance
                           .addSongsAndLyricTable(_songsAndLyric);
                     }
                   }
@@ -344,7 +337,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 alignment: Alignment.topLeft,
                 child: TabBar(
                     controller: tabController,
-                    labelColor: kGrayColor,
+                    labelColor: textGray,
                     unselectedLabelColor: borderColor,
                     tabs: myTabs,
                     isScrollable: true,
@@ -359,7 +352,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 scrollDirection: Axis.vertical,
                 child: Text(
                   _lyric,
-                  style: nomalGrayText,
+                  style: nomalText,
                 )),
           )
         ]));

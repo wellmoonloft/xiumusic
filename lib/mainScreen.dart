@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'models/notifierValue.dart';
-import 'screens/common/baseCSS.dart';
+import 'util/mycss.dart';
 import 'screens/bottomScreen.dart';
 import 'screens/components/myAppBar.dart';
 import 'screens/layout/settings.dart';

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:xiumusic/screens/common/myTextButton.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 
@@ -22,7 +22,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
   int _playlistnum = 0;
 
   _getPlaylist() async {
-    final _playlists = await BaseDB.instance.getPlaylists();
+    final _playlists = await DbProvider.instance.getPlaylists();
     _playlistsList.clear();
     if (_playlists != null && _playlists.length > 0) {
       for (var element in _playlists) {
@@ -61,14 +61,14 @@ class _PlayListScreenState extends State<PlayListScreen> {
                           margin: EdgeInsets.all(5),
                           child: TextField(
                             controller: inputController,
-                            style: nomalGrayText,
-                            cursorColor: kGrayColor,
+                            style: nomalText,
+                            cursorColor: textGray,
                             onSubmitted: (value) {},
                             decoration: InputDecoration(
                                 hintText: "请输入播放列表名称...",
-                                labelStyle: nomalGrayText,
+                                labelStyle: nomalText,
                                 border: InputBorder.none,
-                                hintStyle: nomalGrayText,
+                                hintStyle: nomalText,
                                 filled: true,
                                 fillColor: badgeDark,
                                 enabledBorder: OutlineInputBorder(
@@ -85,7 +85,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                     const EdgeInsets.symmetric(vertical: 10.0),
                                 prefixIcon: Icon(
                                   Icons.edit_note,
-                                  color: kGrayColor,
+                                  color: textGray,
                                   size: 14,
                                 )),
                           )),
@@ -95,14 +95,12 @@ class _PlayListScreenState extends State<PlayListScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             MyTextButton(
-                              isActive: false,
                               press: () async {
                                 Navigator.of(context).pop(3);
                               },
                               title: '取消',
                             ),
                             MyTextButton(
-                              isActive: false,
                               press: () async {
                                 if (inputController.text.isNotEmpty) {
                                   var _response = await createPlaylist(
@@ -122,7 +120,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
                                         public: _playlist["public"] ? 0 : 1,
                                         songCount: _playlist["songCount"],
                                         imageUrl: _url);
-                                    await BaseDB.instance.addPlaylists(_tem);
+                                    await DbProvider.instance
+                                        .addPlaylists(_tem);
 
                                     Navigator.of(context).pop(0);
                                   } else {
@@ -184,7 +183,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
                               builder: ((context, value, child) {
-                                return myRowList(_title, nomalGrayText);
+                                return myRowList(_title, nomalText);
                               }))));
                 }))
         : Container();
@@ -192,7 +191,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = ["名称", "歌曲数", "创建人", "修改时间"];
-    return myRowList(_title, sublGrayText);
+    return myRowList(_title, subText);
   }
 
   @override
@@ -211,7 +210,6 @@ class _PlayListScreenState extends State<PlayListScreen> {
                 Row(
                   children: [
                     MyTextButton(
-                      isActive: false,
                       press: () async {
                         await _newDialog().then((value) {
                           _getPlaylist();
@@ -240,7 +238,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                     Container(
                       child: Text(
                         "播放列表: " + _playlistnum.toString(),
-                        style: nomalGrayText,
+                        style: nomalText,
                       ),
                     )
                   ],

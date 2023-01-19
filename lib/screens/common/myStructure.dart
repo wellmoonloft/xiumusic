@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MyStructure extends StatelessWidget {
   const MyStructure({

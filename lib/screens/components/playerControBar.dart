@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../util/httpClient.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../common/myToast.dart';
 
 class PlayerControBar extends StatefulWidget {
@@ -24,7 +24,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
         return Tooltip(
             message: "全部循环",
             child: IconButton(
-              icon: const Icon(Icons.loop, color: kTextColor, size: 16),
+              icon: const Icon(Icons.loop, color: textGray, size: 16),
               onPressed: () {
                 widget.player.setLoopMode(LoopMode.one);
                 setState(() {
@@ -67,7 +67,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
         return Tooltip(
             message: "全部循环",
             child: IconButton(
-              icon: const Icon(Icons.loop, color: kTextColor, size: 16),
+              icon: const Icon(Icons.loop, color: textGray, size: 16),
               onPressed: () {
                 widget.player.setLoopMode(LoopMode.one);
                 setState(() {
@@ -87,7 +87,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
         // IconButton(
         //   icon: const Icon(
         //     Icons.volume_up,
-        //     color: kTextColor,
+        //     color: textGray,
         //   ),
         //   onPressed: () {
         //     // showSliderDialog(
@@ -110,7 +110,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
               return IconButton(
                 icon: Icon(
                   Icons.skip_previous,
-                  color: isFirst ? badgeDark : kTextColor,
+                  color: isFirst ? badgeDark : textGray,
                 ),
                 onPressed: () {
                   // ignore: unnecessary_statements
@@ -122,7 +122,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
           IconButton(
             icon: const Icon(
               Icons.fast_rewind,
-              color: kTextColor,
+              color: textGray,
             ),
             onPressed: () {
               if (widget.player.position.inSeconds - 15 > 0) {
@@ -150,7 +150,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
               return IconButton(
                 icon: const Icon(
                   Icons.play_circle,
-                  color: kTextColor,
+                  color: textGray,
                 ),
                 iconSize: 40.0,
                 onPressed: widget.player.play,
@@ -159,7 +159,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
               return IconButton(
                 icon: const Icon(
                   Icons.pause_circle_filled,
-                  color: kTextColor,
+                  color: textGray,
                 ),
                 iconSize: 40.0,
                 onPressed: widget.player.pause,
@@ -180,7 +180,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
           IconButton(
             icon: const Icon(
               Icons.fast_forward,
-              color: kTextColor,
+              color: textGray,
             ),
             onPressed: () {
               widget.player.seek(
@@ -193,7 +193,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
               return IconButton(
                 icon: Icon(
                   Icons.skip_next,
-                  color: isLast ? badgeDark : kTextColor,
+                  color: isLast ? badgeDark : textGray,
                 ),
                 onPressed: () {
                   // ignore: unnecessary_statements
@@ -215,7 +215,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                         Favorite _favorite =
                             Favorite(id: _song["value"], type: 'song');
                         await delStarred(_favorite);
-                        await BaseDB.instance.delFavorite(_song["value"]);
+                        await DbProvider.instance.delFavorite(_song["value"]);
                         setState(() {
                           activeSong.value["starred"] = false;
                         });
@@ -224,14 +224,14 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   : IconButton(
                       icon: Icon(
                         Icons.favorite_border,
-                        color: kTextColor,
+                        color: textGray,
                         size: 16,
                       ),
                       onPressed: () async {
                         Favorite _favorite =
                             Favorite(id: _song["value"], type: 'song');
                         await addStarred(_favorite);
-                        await BaseDB.instance.addFavorite(_favorite);
+                        await DbProvider.instance.addFavorite(_favorite);
                         setState(() {
                           activeSong.value["starred"] = true;
                         });

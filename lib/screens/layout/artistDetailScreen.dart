@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
@@ -27,10 +27,10 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   bool _star = false;
 
   _getAlbums(String artistId) async {
-    final _albumsList = await BaseDB.instance.getAlbums(artistId);
+    final _albumsList = await DbProvider.instance.getAlbums(artistId);
     if (_albumsList != null) {
-      final _artistList = await BaseDB.instance.getArtistsByID(artistId);
-      var _favorite = await BaseDB.instance.getFavoritebyId(artistId);
+      final _artistList = await DbProvider.instance.getArtistsByID(artistId);
+      var _favorite = await DbProvider.instance.getFavoritebyId(artistId);
       if (_favorite != null) {
         _star = true;
       } else {
@@ -106,18 +106,16 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     child: Row(
                       children: [
                         MyTextButton(
-                          press: () {
-                            indexValue.value = 5;
-                          },
-                          title: "$artistLocal",
-                          isActive: false,
-                        ),
+                            press: () {
+                              indexValue.value = 5;
+                            },
+                            title: "$artistLocal"),
                         SizedBox(
                           width: 5,
                         ),
                         Text(
                           "$albumLocal: " + _albumsnum.toString(),
-                          style: nomalGrayText,
+                          style: nomalText,
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
@@ -132,7 +130,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                                     Favorite _favorite = Favorite(
                                         id: activeID.value, type: 'artist');
                                     await delStarred(_favorite);
-                                    await BaseDB.instance
+                                    await DbProvider.instance
                                         .delFavorite(activeID.value);
                                     setState(() {
                                       _star = false;
@@ -142,14 +140,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                               : IconButton(
                                   icon: Icon(
                                     Icons.favorite_border,
-                                    color: kTextColor,
+                                    color: textGray,
                                     size: 16,
                                   ),
                                   onPressed: () async {
                                     Favorite _favorite = Favorite(
                                         id: activeID.value, type: 'artist');
                                     await addStarred(_favorite);
-                                    await BaseDB.instance
+                                    await DbProvider.instance
                                         .addFavorite(_favorite);
                                     setState(() {
                                       _star = true;
@@ -169,14 +167,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                       children: [
                         Text(
                           "$songLocal: " + _songs.toString(),
-                          style: nomalGrayText,
+                          style: nomalText,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
                           "$drationLocal: " + formatDuration(_duration),
-                          style: nomalGrayText,
+                          style: nomalText,
                         ),
                         if (!isMobile.value)
                           SizedBox(
@@ -185,7 +183,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                         if (!isMobile.value)
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
-                            style: nomalGrayText,
+                            style: nomalText,
                           ),
                       ],
                     ),
@@ -200,7 +198,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                         child: Row(children: [
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
-                            style: nomalGrayText,
+                            style: nomalText,
                           ),
                         ]))
                 ],
@@ -220,7 +218,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       drationLocal,
       playCountLocal
     ];
-    return myRowList(_title, sublGrayText);
+    return myRowList(_title, subText);
   }
 
   Widget _itemBuildWidget() {
@@ -248,7 +246,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                             activeID.value = _tem.id;
                             indexValue.value = 8;
                           },
-                          child: myRowList(_title, nomalGrayText)));
+                          child: myRowList(_title, nomalText)));
                 }))
         : Container();
   }

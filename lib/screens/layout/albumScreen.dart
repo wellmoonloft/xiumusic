@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
-import '../../util/baseDB.dart';
+import '../../util/mycss.dart';
+import '../../util/dbProvider.dart';
 import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
@@ -19,7 +19,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   int _albumsnum = 0;
 
   _getAllAlbums() async {
-    final _albumsList = await BaseDB.instance.getAllAlbums();
+    final _albumsList = await DbProvider.instance.getAllAlbums();
     List<Albums> _list = [];
     for (var element in _albumsList) {
       Albums _album = element;
@@ -92,7 +92,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           Container(
                               child: Text(
                             _tem.title + "(" + _tem.year.toString() + ")",
-                            style: nomalGrayText,
+                            style: nomalText,
                             textAlign: TextAlign.center,
                           )),
                           SizedBox(
@@ -100,8 +100,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                           ),
                           Container(
                               child: Text(_tem.artist,
-                                  style: sublGrayText,
-                                  textAlign: TextAlign.center))
+                                  style: subText, textAlign: TextAlign.center))
                         ],
                       ));
                 },
@@ -118,7 +117,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
         Container(child: Text(albumLocal, style: titleText1)),
         Text(
           "$albumLocal: " + _albumsnum.toString(),
-          style: nomalGrayText,
+          style: nomalText,
         )
       ],
     );

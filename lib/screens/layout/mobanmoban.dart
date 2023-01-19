@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../common/myStructure.dart';
 
 class TestAudio extends StatefulWidget {
@@ -31,7 +31,7 @@ class _GenresState extends State<TestAudio> {
                       padding: EdgeInsets.all(10),
                       child: Text(
                         "0",
-                        style: nomalGrayText,
+                        style: nomalText,
                       ),
                     )
                   ],

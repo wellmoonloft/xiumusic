@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../common/myStructure.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -26,7 +26,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   List<Artists> _artists = [];
 
   _getFavorite() async {
-    var _favorite = await BaseDB.instance.getFavorite();
+    var _favorite = await DbProvider.instance.getFavorite();
 
     if (_favorite != null) {
       List<Songs> _songs1 = [];
@@ -35,14 +35,14 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       for (var _element in _favorite) {
         Favorite _tem = _element;
         if (_tem.type == "song") {
-          Songs _song = await BaseDB.instance.getSongById(_tem.id);
+          Songs _song = await DbProvider.instance.getSongById(_tem.id);
           _songs1.add(_song);
         } else if (_tem.type == "album") {
-          var _albumsList = await BaseDB.instance.getAlbumsByID(_tem.id);
+          var _albumsList = await DbProvider.instance.getAlbumsByID(_tem.id);
           Albums album = _albumsList[0];
           _albums1.add(album);
         } else if (_tem.type == "artist") {
-          var _artistsList = await BaseDB.instance.getArtistsByID(_tem.id);
+          var _artistsList = await DbProvider.instance.getArtistsByID(_tem.id);
           Artists artist = _artistsList[0];
           _artists1.add(artist);
         }
@@ -103,7 +103,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                                     (value.isNotEmpty &&
                                             value["value"] == _tem.id)
                                         ? activeText
-                                        : nomalGrayText);
+                                        : nomalText);
                               }))));
                 }))
         : Container();
@@ -134,7 +134,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                             activeID.value = _tem.id;
                             indexValue.value = 8;
                           },
-                          child: myRowList(_title, nomalGrayText)));
+                          child: myRowList(_title, nomalText)));
                 }))
         : Container();
   }
@@ -158,7 +158,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                             activeID.value = _tem.id;
                             indexValue.value = 9;
                           },
-                          child: myRowList(_title, nomalGrayText)));
+                          child: myRowList(_title, nomalText)));
                 }))
         : Container();
   }
@@ -173,21 +173,21 @@ class _FavoriteScreenState extends State<FavoriteScreen>
           children: [
             Text(
               "歌曲: " + _songs.length.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "专辑: " + _albums.length.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "艺人: " + _artists.length.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
           ],
         ),
@@ -206,7 +206,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                 alignment: Alignment.topLeft,
                 child: TabBar(
                     controller: tabController,
-                    labelColor: kGrayColor,
+                    labelColor: textGray,
                     unselectedLabelColor: borderColor,
                     tabs: myTabs,
                     isScrollable: true,

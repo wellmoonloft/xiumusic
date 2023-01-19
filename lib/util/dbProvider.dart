@@ -2,10 +2,10 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/myModel.dart';
 
-class BaseDB {
-  static final BaseDB instance = BaseDB._init();
+class DbProvider {
+  static final DbProvider instance = DbProvider._init();
   static Database? _db;
-  BaseDB._init();
+  DbProvider._init();
 
   final String dbName = "xiumusic.db";
   // ignore: non_constant_identifier_names
@@ -319,10 +319,7 @@ class BaseDB {
   checkPlaylistById(String _playlistId, String songId) async {
     try {
       final db = await instance.db;
-
       var res = db.rawQuery(
-          "SELECT * FROM $PlaylistAndSongTable WHERE playlistId='$_playlistId' AND songId='$songId'");
-      print(
           "SELECT * FROM $PlaylistAndSongTable WHERE playlistId='$_playlistId' AND songId='$songId'");
       return res;
     } catch (err) {

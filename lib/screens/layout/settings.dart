@@ -3,8 +3,8 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
-import '../../util/baseDB.dart';
+import '../../util/mycss.dart';
+import '../../util/dbProvider.dart';
 import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/localizations.dart';
@@ -36,10 +36,6 @@ class _SettingsState extends State<Settings>
     Tab(text: '歌词服务器'),
   ];
 
-  _confirm() {
-    Navigator.of(context).pop();
-  }
-
   _saveServer() async {
     if (servercontroller.text != "" &&
         usernamecontroller.text != "" &&
@@ -63,7 +59,7 @@ class _SettingsState extends State<Settings>
             salt: _randomNumber,
             hash: _randomString,
             neteaseapi: "");
-        await BaseDB.instance.addServerInfo(_serverInfo);
+        await DbProvider.instance.addServerInfo(_serverInfo);
         //初始化服务器
         showMyLoadingDialog(context, "初始化中...");
         //初始化服务器
@@ -93,7 +89,7 @@ class _SettingsState extends State<Settings>
       }
 
       _myServerInfo.neteaseapi = _serverURL;
-      await BaseDB.instance.updateServerInfo(_myServerInfo);
+      await DbProvider.instance.updateServerInfo(_myServerInfo);
       showMyAlertDialog(context, "成功", "保存成功");
     } else {
       showMyAlertDialog(context, noticeLocal, contenterrLocal);
@@ -101,7 +97,7 @@ class _SettingsState extends State<Settings>
   }
 
   _getServerInfo() async {
-    final _infoList = await BaseDB.instance.getServerInfo();
+    final _infoList = await DbProvider.instance.getServerInfo();
     if (_infoList != null) {
       _myServerInfo = _infoList;
       if (mounted) {
@@ -117,7 +113,7 @@ class _SettingsState extends State<Settings>
   }
 
   _deleteServer() async {
-    await BaseDB.instance.deleteServerInfo();
+    await DbProvider.instance.deleteServerInfo();
     if (mounted) {
       setState(() {
         isServers.value = false;
@@ -160,31 +156,27 @@ class _SettingsState extends State<Settings>
             Row(
               children: [
                 MyTextButton(
-                  press: () async {
-                    showMyLoadingDialog(context, "刷新中...");
-                    //初始化服务器
-                    await getGenresFromNet();
-                    await getArtistsFromNet();
-                    await sacnServerStatus();
-                    await getFavoriteFromNet();
-                    await getPlaylistsFromNet();
-                    Navigator.pop(context);
-                  },
-                  title: "强制刷新",
-                  isActive: false,
-                ),
+                    press: () async {
+                      showMyLoadingDialog(context, "刷新中...");
+                      //初始化服务器
+                      await getGenresFromNet();
+                      await getArtistsFromNet();
+                      await sacnServerStatus();
+                      await getFavoriteFromNet();
+                      await getPlaylistsFromNet();
+                      Navigator.pop(context);
+                    },
+                    title: "强制刷新"),
                 SizedBox(
                   width: 10,
                 ),
                 MyTextButton(
-                  press: () {
-                    showMyAlertDialog(context, "尚未完工", "敬请期待");
-                    //showMyToast(context, "sssss");
-                    //showMyLoadingDialog(context, "初始化中...");
-                  },
-                  title: versionLocal + version,
-                  isActive: false,
-                )
+                    press: () {
+                      showMyAlertDialog(context, "尚未完工", "敬请期待");
+                      //showMyToast(context, "sssss");
+                      //showMyLoadingDialog(context, "初始化中...");
+                    },
+                    title: versionLocal + version)
               ],
             )
           ],
@@ -193,7 +185,7 @@ class _SettingsState extends State<Settings>
             alignment: Alignment.topLeft,
             child: TabBar(
                 controller: tabController,
-                labelColor: kGrayColor,
+                labelColor: textGray,
                 unselectedLabelColor: borderColor,
                 tabs: myTabs,
                 isScrollable: true,
@@ -219,12 +211,10 @@ class _SettingsState extends State<Settings>
                         valueListenable: isServers,
                         builder: ((context, _value, child) {
                           return MyTextButton(
-                            press: () {
-                              _value ? _deleteServer() : _saveServer();
-                            },
-                            title: _value ? unConnectLocal : saveLocal,
-                            isActive: false,
-                          );
+                              press: () {
+                                _value ? _deleteServer() : _saveServer();
+                              },
+                              title: _value ? unConnectLocal : saveLocal);
                         }))
                   ],
                 ),
@@ -237,7 +227,7 @@ class _SettingsState extends State<Settings>
                   hintLabel: pleasInputLocal + serverURLLocal,
                   hideText: false,
                   icon: Icons.dns,
-                  titleStyle: nomalGrayText,
+                  titleStyle: nomalText,
                   mainaxis: MainAxisAlignment.spaceBetween,
                   crossaxis: CrossAxisAlignment.center,
                 ),
@@ -248,7 +238,7 @@ class _SettingsState extends State<Settings>
                   hideText: false,
                   icon: Icons.person,
                   press: null,
-                  titleStyle: nomalGrayText,
+                  titleStyle: nomalText,
                   mainaxis: MainAxisAlignment.spaceBetween,
                   crossaxis: CrossAxisAlignment.center,
                 ),
@@ -259,7 +249,7 @@ class _SettingsState extends State<Settings>
                   hideText: true,
                   icon: Icons.password,
                   press: null,
-                  titleStyle: nomalGrayText,
+                  titleStyle: nomalText,
                   mainaxis: MainAxisAlignment.spaceBetween,
                   crossaxis: CrossAxisAlignment.center,
                 ),
@@ -281,12 +271,10 @@ class _SettingsState extends State<Settings>
                       style: titleText2,
                     ),
                     MyTextButton(
-                      press: () async {
-                        _saveNetease();
-                      },
-                      title: "保存歌词服务器",
-                      isActive: false,
-                    ),
+                        press: () async {
+                          _saveNetease();
+                        },
+                        title: "保存歌词服务器"),
                   ],
                 ),
                 SizedBox(
@@ -298,7 +286,7 @@ class _SettingsState extends State<Settings>
                   hintLabel: pleasInputLocal + serverURLLocal,
                   hideText: false,
                   icon: Icons.dns,
-                  titleStyle: nomalGrayText,
+                  titleStyle: nomalText,
                   mainaxis: MainAxisAlignment.spaceBetween,
                   crossaxis: CrossAxisAlignment.center,
                 ),

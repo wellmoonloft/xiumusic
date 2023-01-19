@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/notifierValue.dart';
-import 'common/baseCSS.dart';
+import '../util/mycss.dart';
 import '../util/localizations.dart';
 import 'common/myTextButton.dart';
 
@@ -29,7 +29,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: indexLocal,
               icon: Icons.home,
-              color: kGrayColor,
+              color: textGray,
             ),
             MyTextIconButton(
               press: () {
@@ -38,7 +38,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: playlistLocal,
               icon: Icons.queue_music,
-              color: kGrayColor,
+              color: textGray,
             ),
             MyTextIconButton(
               press: () {
@@ -47,7 +47,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: favoriteLocal,
               icon: Icons.favorite,
-              color: kGrayColor,
+              color: textGray,
             ),
             MyTextIconButton(
               press: () {
@@ -56,7 +56,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: albumLocal,
               icon: Icons.album,
-              color: kGrayColor,
+              color: textGray,
             ),
             MyTextIconButton(
               press: () {
@@ -65,7 +65,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: artistLocal,
               icon: Icons.people_alt,
-              color: kGrayColor,
+              color: textGray,
             ),
             MyTextIconButton(
               press: () {
@@ -74,7 +74,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: genresLocal,
               icon: Icons.public,
-              color: kGrayColor,
+              color: textGray,
             ),
             MyTextIconButton(
               press: () {
@@ -83,7 +83,7 @@ class _LeftScreenState extends State<LeftScreen> {
               },
               title: "搜索歌词",
               icon: Icons.public,
-              color: kGrayColor,
+              color: textGray,
             ),
           ],
         ));

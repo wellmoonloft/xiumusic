@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:xiumusic/screens/common/baseCSS.dart';
+import 'package:xiumusic/util/mycss.dart';
 
 class PlayerSeekBar extends StatefulWidget {
   final Duration duration;
@@ -37,10 +37,10 @@ class PlayerSeekBarState extends State<PlayerSeekBar> {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       SliderTheme(
         data: SliderTheme.of(context).copyWith(
-            activeTrackColor: kGrayColor,
+            activeTrackColor: textGray,
             inactiveTrackColor: borderColor,
             trackHeight: 3.0,
-            thumbColor: kTextColor,
+            thumbColor: textGray,
             thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
             overlayShape: SliderComponentShape.noThumb),
         child: Container(

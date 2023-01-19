@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../util/util.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../../util/localizations.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
@@ -23,7 +23,8 @@ class _SearchScreenState extends State<SearchScreen> {
     String _title2 = "";
     List<Songs> _list = [];
     _title2 = await converToTraditional(_title1);
-    final _songsList = await BaseDB.instance.getSongByName(_title1, _title2);
+    final _songsList =
+        await DbProvider.instance.getSongByName(_title1, _title2);
     if (_songsList != null) {
       for (var element in _songsList) {
         Songs _tem = element;
@@ -86,7 +87,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     (value.isNotEmpty &&
                                             value["value"] == _tem.id)
                                         ? activeText
-                                        : nomalGrayText);
+                                        : nomalText);
                               }))));
                 }))
         : Container();
@@ -101,7 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
       if (!isMobile.value) bitRangeLocal,
       if (!isMobile.value) playCountLocal
     ];
-    return myRowList(_title, sublGrayText);
+    return myRowList(_title, subText);
   }
 
   Widget _buildTopWidget() {
@@ -125,8 +126,8 @@ class _SearchScreenState extends State<SearchScreen> {
         SizedBox(height: 10),
         Container(
             child: (_songs != null && _songs!.length > 0)
-                ? Text("结果:" + _songs!.length.toString(), style: nomalGrayText)
-                : Text("结果: 0", style: nomalGrayText)),
+                ? Text("结果:" + _songs!.length.toString(), style: nomalText)
+                : Text("结果: 0", style: nomalText)),
       ],
     );
   }

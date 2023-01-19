@@ -5,7 +5,7 @@
 // 不过这个几乎是小概率事件，同时在设置里面提供一个绕过服务器状态检查的暴力更新即可
 
 import '../models/myModel.dart';
-import 'baseDB.dart';
+import 'dbProvider.dart';
 import 'httpClient.dart';
 
 //0.对比服务器变化是否要更新
@@ -13,11 +13,11 @@ sacnServerStatus() async {
   final _net = await getServerStatus();
   ServerStatus _netstatus = ServerStatus.fromJson(_net);
 
-  final _database = await BaseDB.instance.getServerStatus();
+  final _database = await DbProvider.instance.getServerStatus();
 
   if (_database == null) {
     //新数据库，需要更新
-    await BaseDB.instance.addServerStatus(_netstatus);
+    await DbProvider.instance.addServerStatus(_netstatus);
     return true;
   } else {
     ServerStatus _databasestatus = _database;
@@ -26,7 +26,7 @@ sacnServerStatus() async {
       //不需要更新
       return false;
     } else {
-      await BaseDB.instance.addServerStatus(_netstatus);
+      await DbProvider.instance.addServerStatus(_netstatus);
       return true;
     }
   }
@@ -40,7 +40,7 @@ getGenresFromNet() async {
     Genres _tem = Genres.fromJson(element);
     _list.add(_tem);
   }
-  await BaseDB.instance.addGenres(_list);
+  await DbProvider.instance.addGenres(_list);
 }
 
 //2.艺人/专辑/歌曲
@@ -61,7 +61,7 @@ getArtistsFromNet() async {
       getAlbumsFromNet(_tem.id);
     }
   }
-  await BaseDB.instance.addArtists(_list);
+  await DbProvider.instance.addArtists(_list);
 }
 
 getAlbumsFromNet(String artistId) async {
@@ -77,7 +77,7 @@ getAlbumsFromNet(String artistId) async {
     _list.add(_tem);
     getSongsFromNet(_tem.id);
   }
-  await BaseDB.instance.addAlbums(_list, artistId);
+  await DbProvider.instance.addAlbums(_list, artistId);
 }
 
 getSongsFromNet(String albumId) async {
@@ -95,7 +95,7 @@ getSongsFromNet(String albumId) async {
     Songs _tem = Songs.fromJson(_element);
     _list.add(_tem);
   }
-  await BaseDB.instance.addSongs(_list, albumId);
+  await DbProvider.instance.addSongs(_list, albumId);
 }
 
 //4.收藏
@@ -109,19 +109,19 @@ getFavoriteFromNet() async {
   if (songs != null && songs.length > 0) {
     for (var _song in songs) {
       Favorite _tem = Favorite(id: _song['id'], type: 'song');
-      await BaseDB.instance.addFavorite(_tem);
+      await DbProvider.instance.addFavorite(_tem);
     }
   }
   if (albums != null && albums.length > 0) {
     for (var _album in albums) {
       Favorite _tem = Favorite(id: _album['id'], type: 'album');
-      await BaseDB.instance.addFavorite(_tem);
+      await DbProvider.instance.addFavorite(_tem);
     }
   }
   if (artists != null && artists.length > 0) {
     for (var _artist in artists) {
       Favorite _tem = Favorite(id: _artist['id'], type: 'artist');
-      await BaseDB.instance.addFavorite(_tem);
+      await DbProvider.instance.addFavorite(_tem);
     }
   }
 }
@@ -130,7 +130,7 @@ getFavoriteFromNet() async {
 getPlaylistsFromNet() async {
   final _playlistsList = await getPlaylists();
   if (_playlistsList != null && _playlistsList.length > 0) {
-    await BaseDB.instance.delAllPlaylists();
+    await DbProvider.instance.delAllPlaylists();
     for (var _playlists in _playlistsList) {
       //写playlist表
       String _url = await getCoverArt(_playlists['id']);
@@ -144,7 +144,7 @@ getPlaylistsFromNet() async {
           created: _playlists['created'],
           changed: _playlists['changed'],
           imageUrl: _url);
-      await BaseDB.instance.addPlaylists(_playlist);
+      await DbProvider.instance.addPlaylists(_playlist);
       var _songsList = await getPlaylist(_playlists['id']);
       if (_songsList != null && _songsList.length > 0) {
         List<PlaylistAndSong> _playlistandsongList = [];
@@ -154,7 +154,7 @@ getPlaylistsFromNet() async {
               playlistId: _playlists['id'], songId: _song['id']);
           _playlistandsongList.add(_playlistandsong);
         }
-        await BaseDB.instance
+        await DbProvider.instance
             .addForcePlaylistSongs(_playlistandsongList, _playlists['id']);
       }
     }

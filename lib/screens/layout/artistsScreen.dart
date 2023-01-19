@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
@@ -19,7 +19,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
 
   _getArtists() async {
     if (_artists == null) {
-      final _artistsList = await BaseDB.instance.getArtists();
+      final _artistsList = await DbProvider.instance.getArtists();
       if (_artistsList != null) {
         for (var element in _artistsList) {
           Artists _xx = element;
@@ -51,14 +51,14 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
           children: [
             Text(
               "艺人: " + artistsnum.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "$albumLocal: " + albumsnum.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
           ],
         ),
@@ -68,7 +68,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [artistLocal, albumLocal];
-    return myRowList(_title, sublGrayText);
+    return myRowList(_title, subText);
   }
 
   Widget _itemBuildWidget() {
@@ -91,7 +91,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
                             activeID.value = _tem.id;
                             indexValue.value = 9;
                           },
-                          child: myRowList(_title, nomalGrayText)));
+                          child: myRowList(_title, nomalText)));
                 }))
         : Container();
   }

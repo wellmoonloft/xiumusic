@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import '../models/myModel.dart';
-import 'baseDB.dart';
+import 'dbProvider.dart';
 
 testServer(String _baseUrl, String _username, String _password) async {
   try {
@@ -30,7 +30,7 @@ testServer(String _baseUrl, String _username, String _password) async {
 }
 
 _getServerInfo(String _api) async {
-  final _infoList = await BaseDB.instance.getServerInfo();
+  final _infoList = await DbProvider.instance.getServerInfo();
   String _request = _infoList.baseurl +
       '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
       _infoList.username +
@@ -42,7 +42,7 @@ _getServerInfo(String _api) async {
 }
 
 getServerInfo(String _api) async {
-  final _infoList = await BaseDB.instance.getServerInfo();
+  final _infoList = await DbProvider.instance.getServerInfo();
   String _request = _infoList.baseurl +
       '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
       _infoList.username +
@@ -314,7 +314,7 @@ getCoverArt(String _id) async {
 }
 
 searchNeteasAPI(String _name, String _type) async {
-  final _infoList = await BaseDB.instance.getServerInfo();
+  final _infoList = await DbProvider.instance.getServerInfo();
   String _neteaseapi = _infoList.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request = _neteaseapi +
@@ -336,7 +336,7 @@ searchNeteasAPI(String _name, String _type) async {
 }
 
 getLyric(String _songId) async {
-  final _infoList = await BaseDB.instance.getServerInfo();
+  final _infoList = await DbProvider.instance.getServerInfo();
   String _neteaseapi = _infoList.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request = _neteaseapi + "/lyric?id=$_songId&timestamp=$_timestamp";

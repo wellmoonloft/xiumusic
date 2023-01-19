@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../util/localizations.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 import 'myTextButton.dart';
 
 showMyAlertDialog(BuildContext _context, String _title, String _content) {
@@ -11,8 +11,8 @@ showMyAlertDialog(BuildContext _context, String _title, String _content) {
       return AlertDialog(
         titlePadding: EdgeInsets.all(10),
         contentPadding: EdgeInsets.all(10),
-        titleTextStyle: nomalGrayText,
-        contentTextStyle: nomalGrayText,
+        titleTextStyle: nomalText,
+        contentTextStyle: nomalText,
         backgroundColor: badgeDark,
         title: Text(
           _title,
@@ -23,7 +23,6 @@ showMyAlertDialog(BuildContext _context, String _title, String _content) {
         actions: <Widget>[
           MyTextButton(
             title: confirmLocal,
-            isActive: false,
             press: () {
               Navigator.of(_context).pop();
             },

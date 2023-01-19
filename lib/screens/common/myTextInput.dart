@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MyTextInput extends StatelessWidget {
   const MyTextInput({
@@ -42,10 +42,9 @@ class MyTextInput extends StatelessWidget {
           margin: EdgeInsets.all(5),
           child: TextField(
             controller: control,
-            style: nomalGrayText,
-            cursorColor: kGrayColor,
+            style: nomalText,
+            cursorColor: textGray,
             obscureText: hideText,
-            //autofocus: true,
             onSubmitted: (value) {
               if (control.text != "") {
                 press();
@@ -53,9 +52,9 @@ class MyTextInput extends StatelessWidget {
             },
             decoration: InputDecoration(
                 hintText: hintLabel,
-                labelStyle: nomalGrayText,
+                labelStyle: nomalText,
                 border: InputBorder.none,
-                hintStyle: nomalGrayText,
+                hintStyle: nomalText,
                 filled: true,
                 fillColor: badgeDark,
                 enabledBorder: OutlineInputBorder(
@@ -71,7 +70,7 @@ class MyTextInput extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
                 prefixIcon: Icon(
                   icon,
-                  color: kGrayColor,
+                  color: textGray,
                   size: 14,
                 )),
           ),

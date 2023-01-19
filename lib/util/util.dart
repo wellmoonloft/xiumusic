@@ -4,9 +4,6 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 
 class ColorsUtil {
-  /// 十六进制颜色，
-  /// hex, 十六进制值，例如：0xffffff,
-  /// alpha, 透明度 [0.0,1.0]
   static Color hexColor(int hex, {double alpha = 1}) {
     if (alpha < 0) {
       alpha = 0;
@@ -27,19 +24,14 @@ String md5RandomString(String _password) {
 
 DateTime timestampToDate(int timestamp) {
   DateTime dateTime = DateTime.now();
-
-  ///如果是十三位时间戳返回这个
   if (timestamp.toString().length == 13) {
     dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
   } else if (timestamp.toString().length == 16) {
-    ///如果是十六位时间戳
     dateTime = DateTime.fromMicrosecondsSinceEpoch(timestamp);
   }
   return dateTime;
 }
 
-///时间戳转日期
-///[timestamp] 时间戳
 ///[onlyNeedDate ] 是否只显示日期 舍去时间
 String timestampToDateStr(int timestamp, {onlyNeedDate = false}) {
   DateTime dataTime = timestampToDate(timestamp);
@@ -56,11 +48,8 @@ String timestampToDateStr(int timestamp, {onlyNeedDate = false}) {
 
 String timeISOtoString(String time) {
   DateTime y2k = DateTime.parse(time);
-  //获取当前时间的年
   int year = y2k.year;
-  //获取当前时间的月
   int month = y2k.month;
-  //获取当前时间的日
   int day = y2k.day;
   return "$year-$month-$day";
 }
@@ -76,7 +65,6 @@ String generateRandomString() {
   return randomString;
 }
 
-// Define the function
 String formatDuration(int _duration) {
   Duration _dura = Duration(seconds: _duration);
   if (_dura.inHours != 0) {
@@ -135,7 +123,5 @@ converToTraditional(String simplified) {
       traditional += _temp;
     }
   }
-
-  print(traditional);
   return traditional;
 }

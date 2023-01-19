@@ -2,9 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../util/localizations.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
 
@@ -23,7 +23,7 @@ class _IndexScreenState extends State<IndexScreen> {
   List<Songs>? _songs;
 
   _getRandomAlbums() async {
-    final _albumsList = await BaseDB.instance.getAllAlbums();
+    final _albumsList = await DbProvider.instance.getAllAlbums();
     List<Albums> _list = [];
     List<int> _indexList = [];
     int _count = 0;
@@ -47,7 +47,7 @@ class _IndexScreenState extends State<IndexScreen> {
   }
 
   _getLastAlbums() async {
-    final _albumsList = await BaseDB.instance.getAlbumsByOrder(1);
+    final _albumsList = await DbProvider.instance.getAlbumsByOrder(1);
     List<Albums> _list = [];
 
     for (var element in _albumsList) {
@@ -62,7 +62,7 @@ class _IndexScreenState extends State<IndexScreen> {
   }
 
   _getRandomSongs() async {
-    final _songsList = await BaseDB.instance.getSongsByOrder(0);
+    final _songsList = await DbProvider.instance.getSongsByOrder(0);
     List<Songs> _list = [];
 
     for (var element in _songsList) {
@@ -149,7 +149,7 @@ class _IndexScreenState extends State<IndexScreen> {
                                 _title,
                                 (value.isNotEmpty && value["value"] == _tem.id)
                                     ? activeText
-                                    : nomalGrayText);
+                                    : nomalText);
                           }))));
             }, childCount: _songs!.length),
           ),

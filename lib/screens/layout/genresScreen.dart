@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../util/baseDB.dart';
+import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
@@ -18,7 +18,7 @@ class _GenresScreenState extends State<GenresScreen> {
   int genresnum = 0;
 
   _getGenres() async {
-    final _genresList = await BaseDB.instance.getGenres();
+    final _genresList = await DbProvider.instance.getGenres();
     if (_genresList != null) {
       for (var element in _genresList) {
         Genres _tem = element;
@@ -52,21 +52,21 @@ class _GenresScreenState extends State<GenresScreen> {
           children: [
             Text(
               "$genresLocal: " + genresnum.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "$albumLocal: " + albumsnum.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
               "$songLocal: " + songsnum.toString(),
-              style: nomalGrayText,
+              style: nomalText,
             ),
           ],
         ),
@@ -76,7 +76,7 @@ class _GenresScreenState extends State<GenresScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [nameLocal, albumLocal, songLocal];
-    return myRowList(_title, sublGrayText);
+    return myRowList(_title, subText);
   }
 
   Widget _itemBuildWidget() {
@@ -97,7 +97,7 @@ class _GenresScreenState extends State<GenresScreen> {
                         _tem.albumCount.toString(),
                         _tem.songCount.toString()
                       ];
-                      return ListTile(title: myRowList(_title, nomalGrayText));
+                      return ListTile(title: myRowList(_title, nomalText));
                     })))
         : Container();
   }

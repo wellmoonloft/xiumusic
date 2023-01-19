@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/notifierValue.dart';
-import '../common/baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MyAppBar extends StatefulWidget {
   MyAppBar({Key? key, required this.drawer}) : super(key: key);
@@ -36,10 +36,10 @@ class _MyAppBarState extends State<MyAppBar> {
                 IconButton(
                   icon: Icon(
                     Icons.menu,
-                    color: kGrayColor,
+                    color: textGray,
                     size: 15,
                   ),
-                  color: kGrayColor,
+                  color: textGray,
                   onPressed: () {
                     widget.drawer();
                   },
@@ -52,7 +52,7 @@ class _MyAppBarState extends State<MyAppBar> {
                 child: IconButton(
                   icon: Icon(
                     Icons.search,
-                    color: kGrayColor,
+                    color: textGray,
                     size: 15,
                   ),
                   onPressed: () async {
@@ -64,7 +64,7 @@ class _MyAppBarState extends State<MyAppBar> {
                 child: IconButton(
                   icon: Icon(
                     Icons.settings,
-                    color: kGrayColor,
+                    color: textGray,
                     size: 15,
                   ),
                   onPressed: () {

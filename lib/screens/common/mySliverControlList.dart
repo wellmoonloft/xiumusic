@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MySliverControlList extends StatelessWidget {
   final controller;
@@ -70,11 +70,11 @@ class MySliverControlList extends StatelessWidget {
                             _tem.title + "(" + _tem.year.toString() + ")",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: nomalGrayText)),
+                            style: nomalText)),
                     SizedBox(
                       height: 5,
                     ),
-                    Container(child: Text(_tem.artist, style: sublGrayText))
+                    Container(child: Text(_tem.artist, style: subText))
                   ],
                 )),
           );

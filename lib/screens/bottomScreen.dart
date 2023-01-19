@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
-import '../util/baseDB.dart';
+import '../util/dbProvider.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
-import 'common/baseCSS.dart';
+import '../util/mycss.dart';
 import 'common/myToast.dart';
 import 'components/playerControBar.dart';
 import 'components/playerSeekBar.dart';
@@ -42,7 +42,7 @@ class _BottomScreenState extends State<BottomScreen>
       // 更新当前歌曲
       final currentItem = _player.sequenceState!.currentSource;
       final _title = currentItem?.tag as String?;
-      Songs _song = await BaseDB.instance.getSongById(_title.toString());
+      Songs _song = await DbProvider.instance.getSongById(_title.toString());
       //拼装当前歌曲
       Map _activeSong = new Map();
       _activeSong["value"] = _song.id;
@@ -51,7 +51,7 @@ class _BottomScreenState extends State<BottomScreen>
       _activeSong["title"] = _song.title;
       _activeSong["album"] = _song.album;
       _activeSong["albumId"] = _song.albumId;
-      var _favorite = await BaseDB.instance.getFavoritebyId(_song.id);
+      var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
       if (_favorite != null) {
         _activeSong["starred"] = true;
       } else {
@@ -60,7 +60,7 @@ class _BottomScreenState extends State<BottomScreen>
       activeSong.value = _activeSong;
 
       //获取歌词
-      final _lyrictem = await BaseDB.instance.getLyricById(_song.id);
+      final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
       if (_lyrictem != null && _lyrictem!.isNotEmpty) {
         activeLyric.value = _lyrictem;
       } else {
@@ -86,7 +86,7 @@ class _BottomScreenState extends State<BottomScreen>
       // 更新当前歌曲
       final currentItem = _player.sequenceState!.currentSource;
       final _title = currentItem?.tag as String?;
-      Songs _song = await BaseDB.instance.getSongById(_title.toString());
+      Songs _song = await DbProvider.instance.getSongById(_title.toString());
       //拼装当前歌曲
       Map _activeSong = new Map();
       _activeSong["value"] = _song.id;
@@ -95,7 +95,7 @@ class _BottomScreenState extends State<BottomScreen>
       _activeSong["title"] = _song.title;
       _activeSong["album"] = _song.album;
       _activeSong["albumId"] = _song.albumId;
-      var _favorite = await BaseDB.instance.getFavoritebyId(_song.id);
+      var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
       if (_favorite != null) {
         _activeSong["starred"] = true;
       } else {
@@ -104,7 +104,7 @@ class _BottomScreenState extends State<BottomScreen>
       activeSong.value = _activeSong;
 
       //获取歌词
-      final _lyrictem = await BaseDB.instance.getLyricById(_song.id);
+      final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
       if (_lyrictem != null && _lyrictem!.isNotEmpty) {
         activeLyric.value = _lyrictem;
       } else {
@@ -279,7 +279,7 @@ class _BottomScreenState extends State<BottomScreen>
                                                   maxLines: 2,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: nomalGrayText),
+                                                  style: nomalText),
                                             ),
                                             Container(
                                               width: (isMobile.value)
@@ -292,7 +292,7 @@ class _BottomScreenState extends State<BottomScreen>
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: sublGrayText),
+                                                  style: subText),
                                             ),
                                             Container(
                                               width: (isMobile.value)
@@ -305,7 +305,7 @@ class _BottomScreenState extends State<BottomScreen>
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: sublGrayText),
+                                                  style: subText),
                                             )
                                           ],
                                         ))

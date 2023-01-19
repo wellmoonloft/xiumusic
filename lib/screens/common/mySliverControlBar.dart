@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/notifierValue.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 class MySliverControlBar extends StatelessWidget {
   final String title;
@@ -26,8 +26,8 @@ class MySliverControlBar extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.chevron_left,
-                      color: kTextColor, size: 16),
+                  icon:
+                      const Icon(Icons.chevron_left, color: textGray, size: 16),
                   onPressed: () {
                     controller.animateTo(
                         controller.offset - windowsWidth.value / 2,
@@ -37,7 +37,7 @@ class MySliverControlBar extends StatelessWidget {
                 ),
                 IconButton(
                   icon: const Icon(Icons.chevron_right,
-                      color: kTextColor, size: 16),
+                      color: textGray, size: 16),
                   onPressed: () {
                     controller.animateTo(
                         controller.offset + windowsWidth.value / 2,

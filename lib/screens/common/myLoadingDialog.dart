@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'baseCSS.dart';
+import '../../util/mycss.dart';
 
 showMyLoadingDialog(BuildContext _context, String _title) {
   showDialog(
@@ -22,14 +22,14 @@ showMyLoadingDialog(BuildContext _context, String _title) {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    color: kGrayColor,
+                    color: textGray,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
                     _title,
-                    style: nomalGrayText,
+                    style: nomalText,
                   )
                 ],
               ),
