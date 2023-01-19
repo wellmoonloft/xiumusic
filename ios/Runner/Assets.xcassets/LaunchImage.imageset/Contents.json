@@ -1,19 +1,44 @@
 {
   "images" : [
     {
-      "filename" : "icon-1024 2.png",
+      "filename" : "iPhone Portrait-Retina 5.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon-1024.png",
+      "filename" : "iPhone Portrait-Retina HD 4.7 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon-1024 1.png",
+      "filename" : "iPhone Portrait-Retina HD 5.5 1.png",
       "idiom" : "universal",
       "scale" : "3x"
+    },
+    {
+      "filename" : "iPhone Portrait-Retina 4.png",
+      "idiom" : "iphone",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "iPhone Portrait-Retina HD 4.7.png",
+      "idiom" : "iphone",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "iPhone Portrait-Retina HD 5.5.png",
+      "idiom" : "iphone",
+      "scale" : "3x"
+    },
+    {
+      "filename" : "iPad Portrait.png",
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "iPad Portrait@2x.png",
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {
