@@ -66,9 +66,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     _tem.title,
                     _tem.album,
                     _tem.artist,
-                    if (!isMobile.value) formatDuration(_tem.duration),
-                    if (!isMobile.value) _tem.bitRate.toString(),
-                    if (!isMobile.value) _tem.playCount.toString(),
+                    if (!isMobile) formatDuration(_tem.duration),
+                    if (!isMobile) _tem.bitRate.toString(),
+                    if (!isMobile) _tem.playCount.toString(),
                   ];
                   return ListTile(
                       title: InkWell(
@@ -98,9 +98,9 @@ class _SearchScreenState extends State<SearchScreen> {
       songLocal,
       albumLocal,
       artistLocal,
-      if (!isMobile.value) drationLocal,
-      if (!isMobile.value) bitRangeLocal,
-      if (!isMobile.value) playCountLocal
+      if (!isMobile) drationLocal,
+      if (!isMobile) bitRangeLocal,
+      if (!isMobile) playCountLocal
     ];
     return myRowList(_title, subText);
   }

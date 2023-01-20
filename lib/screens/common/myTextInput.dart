@@ -14,6 +14,7 @@ class MyTextInput extends StatelessWidget {
     required this.titleStyle,
     required this.mainaxis,
     required this.crossaxis,
+    this.keyboardType = TextInputType.text,
   }) : super(key: key);
 
   final control;
@@ -25,6 +26,7 @@ class MyTextInput extends StatelessWidget {
   final TextStyle titleStyle;
   final MainAxisAlignment mainaxis;
   final CrossAxisAlignment crossaxis;
+  final TextInputType keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,7 @@ class MyTextInput extends StatelessWidget {
             style: nomalText,
             cursorColor: textGray,
             obscureText: hideText,
+            keyboardType: TextInputType.number,
             onSubmitted: (value) {
               if (control.text != "") {
                 press();

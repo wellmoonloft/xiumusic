@@ -137,11 +137,11 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                       ],
                     ),
                   ),
-                  if (isMobile.value)
+                  if (isMobile)
                     SizedBox(
                       height: 5,
                     ),
-                  if (isMobile.value)
+                  if (isMobile)
                     Container(
                       padding: leftrightPadding,
                       child: Row(

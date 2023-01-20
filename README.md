@@ -88,8 +88,8 @@
   - [ ] 理论支持IOS/安卓/macOS/Windows/Linux，目前用macOS开发，推到iPhone上看了一眼大概没什么问题
   - [ ] 后台抛错到前台
 
-- [ ] 后台任务  
-  - [ ] 监听服务器状态，未发生变化做update，发生变化做insert  
+- [x] 后台任务  
+  - [x] 在Main里面设置了一个timer，20分钟从网上刷一次数据（我觉得回头要把这个时间做成可配置可开启的，长时间新增删除歌曲的可以关掉）
 
 ![](https://s2.loli.net/2023/01/12/vMEGWZdzIblT9qx.jpg)
 

@@ -118,7 +118,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                 },
               );
             }),
-        if (!isMobile.value)
+        if (!isMobile)
           IconButton(
             icon: const Icon(
               Icons.fast_rewind,
@@ -176,7 +176,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
             }
           },
         ),
-        if (!isMobile.value)
+        if (!isMobile)
           IconButton(
             icon: const Icon(
               Icons.fast_forward,

@@ -122,11 +122,11 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               indexValue.value = 9;
                             },
                             title: _artist),
-                        if (!isMobile.value)
+                        if (!isMobile)
                           SizedBox(
                             width: 10,
                           ),
-                        if (!isMobile.value)
+                        if (!isMobile)
                           Text(
                             "$yearLocal: " + _year.toString(),
                             style: nomalText,
@@ -169,11 +169,11 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       ],
                     ),
                   ),
-                  if (isMobile.value)
+                  if (isMobile)
                     SizedBox(
                       height: 5,
                     ),
-                  if (isMobile.value)
+                  if (isMobile)
                     Container(
                       padding: leftrightPadding,
                       child: Row(
@@ -199,7 +199,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     padding: leftrightPadding,
                     child: Row(
                       children: [
-                        if (!isMobile.value)
+                        if (!isMobile)
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
                             style: nomalText,

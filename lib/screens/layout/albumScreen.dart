@@ -42,7 +42,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Widget _itemBuildWidget() {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
     double _rightWidth = 0;
-    if (isMobile.value) {
+    if (isMobile) {
       _rightWidth =
           (windowsHeight.value - bottomHeight - appBarHeight - 40 - 25 - 80) /
               screenImageWidthAndHeight;

@@ -39,9 +39,9 @@ class PlayerSeekBarState extends State<PlayerSeekBar> {
         data: SliderTheme.of(context).copyWith(
             activeTrackColor: textGray,
             inactiveTrackColor: borderColor,
-            trackHeight: 3.0,
+            trackHeight: 2.0,
             thumbColor: textGray,
-            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 2),
             overlayShape: SliderComponentShape.noThumb),
         child: Container(
           width: widget.trackWidth,
@@ -92,48 +92,6 @@ class HiddenThumbComponentShape extends SliderComponentShape {
     required double textScaleFactor,
     required Size sizeWithOverflow,
   }) {}
-}
-
-void showSliderDialog({
-  required BuildContext context,
-  required String title,
-  required int divisions,
-  required double min,
-  required double max,
-  String valueSuffix = '',
-  // Replace these two by ValueStream.
-  required double value,
-  required Stream<double> stream,
-  required ValueChanged<double> onChanged,
-}) {
-  showDialog<void>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(title, textAlign: TextAlign.center),
-      content: StreamBuilder<double>(
-        stream: stream,
-        builder: (context, snapshot) => SizedBox(
-          height: 100.0,
-          child: Column(
-            children: [
-              Text('${snapshot.data?.toStringAsFixed(1)}$valueSuffix',
-                  style: const TextStyle(
-                      fontFamily: 'Fixed',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0)),
-              Slider(
-                divisions: divisions,
-                min: min,
-                max: max,
-                value: snapshot.data ?? value,
-                onChanged: onChanged,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
 }
 
 T? ambiguate<T>(T? value) => value;

@@ -176,11 +176,11 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                           "$drationLocal: " + formatDuration(_duration),
                           style: nomalText,
                         ),
-                        if (!isMobile.value)
+                        if (!isMobile)
                           SizedBox(
                             width: 10,
                           ),
-                        if (!isMobile.value)
+                        if (!isMobile)
                           Text(
                             "$playCountLocal: " + _playCount.toString(),
                             style: nomalText,
@@ -188,11 +188,11 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                       ],
                     ),
                   ),
-                  if (isMobile.value)
+                  if (isMobile)
                     SizedBox(
                       height: 5,
                     ),
-                  if (isMobile.value)
+                  if (isMobile)
                     Container(
                         padding: leftrightPadding,
                         child: Row(children: [

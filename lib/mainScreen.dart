@@ -20,7 +20,7 @@ class MainScreen extends StatelessWidget {
 
     //当不是移动端的时候使用这个可以动态监听窗体变化
     //如果是移动端的话，窗体不会变化
-    if (!isMobile.value) {
+    if (!isMobile) {
       windowsWidth.value = MediaQuery.of(context).size.width;
       windowsHeight.value = MediaQuery.of(context).size.height;
     }
@@ -34,7 +34,7 @@ class MainScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          if (isMobile.value)
+          if (isMobile)
             Container(
               height: 40,
               color: bkColor,
@@ -43,18 +43,18 @@ class MainScreen extends StatelessWidget {
             drawer: () => _drawer(),
           ),
           Container(
-              height: isMobile.value
+              height: isMobile
                   ? windowsHeight.value - bottomHeight - appBarHeight - 40 - 25
                   : windowsHeight.value - bottomHeight - appBarHeight,
               child: Row(
                 children: [
-                  if (!isMobile.value)
+                  if (!isMobile)
                     Container(
                       width: drawerWidth,
                       child: LeftScreen(),
                     ),
                   Container(
-                      width: isMobile.value
+                      width: isMobile
                           ? windowsWidth.value
                           : windowsWidth.value - drawerWidth,
                       color: bkColor,
@@ -81,7 +81,7 @@ class MainScreen extends StatelessWidget {
                   BottomScreen(),
                 ],
               )),
-          if (isMobile.value)
+          if (isMobile)
             Container(
               height: 25,
               color: bkColor,

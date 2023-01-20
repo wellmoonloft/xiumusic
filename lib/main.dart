@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/mainScreen.dart';
+import 'models/myModel.dart';
 import 'models/notifierValue.dart';
+import 'util/dbProvider.dart';
+import 'util/handling.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +25,33 @@ void main() async {
       await windowManager.show();
       await windowManager.focus();
     });
+    if (Platform.isWindows) {
+      isWindows = true;
+    } else {
+      isWindows = false;
+    }
 
-    //是不是移动端，这里是第二次赋值，以后也不会变了，不是常量胜似常量
-    isMobile.value = false;
+    isMobile = false;
+  } else {
+    isMobile = true;
+  }
+
+  final _infoList = await DbProvider.instance.getServerInfo();
+  if (_infoList != null) {
+    ServerInfo _myServerInfo = _infoList;
+    if (_myServerInfo.neteaseapi.isNotEmpty) {
+      isSNetease.value = true;
+    }
+    Timer.periodic(const Duration(minutes: 20), (timer) async {
+      print("开始刷新" + DateTime.now().toString());
+      await getGenresFromNet();
+      await getArtistsFromNet();
+      await sacnServerStatus();
+      await getFavoriteFromNet();
+      await getPlaylistsFromNet();
+      print("刷新完成" + DateTime.now().toString());
+      isServers.value = true;
+    });
   }
 
   runApp(MyApp());

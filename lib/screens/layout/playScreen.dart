@@ -49,7 +49,7 @@ class _PlayScreenState extends State<PlayScreen>
         builder: ((context, value, child) {
           return Row(
             children: [
-              if (!isMobile.value)
+              if (!isMobile)
                 Container(
                   height: windowsHeight.value - 95,
                   padding: EdgeInsets.all(30),
@@ -92,17 +92,17 @@ class _PlayScreenState extends State<PlayScreen>
                 ),
               Container(
                 padding: EdgeInsets.all(30),
-                height: !isMobile.value
+                height: !isMobile
                     ? windowsHeight.value - 95
                     : windowsHeight.value - 95 - 35,
-                width: !isMobile.value ? _width / 2 : _width,
+                width: !isMobile ? _width / 2 : _width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
                       height: 50,
-                      width: !isMobile.value ? _width / 2 : _width,
+                      width: !isMobile ? _width / 2 : _width,
                       child: Text((value.isEmpty) ? "未知" : value["title"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -110,7 +110,7 @@ class _PlayScreenState extends State<PlayScreen>
                           style: titleText2),
                     ),
                     Container(
-                        width: !isMobile.value ? _width / 2 : _width,
+                        width: !isMobile ? _width / 2 : _width,
                         child: Text(
                           (value.isEmpty)
                               ? "未知"
@@ -124,7 +124,7 @@ class _PlayScreenState extends State<PlayScreen>
                       height: 15,
                     ),
                     Container(
-                        width: !isMobile.value ? _width / 2 : _width,
+                        width: !isMobile ? _width / 2 : _width,
                         child: Text(
                           (value.isEmpty)
                               ? "未知"
@@ -164,7 +164,7 @@ class _PlayScreenState extends State<PlayScreen>
                   position: position,
                   lyricUi: lyricUI,
                   playing: playing,
-                  size: !isMobile.value
+                  size: !isMobile
                       ? Size(windowsWidth.value / 2, windowsHeight.value - 350)
                       : Size(windowsWidth.value, windowsHeight.value - 385),
                   emptyBuilder: () => Center(
@@ -261,7 +261,7 @@ class _PlayScreenState extends State<PlayScreen>
                       child: Column(
                         children: [
                           _buildHeader(),
-                          if (isMobile.value) PlayerVolumeBar(widget.player),
+                          if (isMobile) PlayerVolumeBar(widget.player),
                           StreamBuilder<PositionData>(
                             stream: _positionDataStream,
                             builder: (context, snapshot) {
