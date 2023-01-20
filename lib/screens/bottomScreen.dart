@@ -210,7 +210,7 @@ class _BottomScreenState extends State<BottomScreen>
                       children: [
                         Container(
                             width: (isMobile)
-                                ? windowsWidth.value / 3
+                                ? windowsWidth.value - 110
                                 : windowsWidth.value / 4,
                             child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
@@ -274,8 +274,8 @@ class _BottomScreenState extends State<BottomScreen>
                                           children: [
                                             Container(
                                               width: (isMobile)
-                                                  ? windowsWidth.value / 3 - 95
-                                                  : windowsWidth.value / 4 - 95,
+                                                  ? windowsWidth.value - 180
+                                                  : windowsWidth.value / 4 - 70,
                                               child: Text(
                                                   _song.isEmpty
                                                       ? ""
@@ -287,8 +287,8 @@ class _BottomScreenState extends State<BottomScreen>
                                             ),
                                             Container(
                                               width: (isMobile)
-                                                  ? windowsWidth.value / 3 - 95
-                                                  : windowsWidth.value / 4 - 95,
+                                                  ? windowsWidth.value - 180
+                                                  : windowsWidth.value / 4 - 70,
                                               child: Text(
                                                   _song.isEmpty
                                                       ? ""
@@ -300,8 +300,8 @@ class _BottomScreenState extends State<BottomScreen>
                                             ),
                                             Container(
                                               width: (isMobile)
-                                                  ? windowsWidth.value / 3 - 95
-                                                  : windowsWidth.value / 4 - 95,
+                                                  ? windowsWidth.value - 180
+                                                  : windowsWidth.value / 4 - 70,
                                               child: Text(
                                                   _song.isEmpty
                                                       ? ""
@@ -318,14 +318,13 @@ class _BottomScreenState extends State<BottomScreen>
                               },
                             )),
                         Container(
-                          width: (isMobile)
-                              ? windowsWidth.value * 2 / 3
-                              : windowsWidth.value * 1 / 2,
+                          width: isMobile ? 110 : windowsWidth.value * 1 / 2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              PlayerControBar(_player),
+                              PlayerControBar(
+                                  isPlayScreen: false, player: _player),
                             ],
                           ),
                         ),

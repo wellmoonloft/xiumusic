@@ -104,7 +104,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                               press: () async {
                                 if (inputController.text.isNotEmpty) {
                                   var _response = await createPlaylist(
-                                      0, inputController.text, "");
+                                      inputController.text, "");
                                   if (_response != null &&
                                       _response["status"] == "ok") {
                                     var _playlist = _response["playlist"];

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/mainScreen.dart';
 import 'models/myModel.dart';
@@ -27,13 +28,12 @@ void main() async {
     });
     if (Platform.isWindows) {
       isWindows = true;
-    } else {
-      isWindows = false;
     }
 
     isMobile = false;
   } else {
     isMobile = true;
+    isWindows = false;
   }
 
   final _infoList = await DbProvider.instance.getServerInfo();
@@ -53,6 +53,7 @@ void main() async {
       isServers.value = true;
     });
   }
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
   runApp(MyApp());
 }
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'NotoSansSC',
         brightness: Brightness.dark,
       ),
+
       home: MainScreen(),
     );
   }

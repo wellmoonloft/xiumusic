@@ -47,7 +47,7 @@ class MyTextInput extends StatelessWidget {
             style: nomalText,
             cursorColor: textGray,
             obscureText: hideText,
-            keyboardType: TextInputType.number,
+            keyboardType: keyboardType,
             onSubmitted: (value) {
               if (control.text != "") {
                 press();

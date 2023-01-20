@@ -101,9 +101,9 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       width: windowsWidth.value / 2,
                       padding: leftrightPadding,
                       child: Text(_albumsname,
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: titleText1)),
+                          style: titleText2)),
                   Container(
                     padding: leftrightPadding,
                     child: Row(
@@ -192,9 +192,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         ],
                       ),
                     ),
-                  SizedBox(
-                    height: 5,
-                  ),
                   Container(
                     padding: leftrightPadding,
                     child: Row(
@@ -205,7 +202,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                             style: nomalText,
                           ),
                         Container(
-                          padding: EdgeInsets.only(left: 5),
+                          height: 30,
+                          width: 30,
                           child: (_star)
                               ? IconButton(
                                   icon: Icon(

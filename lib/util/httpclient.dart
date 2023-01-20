@@ -102,22 +102,15 @@ getMusicFolders() async {
 }
 
 //playlistId Yes (if updating) || name Yes (if creating)
-createPlaylist(int _type, String _nameOrId, String _songId) async {
+createPlaylist(String _nameOrId, String _songId) async {
   String _sql = await _getServerInfo("createPlaylist");
-  //0 新建 1 更新
-  if (_type == 0) {
-    if (_songId == "") {
-      _sql = _sql + '&name=' + _nameOrId;
-    } else {
-      _sql = _sql + '&name=' + _nameOrId + '&songId=' + _songId;
-    }
-  } else if (_type == 1) {
-    if (_songId == "") {
-      _sql = _sql + '&playlistId=' + _nameOrId;
-    } else {
-      _sql = _sql + '&playlistId=' + _nameOrId + '&songId=' + _songId;
-    }
+
+  if (_songId == "") {
+    _sql = _sql + '&name=' + _nameOrId;
+  } else {
+    _sql = _sql + '&name=' + _nameOrId + '&songId=' + _songId;
   }
+
   try {
     var response = await Dio().get(_sql);
     if (response.statusCode == 200) {

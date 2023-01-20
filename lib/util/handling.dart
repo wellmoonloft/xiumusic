@@ -1,9 +1,3 @@
-// TODO: 设置里面有个强制刷新，绕过服务器状态检查直接删表（除了ServerInfoTable）
-// 其他地方的刷新都做成update，但是最好先sacnServerStatus()一下
-// 还需要一个app打开的时候自动检测
-// 这里有一个bug，就是如果用户在同一文件夹里删除一首歌后又添加一首歌，返回的结果也是不需要更新
-// 不过这个几乎是小概率事件，同时在设置里面提供一个绕过服务器状态检查的暴力更新即可
-
 import '../models/myModel.dart';
 import 'dbProvider.dart';
 import 'httpClient.dart';

@@ -9,14 +9,109 @@ import '../common/myToast.dart';
 
 class PlayerControBar extends StatefulWidget {
   final AudioPlayer player;
+  final bool isPlayScreen;
 
-  const PlayerControBar(this.player, {Key? key}) : super(key: key);
+  const PlayerControBar(
+      {Key? key, required this.player, required this.isPlayScreen})
+      : super(key: key);
   @override
   _PlayerControBarState createState() => _PlayerControBarState();
 }
 
 class _PlayerControBarState extends State<PlayerControBar> {
   int loopMode = 0;
+  bool isactivePlay = true;
+  late OverlayEntry activePlaylistOverlay;
+
+  @override
+  initState() {
+    super.initState();
+    activePlaylistOverlay = OverlayEntry(builder: (context) {
+      List _songs = activeList.value;
+      return Positioned(
+          bottom: 85,
+          right: 10,
+          child: Material(
+              color: badgeDark,
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: badgeDark,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "当前播放",
+                                style: nomalText,
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                "(" + _songs.length.toString() + ")",
+                                style: subText,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          )),
+                      Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: _songs.length,
+                                  itemExtent: 40.0, //强制高度为50.0
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Songs _tem = _songs[index];
+                                    return ListTile(
+                                        title: InkWell(
+                                            onTap: () async {
+                                              await widget.player.seek(
+                                                  Duration.zero,
+                                                  index: index);
+                                            },
+                                            child: ValueListenableBuilder<Map>(
+                                                valueListenable: activeSong,
+                                                builder:
+                                                    ((context, value, child) {
+                                                  return Container(
+                                                      width: 200,
+                                                      child: Text(
+                                                        _tem.title,
+                                                        textDirection:
+                                                            TextDirection.ltr,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: (value
+                                                                    .isNotEmpty &&
+                                                                value["value"] ==
+                                                                    _tem.id)
+                                                            ? activeText
+                                                            : nomalText,
+                                                      ));
+                                                }))));
+                                  })))
+                    ],
+                  ))));
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   Widget _buildLoopButtom() {
     switch (loopMode) {
@@ -81,43 +176,25 @@ class _PlayerControBarState extends State<PlayerControBar> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Opens volume slider dialog
-        // IconButton(
-        //   icon: const Icon(
-        //     Icons.volume_up,
-        //     color: textGray,
-        //   ),
-        //   onPressed: () {
-        //     // showSliderDialog(
-        //     //   context: context,
-        //     //   title: "Adjust volume",
-        //     //   divisions: 10,
-        //     //   min: 0.0,
-        //     //   max: 1.0,
-        //     //   value: player.volume,
-        //     //   stream: player.volumeStream,
-        //     //   onChanged: player.setVolume,
-        //     // );
-        //     widget.player.setLoopMode(LoopMode.one);
-        //   },
-        // ),
-        _buildLoopButtom(),
-        ValueListenableBuilder<bool>(
-            valueListenable: isFirstSongNotifier,
-            builder: (_, isFirst, __) {
-              return IconButton(
-                icon: Icon(
-                  Icons.skip_previous,
-                  color: isFirst ? badgeDark : textGray,
-                ),
-                onPressed: () {
-                  // ignore: unnecessary_statements
-                  (isFirst) ? null : widget.player.seekToPrevious();
-                },
-              );
-            }),
+        if (widget.isPlayScreen) _buildLoopButtom(),
+        if (widget.isPlayScreen)
+          ValueListenableBuilder<bool>(
+              valueListenable: isFirstSongNotifier,
+              builder: (_, isFirst, __) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.skip_previous,
+                    color: isFirst ? badgeDark : textGray,
+                  ),
+                  onPressed: () {
+                    // ignore: unnecessary_statements
+                    (isFirst) ? null : widget.player.seekToPrevious();
+                  },
+                );
+              }),
         if (!isMobile)
           IconButton(
             icon: const Icon(
@@ -176,6 +253,31 @@ class _PlayerControBarState extends State<PlayerControBar> {
             }
           },
         ),
+        if (isMobile && !widget.isPlayScreen)
+          IconButton(
+            icon: Icon(
+              Icons.playlist_play,
+              color: (activeList.value.length > 0) ? textGray : badgeDark,
+              size: 30.0,
+            ),
+            onPressed: (activeList.value.length > 0)
+                ? () {
+                    if (isactivePlay) {
+                      Overlay.of(context)?.insert(activePlaylistOverlay);
+                      setState(() {
+                        isactivePlay = false;
+                      });
+                    } else {
+                      if (activePlaylistOverlay.mounted) {
+                        activePlaylistOverlay.remove();
+                      }
+                      setState(() {
+                        isactivePlay = true;
+                      });
+                    }
+                  }
+                : null,
+          ),
         if (!isMobile)
           IconButton(
             icon: const Icon(
@@ -187,57 +289,59 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   Duration(seconds: widget.player.position.inSeconds + 15));
             },
           ),
-        ValueListenableBuilder<bool>(
-            valueListenable: isLastSongNotifier,
-            builder: (_, isLast, __) {
-              return IconButton(
-                icon: Icon(
-                  Icons.skip_next,
-                  color: isLast ? badgeDark : textGray,
-                ),
-                onPressed: () {
-                  // ignore: unnecessary_statements
-                  (isLast) ? null : widget.player.seekToNext();
-                },
-              );
-            }),
-        ValueListenableBuilder<Map>(
-            valueListenable: activeSong,
-            builder: (context, _song, child) {
-              return (_song.isNotEmpty && _song["starred"])
-                  ? IconButton(
-                      icon: Icon(
-                        Icons.favorite,
-                        color: badgeRed,
-                        size: 16,
-                      ),
-                      onPressed: () async {
-                        Favorite _favorite =
-                            Favorite(id: _song["value"], type: 'song');
-                        await delStarred(_favorite);
-                        await DbProvider.instance.delFavorite(_song["value"]);
-                        setState(() {
-                          activeSong.value["starred"] = false;
-                        });
-                      },
-                    )
-                  : IconButton(
-                      icon: Icon(
-                        Icons.favorite_border,
-                        color: textGray,
-                        size: 16,
-                      ),
-                      onPressed: () async {
-                        Favorite _favorite =
-                            Favorite(id: _song["value"], type: 'song');
-                        await addStarred(_favorite);
-                        await DbProvider.instance.addFavorite(_favorite);
-                        setState(() {
-                          activeSong.value["starred"] = true;
-                        });
-                      },
-                    );
-            })
+        if (widget.isPlayScreen)
+          ValueListenableBuilder<bool>(
+              valueListenable: isLastSongNotifier,
+              builder: (_, isLast, __) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.skip_next,
+                    color: isLast ? badgeDark : textGray,
+                  ),
+                  onPressed: () {
+                    // ignore: unnecessary_statements
+                    (isLast) ? null : widget.player.seekToNext();
+                  },
+                );
+              }),
+        if (widget.isPlayScreen)
+          ValueListenableBuilder<Map>(
+              valueListenable: activeSong,
+              builder: (context, _song, child) {
+                return (_song.isNotEmpty && _song["starred"])
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                          color: badgeRed,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _song["value"], type: 'song');
+                          await delStarred(_favorite);
+                          await DbProvider.instance.delFavorite(_song["value"]);
+                          setState(() {
+                            activeSong.value["starred"] = false;
+                          });
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: textGray,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _song["value"], type: 'song');
+                          await addStarred(_favorite);
+                          await DbProvider.instance.addFavorite(_favorite);
+                          setState(() {
+                            activeSong.value["starred"] = true;
+                          });
+                        },
+                      );
+              })
       ],
     );
   }

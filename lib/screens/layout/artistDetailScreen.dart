@@ -99,8 +99,8 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      padding: EdgeInsets.all(10),
-                      child: Text(_artilstname, style: titleText1)),
+                      padding: leftrightPadding,
+                      child: Text(_artilstname, style: titleText2)),
                   Container(
                     padding: leftrightPadding,
                     child: Row(
@@ -118,7 +118,8 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                           style: nomalText,
                         ),
                         Container(
-                          padding: EdgeInsets.only(left: 5),
+                          height: 30,
+                          width: 30,
                           child: (_star)
                               ? IconButton(
                                   icon: Icon(

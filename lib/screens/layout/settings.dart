@@ -161,18 +161,24 @@ class _SettingsState extends State<Settings>
             Text(settingsLocal, style: titleText1),
             Row(
               children: [
-                MyTextButton(
-                    press: () async {
-                      showMyLoadingDialog(context, "刷新中...");
-                      //初始化服务器
-                      await getGenresFromNet();
-                      await getArtistsFromNet();
-                      await sacnServerStatus();
-                      await getFavoriteFromNet();
-                      await getPlaylistsFromNet();
-                      Navigator.pop(context);
-                    },
-                    title: "强制刷新"),
+                ValueListenableBuilder<bool>(
+                    valueListenable: isServers,
+                    builder: ((context, _value, child) {
+                      return isServers.value
+                          ? MyTextButton(
+                              press: () async {
+                                showMyLoadingDialog(context, "刷新中...");
+                                //初始化服务器
+                                await getGenresFromNet();
+                                await getArtistsFromNet();
+                                await sacnServerStatus();
+                                await getFavoriteFromNet();
+                                await getPlaylistsFromNet();
+                                Navigator.pop(context);
+                              },
+                              title: "强制刷新")
+                          : Container();
+                    })),
                 SizedBox(
                   width: 10,
                 ),
@@ -278,11 +284,22 @@ class _SettingsState extends State<Settings>
                           "歌词服务器",
                           style: titleText2,
                         ),
-                        MyTextButton(
-                            press: () async {
-                              _saveNetease();
-                            },
-                            title: "保存歌词服务器"),
+                        ValueListenableBuilder<bool>(
+                            valueListenable: isServers,
+                            builder: ((context, _value, child) {
+                              return _value
+                                  ? Container()
+                                  : MyTextButton(
+                                      press: () async {
+                                        if (isServers.value) {
+                                          _saveNetease();
+                                        } else {
+                                          showMyAlertDialog(
+                                              context, "提醒", "请先保存音乐服务器");
+                                        }
+                                      },
+                                      title: "保存歌词服务器");
+                            }))
                       ],
                     ),
                     SizedBox(

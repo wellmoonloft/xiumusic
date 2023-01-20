@@ -51,7 +51,7 @@ class _PlayScreenState extends State<PlayScreen>
             children: [
               if (!isMobile)
                 Container(
-                  height: windowsHeight.value - 95,
+                  height: windowsHeight.value - 80,
                   padding: EdgeInsets.all(30),
                   width: _width / 2,
                   child: Column(
@@ -93,8 +93,8 @@ class _PlayScreenState extends State<PlayScreen>
               Container(
                 padding: EdgeInsets.all(30),
                 height: !isMobile
-                    ? windowsHeight.value - 95
-                    : windowsHeight.value - 95 - 35,
+                    ? windowsHeight.value - 80
+                    : windowsHeight.value - 80 - 50,
                 width: !isMobile ? _width / 2 : _width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -261,26 +261,37 @@ class _PlayScreenState extends State<PlayScreen>
                       child: Column(
                         children: [
                           _buildHeader(),
-                          if (isMobile) PlayerVolumeBar(widget.player),
-                          StreamBuilder<PositionData>(
-                            stream: _positionDataStream,
-                            builder: (context, snapshot) {
-                              final positionData = snapshot.data;
+                          if (isMobile)
+                            Container(
+                                height: 50,
+                                child: PlayerVolumeBar(widget.player)),
+                          Container(
+                              height: 5,
+                              child: StreamBuilder<PositionData>(
+                                stream: _positionDataStream,
+                                builder: (context, snapshot) {
+                                  final positionData = snapshot.data;
 
-                              return PlayerSeekBar(
-                                trackWidth: windowsWidth.value,
-                                duration:
-                                    positionData?.duration ?? Duration.zero,
-                                position:
-                                    positionData?.position ?? Duration.zero,
-                                bufferedPosition:
-                                    positionData?.bufferedPosition ??
-                                        Duration.zero,
-                                onChangeEnd: widget.player.seek,
-                              );
-                            },
+                                  return PlayerSeekBar(
+                                    trackWidth: windowsWidth.value,
+                                    duration:
+                                        positionData?.duration ?? Duration.zero,
+                                    position:
+                                        positionData?.position ?? Duration.zero,
+                                    bufferedPosition:
+                                        positionData?.bufferedPosition ??
+                                            Duration.zero,
+                                    onChangeEnd: widget.player.seek,
+                                  );
+                                },
+                              )),
+                          SizedBox(
+                            height: 5,
                           ),
-                          PlayerControBar(widget.player),
+                          Container(
+                              height: 60,
+                              child: PlayerControBar(
+                                  isPlayScreen: true, player: widget.player))
                         ],
                       )),
                 ),

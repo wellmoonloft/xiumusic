@@ -16,11 +16,11 @@ class _LeftScreenState extends State<LeftScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: bkColor,
+        color: isMobile ? rightColor : bkColor,
         padding: leftrightPadding,
         child: Column(
           children: [
-            SizedBox(height: isMobile ? 30 : 0),
+            SizedBox(height: isMobile ? 40 : 0),
             MyTextIconButton(
                 press: () {
                   indexValue.value = 0;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../common/myAlertDialog.dart';
-import 'activePlaylistDialog.dart';
 import 'addPlaylistDialog.dart';
 
 class PlayerVolumeBar extends StatefulWidget {
@@ -17,12 +17,16 @@ class PlayerVolumeBar extends StatefulWidget {
 class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
   double _activevolume = 1.0;
   bool isVolume = true;
-  late OverlayEntry overlayEntry;
+  bool isactivePlay = true;
+  late OverlayEntry volumeOverlay;
+  late OverlayEntry activePlaylistOverlay;
 
   @override
   initState() {
     super.initState();
-    overlayEntry = OverlayEntry(builder: (context) {
+    // volumeOverlay?.remove();
+    // activePlaylistOverlay?.remove();
+    volumeOverlay = OverlayEntry(builder: (context) {
       return Positioned(
           bottom: 55,
           right: 20,
@@ -81,6 +85,86 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                             );
                           })))));
     });
+    activePlaylistOverlay = OverlayEntry(builder: (context) {
+      List _songs = activeList.value;
+      return Positioned(
+          bottom: 55,
+          right: 20,
+          child: Material(
+              color: badgeDark,
+              borderRadius: BorderRadius.circular(8.0),
+              child: Container(
+                  width: 200,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: badgeDark,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "当前播放",
+                                style: nomalText,
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                "(" + _songs.length.toString() + ")",
+                                style: subText,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          )),
+                      Container(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: _songs.length,
+                                  itemExtent: 40.0, //强制高度为50.0
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Songs _tem = _songs[index];
+                                    return ListTile(
+                                        title: InkWell(
+                                            onTap: () async {
+                                              await widget.player.seek(
+                                                  Duration.zero,
+                                                  index: index);
+                                            },
+                                            child: ValueListenableBuilder<Map>(
+                                                valueListenable: activeSong,
+                                                builder:
+                                                    ((context, value, child) {
+                                                  return Container(
+                                                      width: 200,
+                                                      child: Text(
+                                                        _tem.title,
+                                                        textDirection:
+                                                            TextDirection.ltr,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: (value
+                                                                    .isNotEmpty &&
+                                                                value["value"] ==
+                                                                    _tem.id)
+                                                            ? activeText
+                                                            : nomalText,
+                                                      ));
+                                                }))));
+                                  })))
+                    ],
+                  ))));
+    });
   }
 
   @override
@@ -137,24 +221,35 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                                 },
                         );
                       })),
-              Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.playlist_add_check,
-                    color: (activeList.value.length > 0) ? textGray : badgeDark,
-                    size: 16,
+              if (!isMobile)
+                Container(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.playlist_play,
+                      color:
+                          (activeList.value.length > 0) ? textGray : badgeDark,
+                      size: 16,
+                    ),
+                    onPressed: (activeList.value.length > 0)
+                        ? () {
+                            if (isactivePlay) {
+                              Overlay.of(context)
+                                  ?.insert(activePlaylistOverlay);
+                              setState(() {
+                                isactivePlay = false;
+                              });
+                            } else {
+                              if (activePlaylistOverlay.mounted) {
+                                activePlaylistOverlay.remove();
+                              }
+                              setState(() {
+                                isactivePlay = true;
+                              });
+                            }
+                          }
+                        : null,
                   ),
-                  onPressed: (activeList.value.length > 0)
-                      ? () {
-                          RenderBox? renderBox =
-                              context.findRenderObject() as RenderBox?;
-                          Offset offset = renderBox!.localToGlobal(Offset.zero);
-                          showActivePlaylistDialog(
-                              context, offset, widget.player);
-                        }
-                      : null,
                 ),
-              ),
               if (!isMobile)
                 StreamBuilder<double>(
                     stream: widget.player.volumeStream,
@@ -170,13 +265,13 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                               ),
                               onPressed: () {
                                 if (isVolume) {
-                                  Overlay.of(context)?.insert(overlayEntry);
+                                  Overlay.of(context)?.insert(volumeOverlay);
                                   setState(() {
                                     isVolume = false;
                                   });
                                 } else {
-                                  if (overlayEntry.mounted) {
-                                    overlayEntry.remove();
+                                  if (volumeOverlay.mounted) {
+                                    volumeOverlay.remove();
                                   }
                                   setState(() {
                                     isVolume = true;
