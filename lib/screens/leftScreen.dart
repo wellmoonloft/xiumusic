@@ -56,13 +56,13 @@ class _LeftScreenState extends State<LeftScreen> {
                 },
                 title: artistLocal,
                 icon: Icons.people_alt),
-            MyTextIconButton(
-                press: () {
-                  indexValue.value = 6;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: genresLocal,
-                icon: Icons.public),
+            // MyTextIconButton(
+            //     press: () {
+            //       indexValue.value = 6;
+            //       if (isMobile) Navigator.pop(context);
+            //     },
+            //     title: genresLocal,
+            //     icon: Icons.public),
             if (isSNetease.value)
               MyTextIconButton(
                   press: () {

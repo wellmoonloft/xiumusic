@@ -179,8 +179,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (widget.isPlayScreen) _buildLoopButtom(),
-        if (widget.isPlayScreen)
+        if (widget.isPlayScreen || !isMobile) _buildLoopButtom(),
+        if (widget.isPlayScreen || !isMobile)
           ValueListenableBuilder<bool>(
               valueListenable: isFirstSongNotifier,
               builder: (_, isFirst, __) {
@@ -289,7 +289,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   Duration(seconds: widget.player.position.inSeconds + 15));
             },
           ),
-        if (widget.isPlayScreen)
+        if (widget.isPlayScreen || !isMobile)
           ValueListenableBuilder<bool>(
               valueListenable: isLastSongNotifier,
               builder: (_, isLast, __) {
@@ -304,7 +304,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   },
                 );
               }),
-        if (widget.isPlayScreen)
+        if (widget.isPlayScreen || !isMobile)
           ValueListenableBuilder<Map>(
               valueListenable: activeSong,
               builder: (context, _song, child) {

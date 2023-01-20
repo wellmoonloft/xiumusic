@@ -28,6 +28,8 @@ void main() async {
     });
     if (Platform.isWindows) {
       isWindows = true;
+    } else {
+      isWindows = false;
     }
 
     isMobile = false;

@@ -1,5 +1,5 @@
 //抽取所有文本条目，也许将来会国际化，省的到时候再整理
-final String version = "v0.0.4";
+final String version = "v0.1.0";
 
 //页面
 final String confirmLocal = "确定";

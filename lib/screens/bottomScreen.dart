@@ -85,31 +85,7 @@ class _BottomScreenState extends State<BottomScreen>
       print("3");
       // 更新当前歌曲
       final currentItem = _player.sequenceState!.currentSource;
-      final _title = currentItem?.tag as String?;
-      Songs _song = await DbProvider.instance.getSongById(_title.toString());
-      //拼装当前歌曲
-      Map _activeSong = new Map();
-      _activeSong["value"] = _song.id;
-      _activeSong["artist"] = _song.artist;
-      _activeSong["url"] = _song.coverUrl;
-      _activeSong["title"] = _song.title;
-      _activeSong["album"] = _song.album;
-      _activeSong["albumId"] = _song.albumId;
-      var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
-      if (_favorite != null) {
-        _activeSong["starred"] = true;
-      } else {
-        _activeSong["starred"] = false;
-      }
-      activeSong.value = _activeSong;
 
-      //获取歌词
-      final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
-      if (_lyrictem != null && _lyrictem!.isNotEmpty) {
-        activeLyric.value = _lyrictem;
-      } else {
-        activeLyric.value = "";
-      }
       final playlist = _player.sequenceState!.effectiveSequence;
       //更新上下首歌曲
       if (playlist.isEmpty || currentItem == null) {
@@ -145,6 +121,32 @@ class _BottomScreenState extends State<BottomScreen>
           message: "加入" + activeList.value.length.toString() + "首歌");
     }
     _player.play();
+    final currentItem = _player.sequenceState!.currentSource;
+    final _title = currentItem?.tag as String?;
+    Songs _song = await DbProvider.instance.getSongById(_title.toString());
+    //拼装当前歌曲
+    Map _activeSong = new Map();
+    _activeSong["value"] = _song.id;
+    _activeSong["artist"] = _song.artist;
+    _activeSong["url"] = _song.coverUrl;
+    _activeSong["title"] = _song.title;
+    _activeSong["album"] = _song.album;
+    _activeSong["albumId"] = _song.albumId;
+    var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
+    if (_favorite != null) {
+      _activeSong["starred"] = true;
+    } else {
+      _activeSong["starred"] = false;
+    }
+    activeSong.value = _activeSong;
+
+    //获取歌词
+    final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
+    if (_lyrictem != null && _lyrictem!.isNotEmpty) {
+      activeLyric.value = _lyrictem;
+    } else {
+      activeLyric.value = "";
+    }
   }
 
   Stream<PositionData> get _positionDataStream {

@@ -17,9 +17,12 @@ class MySliverControlList extends StatelessWidget {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
     double _rightWidth = 0;
     if (isMobile) {
-      _rightWidth = windowsHeight.value / 4;
+      _rightWidth =
+          (windowsHeight.value / 4 > 300) ? 300 : windowsHeight.value / 4;
     } else {
-      _rightWidth = (windowsWidth.value - drawerWidth) / 4;
+      _rightWidth = ((windowsWidth.value - drawerWidth) / 4 > 300)
+          ? 300
+          : (windowsWidth.value - drawerWidth) / 4;
     }
     return Container(
       margin: EdgeInsets.only(top: 10),
