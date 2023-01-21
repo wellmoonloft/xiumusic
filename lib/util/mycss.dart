@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+const qing = Color.fromARGB(255, 194, 197, 196);
+const hong = Color.fromARGB(255, 185, 64, 65);
+const huang = Color.fromARGB(255, 237, 207, 106);
+const bai = Color.fromARGB(255, 250, 250, 250);
+const xuan = Color.fromARGB(255, 48, 46, 44);
+
 const badgeRed = Color.fromARGB(255, 209, 45, 49);
 const badgeDark = Color.fromARGB(255, 61, 63, 67);
 const textGray = Color.fromARGB(255, 216, 216, 216);
@@ -31,6 +37,8 @@ List<Widget> mylistView(List<String> _title, TextStyle _style) {
       child: Text(
         _title[i],
         textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: _style,
       ),
     ));
@@ -59,3 +67,7 @@ const double screenImageWidthAndHeight = 180;
 const double playingImageWidthAndHeight = 180;
 //图片刷新动画延迟
 const int imageMilli = 500;
+//logo asset地址
+const String mylogoAsset = "assets/images/logo.jpg";
+//是不是移动端
+late final bool isMobile;

@@ -24,8 +24,6 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
   @override
   initState() {
     super.initState();
-    // volumeOverlay?.remove();
-    // activePlaylistOverlay?.remove();
     volumeOverlay = OverlayEntry(builder: (context) {
       return Positioned(
           bottom: 55,

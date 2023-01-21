@@ -54,7 +54,7 @@ class MySliverControlList extends StatelessWidget {
                           fit: BoxFit.cover,
                           placeholder: (context, url) {
                             return AnimatedSwitcher(
-                              child: Image.asset("assets/images/logo.jpg"),
+                              child: Image.asset(mylogoAsset),
                               duration:
                                   const Duration(milliseconds: imageMilli),
                             );

@@ -13,7 +13,7 @@ ValueNotifier<bool> isServers = ValueNotifier<bool>(false);
 //监听服务器是否保存
 ValueNotifier<bool> isSNetease = ValueNotifier<bool>(false);
 
-//监听当前资源ID
+//监听当前资源ID 艺人/专辑/歌曲都是它
 ValueNotifier<String> activeID = ValueNotifier<String>("1");
 
 //监听当前播放列表
@@ -42,8 +42,3 @@ ValueNotifier<double> windowsWidth =
 
 ValueNotifier<double> windowsHeight =
     ValueNotifier<double>(window.physicalSize.height / window.devicePixelRatio);
-
-//是不是移动端
-late final bool isMobile;
-//是不是Windows
-late final bool isWindows;

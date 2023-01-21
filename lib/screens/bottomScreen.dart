@@ -26,7 +26,6 @@ class _BottomScreenState extends State<BottomScreen>
   initState() {
     super.initState();
     _listenforcurrentIndexStream();
-    _listenforsequenceStream();
   }
 
   @override
@@ -79,32 +78,11 @@ class _BottomScreenState extends State<BottomScreen>
     });
   }
 
-  //创建列表监听，只有第一次
-  void _listenforsequenceStream() {
-    _player.sequenceStream.listen((event) async {
-      if (_player.sequenceState == null) return;
-      print("3");
-      // 更新当前歌曲
-      final currentItem = _player.sequenceState!.currentSource;
-
-      final playlist = _player.sequenceState!.effectiveSequence;
-      //更新上下首歌曲
-      if (playlist.isEmpty || currentItem == null) {
-        isFirstSongNotifier.value = true;
-        isLastSongNotifier.value = true;
-      } else {
-        isFirstSongNotifier.value = playlist.first == currentItem;
-        isLastSongNotifier.value = playlist.last == currentItem;
-      }
-    });
-  }
-
   Future<void> setAudioSource() async {
     List<AudioSource> children = [];
     List _songs = activeList.value;
     for (var element in _songs) {
       Songs _song = element;
-      //children.add(AudioSource.uri(Uri.parse(_song.stream), tag: _song.id));
       children.add(
         AudioSource.uri(
           Uri.parse(_song.stream),
@@ -153,6 +131,15 @@ class _BottomScreenState extends State<BottomScreen>
     }
     activeSong.value = _activeSong;
 
+    //更新上下首歌曲
+    if (playlist.sequence.isEmpty || currentItem == null) {
+      isFirstSongNotifier.value = true;
+      isLastSongNotifier.value = true;
+    } else {
+      isFirstSongNotifier.value = playlist.sequence.first == currentItem;
+      isLastSongNotifier.value = playlist.sequence.last == currentItem;
+    }
+
     //获取歌词
     final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
     if (_lyrictem != null && _lyrictem!.isNotEmpty) {
@@ -194,7 +181,7 @@ class _BottomScreenState extends State<BottomScreen>
                 children: [
                   Container(
                     width: windowsWidth.value,
-                    height: 5,
+                    height: 6,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -252,8 +239,8 @@ class _BottomScreenState extends State<BottomScreen>
                                               ? ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(6),
-                                                  child: Image.asset(
-                                                      "assets/images/logo.jpg"))
+                                                  child:
+                                                      Image.asset(mylogoAsset))
                                               : ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(6),
@@ -264,7 +251,7 @@ class _BottomScreenState extends State<BottomScreen>
                                                         (context, url) {
                                                       return AnimatedSwitcher(
                                                         child: Image.asset(
-                                                            "assets/images/logo.jpg"),
+                                                            mylogoAsset),
                                                         duration:
                                                             const Duration(
                                                                 milliseconds:

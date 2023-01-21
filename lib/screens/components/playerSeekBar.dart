@@ -39,9 +39,9 @@ class PlayerSeekBarState extends State<PlayerSeekBar> {
         data: SliderTheme.of(context).copyWith(
             activeTrackColor: textGray,
             inactiveTrackColor: borderColor,
-            trackHeight: 2.0,
+            trackHeight: 3.0,
             thumbColor: textGray,
-            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 2),
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 3),
             overlayShape: SliderComponentShape.noThumb),
         child: Container(
           width: widget.trackWidth,

@@ -1,22 +1,17 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/mainScreen.dart';
+import 'package:xiumusic/util/mycss.dart';
 import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/dbProvider.dart';
-import 'util/handling.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
-    androidNotificationChannelName: 'Audio playback',
-    androidNotificationOngoing: true,
-  );
+
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = WindowOptions(
@@ -32,34 +27,34 @@ void main() async {
       await windowManager.show();
       await windowManager.focus();
     });
-    if (Platform.isWindows) {
-      isWindows = true;
-    } else {
-      isWindows = false;
-    }
-
     isMobile = false;
   } else {
     isMobile = true;
-    isWindows = false;
+    //移动端开启后台播放
+    await JustAudioBackground.init(
+      androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+      androidNotificationChannelName: 'Audio playback',
+      androidNotificationOngoing: true,
+    );
   }
 
   final _infoList = await DbProvider.instance.getServerInfo();
   if (_infoList != null) {
+    isServers.value = true;
     ServerInfo _myServerInfo = _infoList;
     if (_myServerInfo.neteaseapi.isNotEmpty) {
       isSNetease.value = true;
     }
-    Timer.periodic(const Duration(minutes: 20), (timer) async {
-      print("开始刷新" + DateTime.now().toString());
-      await getGenresFromNet();
-      await getArtistsFromNet();
-      await sacnServerStatus();
-      await getFavoriteFromNet();
-      await getPlaylistsFromNet();
-      print("刷新完成" + DateTime.now().toString());
-      isServers.value = true;
-    });
+    //自动刷新服务器
+    // Timer.periodic(const Duration(minutes: 20), (timer) async {
+    //   print("开始刷新" + DateTime.now().toString());
+    //   await getGenresFromNet();
+    //   await getArtistsFromNet();
+    //   await sacnServerStatus();
+    //   await getFavoriteFromNet();
+    //   await getPlaylistsFromNet();
+    //   print("刷新完成" + DateTime.now().toString());
+    // });
   }
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 

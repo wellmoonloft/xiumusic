@@ -63,9 +63,8 @@ class _PlayScreenState extends State<PlayScreen>
                           height: _width / 2.5,
                           width: _width / 2.5,
                           child: ClipOval(
-                            //borderRadius: BorderRadius.circular(15),
                             child: (value.isEmpty)
-                                ? Image.asset("assets/images/logo.jpg")
+                                ? Image.asset(mylogoAsset)
                                 : Image.network(
                                     value["url"],
                                     height: _width / 2.5,
@@ -79,8 +78,7 @@ class _PlayScreenState extends State<PlayScreen>
                                       return AnimatedSwitcher(
                                         child: frame != null
                                             ? child
-                                            : Image.asset(
-                                                "assets/images/logo.jpg"),
+                                            : Image.asset(mylogoAsset),
                                         duration: const Duration(
                                             milliseconds: imageMilli),
                                       );
@@ -231,13 +229,13 @@ class _PlayScreenState extends State<PlayScreen>
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: (value.isEmpty)
-                          ? Image.asset("assets/images/logo.jpg")
+                          ? Image.asset(mylogoAsset)
                           : CachedNetworkImage(
                               imageUrl: value["url"],
                               fit: BoxFit.cover,
                               placeholder: (context, url) {
                                 return AnimatedSwitcher(
-                                  child: Image.asset("assets/images/logo.jpg"),
+                                  child: Image.asset(mylogoAsset),
                                   duration:
                                       const Duration(milliseconds: imageMilli),
                                 );

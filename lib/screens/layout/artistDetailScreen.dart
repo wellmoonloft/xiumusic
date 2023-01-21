@@ -84,25 +84,39 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                         return child;
                       }
                       return AnimatedSwitcher(
-                        child: frame != null
-                            ? child
-                            : Image.asset("assets/images/logo.jpg"),
+                        child: frame != null ? child : Image.asset(mylogoAsset),
                         duration: const Duration(milliseconds: imageMilli),
                       );
                     },
                   ),
                 )),
+            SizedBox(
+              width: 15,
+            ),
             Container(
-              padding: leftrightPadding,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      padding: leftrightPadding,
-                      child: Text(_artilstname, style: titleText2)),
+                      width: isMobile
+                          ? windowsWidth.value -
+                              screenImageWidthAndHeight -
+                              30 -
+                              15
+                          : windowsWidth.value -
+                              drawerWidth -
+                              screenImageWidthAndHeight -
+                              30 -
+                              15,
+                      child: Text(_artilstname,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: titleText2)),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         MyTextButton(
@@ -117,45 +131,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                           "$albumLocal: " + _albumsnum.toString(),
                           style: nomalText,
                         ),
-                        Container(
-                          height: 30,
-                          width: 30,
-                          child: (_star)
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.favorite,
-                                    color: badgeRed,
-                                    size: 16,
-                                  ),
-                                  onPressed: () async {
-                                    Favorite _favorite = Favorite(
-                                        id: activeID.value, type: 'artist');
-                                    await delStarred(_favorite);
-                                    await DbProvider.instance
-                                        .delFavorite(activeID.value);
-                                    setState(() {
-                                      _star = false;
-                                    });
-                                  },
-                                )
-                              : IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    color: textGray,
-                                    size: 16,
-                                  ),
-                                  onPressed: () async {
-                                    Favorite _favorite = Favorite(
-                                        id: activeID.value, type: 'artist');
-                                    await addStarred(_favorite);
-                                    await DbProvider.instance
-                                        .addFavorite(_favorite);
-                                    setState(() {
-                                      _star = true;
-                                    });
-                                  },
-                                ),
-                        )
                       ],
                     ),
                   ),
@@ -163,7 +138,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     height: 5,
                   ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         Text(
@@ -177,31 +151,55 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                           "$drationLocal: " + formatDuration(_duration),
                           style: nomalText,
                         ),
-                        if (!isMobile)
-                          SizedBox(
-                            width: 10,
-                          ),
-                        if (!isMobile)
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalText,
-                          ),
                       ],
                     ),
                   ),
-                  if (isMobile)
-                    SizedBox(
-                      height: 5,
+                  Container(
+                      child: Row(children: [
+                    Text(
+                      "$playCountLocal: " + _playCount.toString(),
+                      style: nomalText,
                     ),
-                  if (isMobile)
                     Container(
-                        padding: leftrightPadding,
-                        child: Row(children: [
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalText,
-                          ),
-                        ]))
+                      height: 30,
+                      width: 30,
+                      child: (_star)
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.favorite,
+                                color: badgeRed,
+                                size: 16,
+                              ),
+                              onPressed: () async {
+                                Favorite _favorite = Favorite(
+                                    id: activeID.value, type: 'artist');
+                                await delStarred(_favorite);
+                                await DbProvider.instance
+                                    .delFavorite(activeID.value);
+                                setState(() {
+                                  _star = false;
+                                });
+                              },
+                            )
+                          : IconButton(
+                              icon: Icon(
+                                Icons.favorite_border,
+                                color: textGray,
+                                size: 16,
+                              ),
+                              onPressed: () async {
+                                Favorite _favorite = Favorite(
+                                    id: activeID.value, type: 'artist');
+                                await addStarred(_favorite);
+                                await DbProvider.instance
+                                    .addFavorite(_favorite);
+                                setState(() {
+                                  _star = true;
+                                });
+                              },
+                            ),
+                    )
+                  ]))
                 ],
               ),
             ),

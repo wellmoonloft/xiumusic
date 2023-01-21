@@ -77,27 +77,39 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     fit: BoxFit.cover,
                     placeholder: (context, url) {
                       return AnimatedSwitcher(
-                        child: Image.asset("assets/images/logo.jpg"),
+                        child: Image.asset(mylogoAsset),
                         duration: const Duration(milliseconds: imageMilli),
                       );
                     },
                   ),
                 )),
+            SizedBox(
+              width: 15,
+            ),
             Container(
-              //padding: EdgeInsets.only(left: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      width: windowsWidth.value / 2,
-                      padding: leftrightPadding,
+                      width: isMobile
+                          ? windowsWidth.value -
+                              screenImageWidthAndHeight -
+                              30 -
+                              15
+                          : windowsWidth.value -
+                              drawerWidth -
+                              screenImageWidthAndHeight -
+                              30 -
+                              15,
                       child: Text(_albumsname,
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: titleText1)),
+                          style: titleText2)),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         MyTextButton(
@@ -120,7 +132,6 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     height: 5,
                   ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         Text(
@@ -137,84 +148,73 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                       ],
                     ),
                   ),
-                  if (isMobile)
-                    SizedBox(
-                      height: 5,
-                    ),
-                  if (isMobile)
-                    Container(
-                      padding: leftrightPadding,
-                      child: Row(
-                        children: [
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalText,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "$yearLocal: " + _year.toString(),
-                            style: nomalText,
-                          ),
-                        ],
-                      ),
-                    ),
                   SizedBox(
                     height: 5,
                   ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         Text(
                           "修改日期: " + timeISOtoString(_changed),
                           style: nomalText,
                         ),
-                        MyTextButton(
-                            press: () async {
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (_context) {
-                                  return AlertDialog(
-                                    titlePadding: EdgeInsets.all(10),
-                                    contentPadding: EdgeInsets.all(10),
-                                    titleTextStyle: nomalText,
-                                    contentTextStyle: nomalText,
-                                    backgroundColor: badgeDark,
-                                    title: Text(
-                                      "删除",
-                                    ),
-                                    content: Text(
-                                      "是否删除" + _albumsname + "?",
-                                    ),
-                                    actions: <Widget>[
-                                      MyTextButton(
-                                        title: cancelLocal,
-                                        press: () {
-                                          Navigator.of(_context).pop();
-                                        },
-                                      ),
-                                      MyTextButton(
-                                        title: confirmLocal,
-                                        press: () async {
-                                          await deletePlaylist(_palylistId);
-                                          await DbProvider.instance
-                                              .delPlaylistById(_palylistId);
-                                          Navigator.of(_context).pop();
-                                          indexValue.value = 2;
-                                        },
-                                      )
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            title: "删除")
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                      child: Row(children: [
+                    Text(
+                      "$playCountLocal: " + _playCount.toString(),
+                      style: nomalText,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    MyTextButton(
+                        press: () async {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_context) {
+                              return AlertDialog(
+                                titlePadding: EdgeInsets.all(10),
+                                contentPadding: EdgeInsets.all(10),
+                                titleTextStyle: nomalText,
+                                contentTextStyle: nomalText,
+                                backgroundColor: badgeDark,
+                                title: Text(
+                                  "删除",
+                                ),
+                                content: Text(
+                                  "是否删除" + _albumsname + "?",
+                                ),
+                                actions: <Widget>[
+                                  MyTextButton(
+                                    title: cancelLocal,
+                                    press: () {
+                                      Navigator.of(_context).pop();
+                                    },
+                                  ),
+                                  MyTextButton(
+                                    title: confirmLocal,
+                                    press: () async {
+                                      await deletePlaylist(_palylistId);
+                                      await DbProvider.instance
+                                          .delPlaylistById(_palylistId);
+                                      Navigator.of(_context).pop();
+                                      indexValue.value = 2;
+                                    },
+                                  )
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        title: "删除")
+                  ]))
                 ],
               ),
             )

@@ -79,7 +79,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               fit: BoxFit.cover,
                               placeholder: (context, url) {
                                 return AnimatedSwitcher(
-                                  child: Image.asset("assets/images/logo.jpg"),
+                                  child: Image.asset(mylogoAsset),
                                   duration:
                                       const Duration(milliseconds: imageMilli),
                                 );

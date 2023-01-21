@@ -25,7 +25,9 @@
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
-![](https://s2.loli.net/2023/01/15/WCFZOToQYNlg47s.jpg)
+锁屏播放
+
+![](https://s2.loli.net/2023/01/21/nAyQbzUGP3FRjif.jpg)
 
 ## Todo List 
 
@@ -75,6 +77,7 @@
 - [x] 播放  
   - [x] 音乐播放、播放控制、静音、单曲循环
   - [x] 播放列表、全部循环
+  - [x] 移动端后台播放以及锁屏控制  
 
 - [x] 网络  
   - [x] Restful请求、服务器连接等
@@ -168,9 +171,10 @@ AndroidManifest.xml
 - [sqflite: ^2.2.25](https://pub.flutter-io.cn/packages/sqflite) 数据持久化。
 - [path: ^1.8.2 ](https://pub.flutter-io.cn/packages/path) 给数据库找位置的，也可以用于图片缓存，但是还是base64香吧。
 - [just_audio: ^0.9.31](https://pub.dev/packages/just_audio) 好评度99%的音乐播放工具。
+- [just_audio_background: ^0.0.1-beta.9](https://pub.dev/packages/just_audio_background) 支持移动端后台播放及锁屏控制。  
 - [dio: ^4.0.6](https://pub.dev/packages/dio) 及其简单的Restful请求工具。
 - [crypto: ^3.0.2](https://pub.dev/packages/crypto) MD5等加密用的。
 - [window_manager: ^0.2.8](https://pub.dev/packages/crypto) 限制窗体最小化以及隐藏titile栏用的。
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) 实现图片缓存，使用简单。
-- [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) 整个pub上面独一份，非常稳定
+- [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) 整个pub上面独一份，使用简单。

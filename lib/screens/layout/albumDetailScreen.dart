@@ -85,27 +85,39 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     fit: BoxFit.cover,
                     placeholder: (context, url) {
                       return AnimatedSwitcher(
-                        child: Image.asset("assets/images/logo.jpg"),
+                        child: Image.asset(mylogoAsset),
                         duration: const Duration(milliseconds: imageMilli),
                       );
                     },
                   ),
                 )),
+            SizedBox(
+              width: 15,
+            ),
             Container(
-              //padding: EdgeInsets.only(left: 15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      width: windowsWidth.value / 2,
-                      padding: leftrightPadding,
+                      width: isMobile
+                          ? windowsWidth.value -
+                              screenImageWidthAndHeight -
+                              30 -
+                              15
+                          : windowsWidth.value -
+                              drawerWidth -
+                              screenImageWidthAndHeight -
+                              30 -
+                              15,
                       child: Text(_albumsname,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: titleText2)),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         MyTextButton(
@@ -122,37 +134,38 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               indexValue.value = 9;
                             },
                             title: _artist),
-                        if (!isMobile)
-                          SizedBox(
-                            width: 10,
-                          ),
-                        if (!isMobile)
-                          Text(
-                            "$yearLocal: " + _year.toString(),
-                            style: nomalText,
-                          ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        _genre == "0"
-                            ? Container()
-                            : MyTextButton(press: () {}, title: "$genresLocal"),
-                        _genre == "0"
-                            ? Container()
-                            : SizedBox(
-                                width: 10,
-                              ),
-                        _genre == "0"
-                            ? Container()
-                            : MyTextButton(press: () {}, title: _genre),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 5,
                   ),
+                  Row(
+                    children: [
+                      Text(
+                        "$yearLocal: " + _year.toString(),
+                        style: nomalText,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      _genre == "0"
+                          ? Container()
+                          : MyTextButton(press: () {}, title: "$genresLocal"),
+                      _genre == "0"
+                          ? Container()
+                          : SizedBox(
+                              width: 10,
+                            ),
+                      _genre == "0"
+                          ? Container()
+                          : MyTextButton(press: () {}, title: _genre),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
                         Text(
@@ -169,38 +182,13 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       ],
                     ),
                   ),
-                  if (isMobile)
-                    SizedBox(
-                      height: 5,
-                    ),
-                  if (isMobile)
-                    Container(
-                      padding: leftrightPadding,
-                      child: Row(
-                        children: [
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalText,
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "$yearLocal: " + _year.toString(),
-                            style: nomalText,
-                          ),
-                        ],
-                      ),
-                    ),
                   Container(
-                    padding: leftrightPadding,
                     child: Row(
                       children: [
-                        if (!isMobile)
-                          Text(
-                            "$playCountLocal: " + _playCount.toString(),
-                            style: nomalText,
-                          ),
+                        Text(
+                          "$playCountLocal: " + _playCount.toString(),
+                          style: nomalText,
+                        ),
                         Container(
                           height: 30,
                           width: 30,

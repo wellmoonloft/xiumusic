@@ -232,6 +232,12 @@ class _SettingsState extends State<Settings>
                             }))
                       ],
                     ),
+                    Container(
+                      child: Text(
+                        "需要先行保存服务器之后才可以正常使用",
+                        style: subText,
+                      ),
+                    ),
                     SizedBox(
                       height: 10,
                     ),
@@ -285,7 +291,7 @@ class _SettingsState extends State<Settings>
                           style: titleText2,
                         ),
                         ValueListenableBuilder<bool>(
-                            valueListenable: isServers,
+                            valueListenable: isSNetease,
                             builder: ((context, _value, child) {
                               return _value
                                   ? Container()
@@ -301,6 +307,12 @@ class _SettingsState extends State<Settings>
                                       title: "保存歌词服务器");
                             }))
                       ],
+                    ),
+                    Container(
+                      child: Text(
+                        "需要先行保存歌词服务器之后才才会出现搜索歌词按钮",
+                        style: subText,
+                      ),
                     ),
                     SizedBox(
                       height: 10,
@@ -336,7 +348,8 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextButton(
                         press: () async {
-                          //_saveNetease();
+                          showMyAlertDialog(
+                              context, "提醒", "暂时未开放，默认不自动刷新，新增歌曲请点击手动刷新");
                         },
                         title: "保存设置"),
                   ],
