@@ -107,16 +107,55 @@
 
 4. 在项目目录中执行 `flutter packages get`
 
-#### MacOS
+#### MacOS/IOS
 
-
-添加苹果安全
-
-macos-Runner-DebugProfile.entitlements
-macos-Runner-Release.entitlements
+下列文件添加
+DebugProfile.entitlements
+Release.entitlements
 
     <key>com.apple.security.network.client</key>
     <true/>
+
+开启锁屏播放
+#### IOS
+Info.plist
+<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+AndroidManifest.xml
+<manifest xmlns:tools="http://schemas.android.com/tools" ...>
+  <!-- ADD THESE TWO PERMISSIONS -->
+  <uses-permission android:name="android.permission.WAKE_LOCK"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+  
+  <application ...>
+    
+    ...
+    
+    <!-- EDIT THE android:name ATTRIBUTE IN YOUR EXISTING "ACTIVITY" ELEMENT -->
+    <activity android:name="com.ryanheise.audioservice.AudioServiceActivity" ...>
+      ...
+    </activity>
+    
+    <!-- ADD THIS "SERVICE" element -->
+    <service android:name="com.ryanheise.audioservice.AudioService"
+        android:foregroundServiceType="mediaPlayback"
+        android:exported="true" tools:ignore="Instantiatable">
+      <intent-filter>
+        <action android:name="android.media.browse.MediaBrowserService" />
+      </intent-filter>
+    </service>
+
+    <!-- ADD THIS "RECEIVER" element -->
+    <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+        android:exported="true" tools:ignore="Instantiatable">
+      <intent-filter>
+        <action android:name="android.intent.action.MEDIA_BUTTON" />
+      </intent-filter>
+    </receiver> 
+  </application>
+</manifest>
 
 #### 使用歌词搜索功能
 

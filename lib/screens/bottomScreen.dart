@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:rxdart/rxdart.dart';
 import '../util/dbProvider.dart';
 import '../models/myModel.dart';
@@ -41,8 +42,8 @@ class _BottomScreenState extends State<BottomScreen>
       print("4");
       // 更新当前歌曲
       final currentItem = _player.sequenceState!.currentSource;
-      final _title = currentItem?.tag as String?;
-      Songs _song = await DbProvider.instance.getSongById(_title.toString());
+      MediaItem _tag = currentItem?.tag;
+      Songs _song = await DbProvider.instance.getSongById(_tag.id);
       //拼装当前歌曲
       Map _activeSong = new Map();
       _activeSong["value"] = _song.id;
@@ -103,7 +104,19 @@ class _BottomScreenState extends State<BottomScreen>
     List _songs = activeList.value;
     for (var element in _songs) {
       Songs _song = element;
-      children.add(AudioSource.uri(Uri.parse(_song.stream), tag: _song.id));
+      //children.add(AudioSource.uri(Uri.parse(_song.stream), tag: _song.id));
+      children.add(
+        AudioSource.uri(
+          Uri.parse(_song.stream),
+          tag: MediaItem(
+              id: _song.id,
+              album: _song.album,
+              artist: _song.artist,
+              genre: _song.genre,
+              title: _song.title,
+              artUri: Uri.parse(_song.coverUrl)),
+        ),
+      );
     }
 
     final playlist = ConcatenatingAudioSource(
@@ -122,8 +135,8 @@ class _BottomScreenState extends State<BottomScreen>
     }
     _player.play();
     final currentItem = _player.sequenceState!.currentSource;
-    final _title = currentItem?.tag as String?;
-    Songs _song = await DbProvider.instance.getSongById(_title.toString());
+    MediaItem _tag = currentItem?.tag;
+    Songs _song = await DbProvider.instance.getSongById(_tag.id);
     //拼装当前歌曲
     Map _activeSong = new Map();
     _activeSong["value"] = _song.id;
