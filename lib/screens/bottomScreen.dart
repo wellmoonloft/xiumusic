@@ -44,183 +44,212 @@ class _BottomScreenState extends State<BottomScreen>
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<String>(
-        valueListenable: activeSongValue,
+    bool isChangeList = false;
+    return ValueListenableBuilder<List>(
+        valueListenable: activeList,
         builder: ((context, value, child) {
-          if (value != "1") {
-            //新加列表的时候关闭乱序，避免出错
+          if (activeSongValue.value != "1") {
+//新加列表的时候关闭乱序，避免出错
             _player.setShuffleModeEnabled(false);
             _player.setLoopMode(LoopMode.all);
             isShuffleModeEnabledNotifier.value = false;
             playerLoopModeNotifier.value = LoopMode.all;
-
             setAudioSource(_player, context);
+            isChangeList = true;
           }
 
-          return Container(
-              height: bottomHeight,
-              color: bkColor,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: windowsWidth.value,
-                    height: 6,
+          return ValueListenableBuilder<String>(
+              valueListenable: activeSongValue,
+              builder: ((context, value, child) {
+                print(isChangeList);
+                if (value != "1" && isChangeList) {
+                  _player.seek(Duration.zero, index: activeIndex.value);
+                }
+
+                return Container(
+                    height: bottomHeight,
+                    color: bkColor,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        StreamBuilder<PositionData>(
-                          stream: _positionDataStream,
-                          builder: (context, snapshot) {
-                            final positionData = snapshot.data;
-                            return PlayerSeekBar(
-                              trackWidth: windowsWidth.value,
-                              duration: positionData?.duration ?? Duration.zero,
-                              position: positionData?.position ?? Duration.zero,
-                              bufferedPosition:
-                                  positionData?.bufferedPosition ??
-                                      Duration.zero,
-                              onChangeEnd: _player.seek,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 70,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
                         Container(
-                            width: (isMobile)
-                                ? windowsWidth.value - 110
-                                : windowsWidth.value / 4,
-                            child: ValueListenableBuilder<Map>(
-                              valueListenable: activeSong,
-                              builder: (context, _song, child) {
-                                return Row(
-                                  children: [
-                                    InkWell(
-                                        onTap: () async {
-                                          //正在播放的弹窗入口
-                                          showBottomSheet(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return PlayScreen(
-                                                  player: _player);
-                                            },
-                                          );
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          height: bottomImageWidthAndHeight,
-                                          width: bottomImageWidthAndHeight,
-                                          child: (_song.isEmpty)
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                  child:
-                                                      Image.asset(mylogoAsset))
-                                              : ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: _song["url"],
-                                                    fit: BoxFit.cover,
-                                                    placeholder:
-                                                        (context, url) {
-                                                      return AnimatedSwitcher(
-                                                        child: Image.asset(
-                                                            mylogoAsset),
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    imageMilli),
-                                                      );
-                                                    },
-                                                  )),
-                                          // )
-                                        )),
-                                    InkWell(
-                                        onTap: () {
-                                          if (_song.isNotEmpty) {
-                                            activeID.value = _song["albumId"];
-                                            indexValue.value = 8;
-                                          }
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: (isMobile)
-                                                  ? windowsWidth.value - 180
-                                                  : windowsWidth.value / 4 - 70,
-                                              child: Text(
-                                                  _song.isEmpty
-                                                      ? ""
-                                                      : _song["title"],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: nomalText),
-                                            ),
-                                            Container(
-                                              width: (isMobile)
-                                                  ? windowsWidth.value - 180
-                                                  : windowsWidth.value / 4 - 70,
-                                              child: Text(
-                                                  _song.isEmpty
-                                                      ? ""
-                                                      : _song["artist"],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: subText),
-                                            ),
-                                            Container(
-                                              width: (isMobile)
-                                                  ? windowsWidth.value - 180
-                                                  : windowsWidth.value / 4 - 70,
-                                              child: Text(
-                                                  _song.isEmpty
-                                                      ? ""
-                                                      : _song["album"],
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: subText),
-                                            )
-                                          ],
-                                        ))
-                                  ],
-                                );
-                              },
-                            )),
-                        Container(
-                          width: isMobile ? 110 : windowsWidth.value * 1 / 2,
+                          width: windowsWidth.value,
+                          height: 6,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              PlayerControBar(
-                                  isPlayScreen: false, player: _player),
+                              StreamBuilder<PositionData>(
+                                stream: _positionDataStream,
+                                builder: (context, snapshot) {
+                                  final positionData = snapshot.data;
+                                  return PlayerSeekBar(
+                                    trackWidth: windowsWidth.value,
+                                    duration:
+                                        positionData?.duration ?? Duration.zero,
+                                    position:
+                                        positionData?.position ?? Duration.zero,
+                                    bufferedPosition:
+                                        positionData?.bufferedPosition ??
+                                            Duration.zero,
+                                    onChangeEnd: _player.seek,
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ),
-                        if (!isMobile) PlayerVolumeBar(_player)
+                        Container(
+                          height: 70,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  width: (isMobile)
+                                      ? windowsWidth.value - 110
+                                      : windowsWidth.value / 4,
+                                  child: ValueListenableBuilder<Map>(
+                                    valueListenable: activeSong,
+                                    builder: (context, _song, child) {
+                                      return Row(
+                                        children: [
+                                          InkWell(
+                                              onTap: () async {
+                                                //正在播放的弹窗入口
+                                                showBottomSheet(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return PlayScreen(
+                                                        player: _player);
+                                                  },
+                                                );
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                    left: 10, right: 10),
+                                                height:
+                                                    bottomImageWidthAndHeight,
+                                                width:
+                                                    bottomImageWidthAndHeight,
+                                                child: (_song.isEmpty)
+                                                    ? ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(6),
+                                                        child: Image.asset(
+                                                            mylogoAsset))
+                                                    : ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(6),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              _song["url"],
+                                                          fit: BoxFit.cover,
+                                                          placeholder:
+                                                              (context, url) {
+                                                            return AnimatedSwitcher(
+                                                              child: Image.asset(
+                                                                  mylogoAsset),
+                                                              duration: const Duration(
+                                                                  milliseconds:
+                                                                      imageMilli),
+                                                            );
+                                                          },
+                                                        )),
+                                                // )
+                                              )),
+                                          InkWell(
+                                              onTap: () {
+                                                if (_song.isNotEmpty) {
+                                                  activeID.value =
+                                                      _song["albumId"];
+                                                  indexValue.value = 8;
+                                                }
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: (isMobile)
+                                                        ? windowsWidth.value -
+                                                            180
+                                                        : windowsWidth.value /
+                                                                4 -
+                                                            70,
+                                                    child: Text(
+                                                        _song.isEmpty
+                                                            ? ""
+                                                            : _song["title"],
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: nomalText),
+                                                  ),
+                                                  Container(
+                                                    width: (isMobile)
+                                                        ? windowsWidth.value -
+                                                            180
+                                                        : windowsWidth.value /
+                                                                4 -
+                                                            70,
+                                                    child: Text(
+                                                        _song.isEmpty
+                                                            ? ""
+                                                            : _song["artist"],
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: subText),
+                                                  ),
+                                                  Container(
+                                                    width: (isMobile)
+                                                        ? windowsWidth.value -
+                                                            180
+                                                        : windowsWidth.value /
+                                                                4 -
+                                                            70,
+                                                    child: Text(
+                                                        _song.isEmpty
+                                                            ? ""
+                                                            : _song["album"],
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: subText),
+                                                  )
+                                                ],
+                                              ))
+                                        ],
+                                      );
+                                    },
+                                  )),
+                              Container(
+                                width:
+                                    isMobile ? 110 : windowsWidth.value * 1 / 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    PlayerControBar(
+                                        isPlayScreen: false, player: _player),
+                                  ],
+                                ),
+                              ),
+                              if (!isMobile) PlayerVolumeBar(_player)
+                            ],
+                          ),
+                        )
                       ],
-                    ),
-                  )
-                ],
-              ));
+                    ));
+              }));
         }));
   }
 }

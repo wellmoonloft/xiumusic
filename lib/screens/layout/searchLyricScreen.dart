@@ -152,11 +152,10 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 itemCount: _netsongs!.length,
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
+                  //别妄想拿时间了，搜索接口里面的是专辑的时间
                   Map _tem = _netsongs![index];
-
                   var _artistlist = _tem["artists"];
                   Map _artist = _artistlist[0];
-
                   return ListTile(
                       title: InkWell(
                           onTap: () async {

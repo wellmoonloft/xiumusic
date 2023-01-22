@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
+import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
+import '../common/myToast.dart';
 
 class PlaylistDetailScreen extends StatefulWidget {
   const PlaylistDetailScreen({
@@ -51,6 +54,25 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         });
       }
     }
+  }
+
+  _delSong(BuildContext context, double _x, double _y, int _index) {
+    showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(_x, _y, _x, _y),
+        items: [
+          PopupMenuItem(
+            child: Text('移除当前歌曲'),
+            value: _index.toString(),
+          ),
+        ]).then((value) async {
+      if (value != null) {
+        await delSongfromPlaylist(activeID.value, value);
+        await getPlaylistsFromNet();
+        MyToast.show(context: context, message: "删除成功");
+        _getSongs(activeID.value);
+      }
+    });
   }
 
   @override
@@ -251,14 +273,23 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     _song.bitRate.toString(),
                     _song.playCount.toString(),
                   ];
+
                   return ListTile(
-                      title: InkWell(
+                      title: GestureDetector(
                           onTap: () async {
                             activeSongValue.value = _song.id;
                             //歌曲所在专辑歌曲List
                             activeList.value = _songslist;
                             //当前歌曲队列
                             activeIndex.value = index;
+                          },
+                          onLongPressEnd: (details) {
+                            _delSong(context, details.globalPosition.dx,
+                                details.globalPosition.dy, index);
+                          },
+                          onSecondaryTapDown: (details) {
+                            _delSong(context, details.globalPosition.dx,
+                                details.globalPosition.dy, index);
                           },
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,

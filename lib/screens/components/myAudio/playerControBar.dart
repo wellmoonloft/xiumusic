@@ -28,6 +28,9 @@ class _PlayerControBarState extends State<PlayerControBar> {
     super.initState();
     activePlaylistOverlay = OverlayEntry(builder: (context) {
       List _songs = activeList.value;
+      double _height = (_songs.length * 40 + 60) < windowsHeight.value / 2 + 60
+          ? _songs.length * 40 + 60
+          : windowsHeight.value / 2 + 60;
       return Positioned(
           bottom: 85,
           right: 10,
@@ -36,6 +39,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
               borderRadius: BorderRadius.circular(8.0),
               child: Container(
                   width: 200,
+                  height: _height,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
@@ -45,7 +49,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: EdgeInsets.all(10),
+                          height: 40,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -63,6 +68,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                           )),
                       Container(
                           padding: EdgeInsets.only(bottom: 10),
+                          height: _height - 60,
                           child: MediaQuery.removePadding(
                               context: context,
                               removeTop: true,

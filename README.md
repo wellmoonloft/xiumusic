@@ -41,7 +41,8 @@
   - [x] 歌词  
 
 - [x] 播放列表
-  - [x] 播放列表页面(还差)
+  - [x] 播放列表页面
+  - [x] 新增、删除播放列表；添加、删除歌曲
 
 - [x] 收藏  
   - [x] 收藏页面,收藏歌曲、专辑和艺人
@@ -123,11 +124,15 @@ Release.entitlements
 开启锁屏播放
 #### IOS
 Info.plist
+```
 <key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
 	</array>
+```
 AndroidManifest.xml
+
+```
 <manifest xmlns:tools="http://schemas.android.com/tools" ...>
   <!-- ADD THESE TWO PERMISSIONS -->
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -160,6 +165,7 @@ AndroidManifest.xml
     </receiver> 
   </application>
 </manifest>
+```
 
 #### 使用歌词搜索功能
 

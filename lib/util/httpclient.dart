@@ -142,6 +142,28 @@ updatePlaylist(String playlistId, String songIdToAdd) async {
   }
 }
 
+delSongfromPlaylist(String playlistId, String? index) async {
+  String _sql = await _getServerInfo("updatePlaylist");
+
+  _sql = _sql +
+      '&playlistId=' +
+      playlistId +
+      '&songIndexToRemove=' +
+      index.toString();
+
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      var _response = response.data['subsonic-response'];
+
+      return _response;
+    }
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
 getPlaylistbyId(String _id) async {
   String _sql = await _getServerInfo("getPlaylist");
   try {

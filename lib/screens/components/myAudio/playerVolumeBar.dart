@@ -85,6 +85,10 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
     });
     activePlaylistOverlay = OverlayEntry(builder: (context) {
       List _songs = activeList.value;
+      double _height = (_songs.length * 40 + 60) < windowsHeight.value / 2 + 60
+          ? _songs.length * 40 + 60
+          : windowsHeight.value / 2 + 60;
+
       return Positioned(
           bottom: 55,
           right: 20,
@@ -93,6 +97,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
               borderRadius: BorderRadius.circular(8.0),
               child: Container(
                   width: 200,
+                  height: _height,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
@@ -102,7 +107,8 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: EdgeInsets.all(10),
+                          height: 40,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -120,6 +126,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                           )),
                       Container(
                           padding: EdgeInsets.only(bottom: 10),
+                          height: _height - 60,
                           child: MediaQuery.removePadding(
                               context: context,
                               removeTop: true,
@@ -148,7 +155,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                                                         _tem.title,
                                                         textDirection:
                                                             TextDirection.ltr,
-                                                        maxLines: 1,
+                                                        maxLines: 2,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: (value
