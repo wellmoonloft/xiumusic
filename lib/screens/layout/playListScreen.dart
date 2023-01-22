@@ -3,11 +3,11 @@ import 'package:xiumusic/screens/common/myTextButton.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
-import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
+import '../components/myAudio/audioTools.dart';
 
 class PlayListScreen extends StatefulWidget {
   const PlayListScreen({Key? key}) : super(key: key);
@@ -33,115 +33,6 @@ class _PlayListScreenState extends State<PlayListScreen> {
         _playlistnum = _playlistsList.length;
       });
     }
-  }
-
-  Future<int> _newDialog() async {
-    var sss = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return Dialog(
-              backgroundColor: Colors.transparent,
-              child: UnconstrainedBox(
-                  child: Container(
-                width: 250,
-                height: 120,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: badgeDark,
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                          width: 200,
-                          height: 35,
-                          margin: EdgeInsets.all(5),
-                          child: TextField(
-                            controller: inputController,
-                            style: nomalText,
-                            cursorColor: textGray,
-                            onSubmitted: (value) {},
-                            decoration: InputDecoration(
-                                hintText: "请输入播放列表名称...",
-                                labelStyle: nomalText,
-                                border: InputBorder.none,
-                                hintStyle: nomalText,
-                                filled: true,
-                                fillColor: badgeDark,
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ),
-                                ),
-                                contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                prefixIcon: Icon(
-                                  Icons.edit_note,
-                                  color: textGray,
-                                  size: 14,
-                                )),
-                          )),
-                      Container(
-                        padding: allPadding,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            MyTextButton(
-                              press: () async {
-                                Navigator.of(context).pop(3);
-                              },
-                              title: '取消',
-                            ),
-                            MyTextButton(
-                              press: () async {
-                                if (inputController.text.isNotEmpty) {
-                                  var _response = await createPlaylist(
-                                      inputController.text, "");
-                                  if (_response != null &&
-                                      _response["status"] == "ok") {
-                                    var _playlist = _response["playlist"];
-                                    String _url =
-                                        await getCoverArt(_playlist['id']);
-                                    Playlist _tem = Playlist(
-                                        changed: _playlist["changed"],
-                                        created: _playlist["created"],
-                                        duration: _playlist["duration"],
-                                        id: _playlist["id"],
-                                        name: _playlist["name"],
-                                        owner: _playlist["owner"],
-                                        public: _playlist["public"] ? 0 : 1,
-                                        songCount: _playlist["songCount"],
-                                        imageUrl: _url);
-                                    await DbProvider.instance
-                                        .addPlaylists(_tem);
-
-                                    Navigator.of(context).pop(0);
-                                  } else {
-                                    Navigator.of(context).pop(1);
-                                  }
-                                } else {
-                                  Navigator.of(context).pop(2);
-                                }
-                              },
-                              title: '创建',
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )));
-        });
-    return sss;
   }
 
   @override
@@ -211,7 +102,8 @@ class _PlayListScreenState extends State<PlayListScreen> {
                   children: [
                     MyTextButton(
                       press: () async {
-                        await _newDialog().then((value) {
+                        await newPlaylistDialog(context, inputController)
+                            .then((value) {
                           _getPlaylist();
                           switch (value) {
                             case 0:

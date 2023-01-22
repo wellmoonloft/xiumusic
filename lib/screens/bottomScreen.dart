@@ -1,16 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:rxdart/rxdart.dart';
-import '../util/dbProvider.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import '../util/mycss.dart';
-import 'common/myToast.dart';
-import 'components/playerControBar.dart';
-import 'components/playerSeekBar.dart';
-import 'components/playerVolumeBar.dart';
+import 'components/myAudio/audioTools.dart';
+import 'components/myAudio/playerControBar.dart';
+import 'components/myAudio/playerSeekBar.dart';
+import 'components/myAudio/playerVolumeBar.dart';
 import 'layout/playScreen.dart';
 
 class BottomScreen extends StatefulWidget {
@@ -25,128 +23,14 @@ class _BottomScreenState extends State<BottomScreen>
   @override
   initState() {
     super.initState();
-    _listenforcurrentIndexStream();
+    //监听器
+    audioCurrentIndexStream(_player);
   }
 
   @override
   void dispose() {
     _player.dispose();
     super.dispose();
-  }
-
-  //收听歌曲变化
-  void _listenforcurrentIndexStream() {
-    _player.currentIndexStream.listen((event) async {
-      if (_player.sequenceState == null) return;
-      print("4");
-      // 更新当前歌曲
-      final currentItem = _player.sequenceState!.currentSource;
-      MediaItem _tag = currentItem?.tag;
-      Songs _song = await DbProvider.instance.getSongById(_tag.id);
-      //拼装当前歌曲
-      Map _activeSong = new Map();
-      _activeSong["value"] = _song.id;
-      _activeSong["artist"] = _song.artist;
-      _activeSong["url"] = _song.coverUrl;
-      _activeSong["title"] = _song.title;
-      _activeSong["album"] = _song.album;
-      _activeSong["albumId"] = _song.albumId;
-      var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
-      if (_favorite != null) {
-        _activeSong["starred"] = true;
-      } else {
-        _activeSong["starred"] = false;
-      }
-      activeSong.value = _activeSong;
-
-      //获取歌词
-      final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
-      if (_lyrictem != null && _lyrictem!.isNotEmpty) {
-        activeLyric.value = _lyrictem;
-      } else {
-        activeLyric.value = "";
-      }
-      final playlist = _player.sequenceState!.effectiveSequence;
-      //更新上下首歌曲
-      if (playlist.isEmpty || currentItem == null) {
-        isFirstSongNotifier.value = true;
-        isLastSongNotifier.value = true;
-      } else {
-        isFirstSongNotifier.value = playlist.first == currentItem;
-        isLastSongNotifier.value = playlist.last == currentItem;
-      }
-    });
-  }
-
-  Future<void> setAudioSource() async {
-    List<AudioSource> children = [];
-    List _songs = activeList.value;
-    for (var element in _songs) {
-      Songs _song = element;
-      children.add(
-        AudioSource.uri(
-          Uri.parse(_song.stream),
-          tag: MediaItem(
-              id: _song.id,
-              album: _song.album,
-              artist: _song.artist,
-              genre: _song.genre,
-              title: _song.title,
-              artUri: Uri.parse(_song.coverUrl)),
-        ),
-      );
-    }
-
-    final playlist = ConcatenatingAudioSource(
-      useLazyPreparation: true,
-      shuffleOrder: DefaultShuffleOrder(),
-      children: children,
-    );
-
-    await _player.setAudioSource(playlist,
-        initialIndex: activeIndex.value, initialPosition: Duration.zero);
-    print("2");
-    if (mounted) {
-      MyToast.show(
-          context: context,
-          message: "加入" + activeList.value.length.toString() + "首歌");
-    }
-    _player.play();
-    final currentItem = _player.sequenceState!.currentSource;
-    MediaItem _tag = currentItem?.tag;
-    Songs _song = await DbProvider.instance.getSongById(_tag.id);
-    //拼装当前歌曲
-    Map _activeSong = new Map();
-    _activeSong["value"] = _song.id;
-    _activeSong["artist"] = _song.artist;
-    _activeSong["url"] = _song.coverUrl;
-    _activeSong["title"] = _song.title;
-    _activeSong["album"] = _song.album;
-    _activeSong["albumId"] = _song.albumId;
-    var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
-    if (_favorite != null) {
-      _activeSong["starred"] = true;
-    } else {
-      _activeSong["starred"] = false;
-    }
-    activeSong.value = _activeSong;
-
-    //更新上下首歌曲
-    if (playlist.sequence.isEmpty || currentItem == null) {
-      isFirstSongNotifier.value = true;
-      isLastSongNotifier.value = true;
-    } else {
-      isFirstSongNotifier.value = playlist.sequence.first == currentItem;
-      isLastSongNotifier.value = playlist.sequence.last == currentItem;
-    }
-
-    //获取歌词
-    final _lyrictem = await DbProvider.instance.getLyricById(_song.id);
-    if (_lyrictem != null && _lyrictem!.isNotEmpty) {
-      activeLyric.value = _lyrictem;
-    } else {
-      activeLyric.value = "";
-    }
   }
 
   Stream<PositionData> get _positionDataStream {
@@ -166,10 +50,11 @@ class _BottomScreenState extends State<BottomScreen>
           if (value != "1") {
             //新加列表的时候关闭乱序，避免出错
             _player.setShuffleModeEnabled(false);
-            isShuffleModeEnabledNotifier.value = false;
-
             _player.setLoopMode(LoopMode.all);
-            setAudioSource();
+            isShuffleModeEnabledNotifier.value = false;
+            playerLoopModeNotifier.value = LoopMode.all;
+
+            setAudioSource(_player, context);
           }
 
           return Container(

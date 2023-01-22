@@ -9,11 +9,11 @@ import '../../models/notifierValue.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
-import '../components/playerControBar.dart';
-import '../components/playerSeekBar.dart';
+import '../components/myAudio/playerControBar.dart';
+import '../components/myAudio/playerSeekBar.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../components/playerVolumeBar.dart';
+import '../components/myAudio/playerVolumeBar.dart';
 
 class PlayScreen extends StatefulWidget {
   final AudioPlayer player;

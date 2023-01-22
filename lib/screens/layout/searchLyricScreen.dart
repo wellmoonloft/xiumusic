@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../util/util.dart';
@@ -313,6 +314,9 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                           SongsAndLyric(lyric: _lyric, songId: _song.id);
                       await DbProvider.instance
                           .addSongsAndLyricTable(_songsAndLyric);
+                      if (_song.id == activeSong.value["value"]) {
+                        activeLyric.value = _lyric;
+                      }
                     }
                   }
                   showMyAlertDialog(context, "成功", "绑定成功");

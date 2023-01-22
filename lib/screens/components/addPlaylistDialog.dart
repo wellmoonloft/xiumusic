@@ -54,7 +54,7 @@ class _MyDialogState extends State<MyDialog> {
         child: UnconstrainedBox(
             child: Container(
           width: 250,
-          height: 120,
+          height: 150,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
@@ -64,6 +64,13 @@ class _MyDialogState extends State<MyDialog> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Container(
+                  padding: allPadding,
+                  child: Text(
+                    "插入歌曲",
+                    style: nomalText,
+                  ),
+                ),
                 Container(
                   decoration: circularBorder,
                   padding:
@@ -85,7 +92,6 @@ class _MyDialogState extends State<MyDialog> {
                               setState(() {
                                 _selectedSort = value.toString();
                               });
-                              print(_selectedSort);
                             },
                           ))
                       : Container(),

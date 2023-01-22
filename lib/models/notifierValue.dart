@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
+import 'package:just_audio/just_audio.dart';
 
 //左侧按钮更改右侧的监控器，默认起始页为首页 0
 ValueNotifier<int> indexValue = ValueNotifier<int>(0);
@@ -27,6 +28,10 @@ ValueNotifier<Map> activeSong = ValueNotifier<Map>(Map());
 
 //监听是否乱序
 ValueNotifier<bool> isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
+
+//监听循环方式
+ValueNotifier<LoopMode> playerLoopModeNotifier =
+    ValueNotifier<LoopMode>(LoopMode.all);
 
 //监听是否是第一首歌
 ValueNotifier<bool> isFirstSongNotifier = ValueNotifier<bool>(true);

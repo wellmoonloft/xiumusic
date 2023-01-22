@@ -28,7 +28,6 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   String _palylistId = "";
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
   String _artist = "";
-  int _year = 0;
   String _changed = "2023-01-18T16:37:18Z";
 
   _getSongs(String _playlistId) async {

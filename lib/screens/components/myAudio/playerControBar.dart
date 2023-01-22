@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import '../../models/myModel.dart';
-import '../../models/notifierValue.dart';
-import '../../util/dbProvider.dart';
-import '../../util/httpClient.dart';
-import '../../util/mycss.dart';
-import '../common/myToast.dart';
+import '../../../models/myModel.dart';
+import '../../../models/notifierValue.dart';
+import '../../../util/dbProvider.dart';
+import '../../../util/httpClient.dart';
+import '../../../util/mycss.dart';
+import '../../common/myToast.dart';
 
 class PlayerControBar extends StatefulWidget {
   final AudioPlayer player;
@@ -113,73 +113,76 @@ class _PlayerControBarState extends State<PlayerControBar> {
     super.dispose();
   }
 
-  Widget _buildLoopButtom() {
-    switch (loopMode) {
-      case 0:
-        return Tooltip(
-            message: "全部循环",
-            child: IconButton(
-              icon: const Icon(Icons.loop, color: textGray, size: 16),
-              onPressed: () {
-                widget.player.setLoopMode(LoopMode.one);
-                setState(() {
-                  loopMode = 1;
-                });
-                MyToast.show(context: context, message: "单曲循环");
-              },
-            ));
-      case 1:
-        return Tooltip(
-            message: "单曲循环",
-            child: IconButton(
-              icon: const Icon(Icons.loop, color: badgeRed, size: 16),
-              onPressed: () {
-                widget.player.setLoopMode(LoopMode.all);
-                isShuffleModeEnabledNotifier.value = true;
-                widget.player.setShuffleModeEnabled(true);
-                setState(() {
-                  loopMode = 2;
-                });
-
-                MyToast.show(context: context, message: "随机循环");
-              },
-            ));
-      case 2:
-        return Tooltip(
-            message: "随机循环",
-            child: IconButton(
-              icon: const Icon(Icons.shuffle, color: badgeRed, size: 16),
-              onPressed: () {
-                isShuffleModeEnabledNotifier.value = false;
-                widget.player.setShuffleModeEnabled(false);
-                setState(() {
-                  loopMode = 0;
-                });
-                MyToast.show(context: context, message: "全部循环");
-              },
-            ));
-      default:
-        return Tooltip(
-            message: "全部循环",
-            child: IconButton(
-              icon: const Icon(Icons.loop, color: textGray, size: 16),
-              onPressed: () {
-                widget.player.setLoopMode(LoopMode.one);
-                setState(() {
-                  loopMode = 1;
-                });
-              },
-            ));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (widget.isPlayScreen || !isMobile) _buildLoopButtom(),
+        if (widget.isPlayScreen || !isMobile)
+          ValueListenableBuilder<LoopMode>(
+              valueListenable: playerLoopModeNotifier,
+              builder: (_, playerLoopMode, __) {
+                return ValueListenableBuilder<bool>(
+                    valueListenable: isShuffleModeEnabledNotifier,
+                    builder: (_, isShuffle, __) {
+                      int _action = 0; //0全部循环；1单曲循环；2随机循环
+                      String _msg = "全部循环";
+                      Widget _icon =
+                          Icon(Icons.loop, color: textGray, size: 16);
+
+                      if (playerLoopMode == LoopMode.all) {
+                        if (isShuffle) {
+                          _action = 0;
+                          _msg = "随机循环";
+                          _icon =
+                              Icon(Icons.shuffle, color: badgeRed, size: 16);
+                        } else {
+                          _action = 1;
+                          _msg = "全部循环";
+                          _icon = Icon(Icons.loop, color: textGray, size: 16);
+                        }
+                      } else if (playerLoopMode == LoopMode.one) {
+                        _action = 2;
+                        _msg = "单曲循环";
+                        _icon = Icon(Icons.loop, color: badgeRed, size: 16);
+                      }
+                      return Tooltip(
+                          message: _msg,
+                          child: IconButton(
+                            icon: _icon,
+                            onPressed: () {
+                              switch (_action) {
+                                case 0:
+                                  widget.player.setLoopMode(LoopMode.all);
+                                  widget.player.setShuffleModeEnabled(false);
+                                  isShuffleModeEnabledNotifier.value = false;
+                                  playerLoopModeNotifier.value = LoopMode.all;
+                                  MyToast.show(
+                                      context: context, message: "全部循环");
+                                  break;
+                                case 1:
+                                  widget.player.setLoopMode(LoopMode.one);
+                                  widget.player.setShuffleModeEnabled(false);
+                                  isShuffleModeEnabledNotifier.value = false;
+                                  playerLoopModeNotifier.value = LoopMode.one;
+                                  MyToast.show(
+                                      context: context, message: "单曲循环");
+                                  break;
+                                case 2:
+                                  widget.player.setLoopMode(LoopMode.all);
+                                  widget.player.setShuffleModeEnabled(true);
+                                  isShuffleModeEnabledNotifier.value = true;
+                                  playerLoopModeNotifier.value = LoopMode.all;
+                                  MyToast.show(
+                                      context: context, message: "随机循环");
+                                  break;
+                                default:
+                              }
+                            },
+                          ));
+                    });
+              }),
         if (widget.isPlayScreen || !isMobile)
           ValueListenableBuilder<bool>(
               valueListenable: isFirstSongNotifier,
