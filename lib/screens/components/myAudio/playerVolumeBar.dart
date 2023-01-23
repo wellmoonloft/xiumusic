@@ -205,7 +205,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                                   var _value = await showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return MyDialog();
+                                      return AddPlaylistDialog();
                                     },
                                   );
                                   switch (_value) {

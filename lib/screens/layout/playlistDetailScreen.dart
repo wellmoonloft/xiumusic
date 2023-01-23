@@ -8,7 +8,6 @@ import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../../util/localizations.dart';
 import '../../util/util.dart';
-import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 import '../common/myToast.dart';

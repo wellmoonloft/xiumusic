@@ -7,17 +7,17 @@ import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../common/myTextButton.dart';
 
-class MyDialog extends StatefulWidget {
-  const MyDialog({
+class AddPlaylistDialog extends StatefulWidget {
+  const AddPlaylistDialog({
     Key? key,
   }) : super(key: key);
   @override
-  State<StatefulWidget> createState() {
-    return _MyDialogState();
+  _AddPlaylistDialogState createState() {
+    return _AddPlaylistDialogState();
   }
 }
 
-class _MyDialogState extends State<MyDialog> {
+class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
   String _selectedSort = '';
   List<DropdownMenuItem<String>> _sortItems = [];
   bool isInit = false;
@@ -80,7 +80,7 @@ class _MyDialogState extends State<MyDialog> {
                   child: isInit
                       ? Theme(
                           data: Theme.of(context).copyWith(
-                            canvasColor: rightColor,
+                            canvasColor: badgeDark,
                           ),
                           child: DropdownButton(
                             value: _selectedSort,

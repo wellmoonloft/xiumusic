@@ -71,6 +71,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   Widget _buildArtistsHeaderWidget() {
     List<String> _title = [artistLocal, albumLocal];
     return Container(
+        height: 30,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
         color: bkColor,
         child: myRowList(_title, subText));
@@ -85,6 +86,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       playCountLocal
     ];
     return Container(
+        height: 30,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
         color: bkColor,
         child: myRowList(_title, subText));
@@ -98,6 +100,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       playCountLocal
     ];
     return Container(
+        height: 30,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
         color: bkColor,
         child: myRowList(_title, subText));
@@ -107,44 +110,49 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     return Column(
       children: [
         _buildSongHeaderWidget(),
-        _songs.length > 0
-            ? MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: _songs.length,
-                    itemExtent: 50.0, //强制高度为50.0
-                    itemBuilder: (BuildContext context, int index) {
-                      Songs _tem = _songs[index];
-                      List<String> _title = [
-                        _tem.title,
-                        _tem.artist,
-                        _tem.bitRate.toString(),
-                        _tem.playCount.toString(),
-                      ];
-                      return ListTile(
-                          title: InkWell(
-                              onTap: () async {
-                                activeSongValue.value = _tem.id;
-                                //歌曲所在专辑歌曲List
-                                activeList.value = _songs;
-                                //当前歌曲队列
-                                activeIndex.value = index;
-                              },
-                              child: ValueListenableBuilder<Map>(
-                                  valueListenable: activeSong,
-                                  builder: ((context, value, child) {
-                                    return myRowList(
-                                        _title,
-                                        (value.isNotEmpty &&
-                                                value["value"] == _tem.id)
-                                            ? activeText
-                                            : nomalText);
-                                  }))));
-                    }))
-            : Container()
+        Container(
+          height: (isMobile)
+              ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
+              : windowsHeight.value - (106 + bottomHeight + 50 + 30),
+          child: _songs.length > 0
+              ? MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: _songs.length,
+                      itemExtent: 50.0, //强制高度为50.0
+                      itemBuilder: (BuildContext context, int index) {
+                        Songs _tem = _songs[index];
+                        List<String> _title = [
+                          _tem.title,
+                          _tem.artist,
+                          _tem.bitRate.toString(),
+                          _tem.playCount.toString(),
+                        ];
+                        return ListTile(
+                            title: InkWell(
+                                onTap: () async {
+                                  activeSongValue.value = _tem.id;
+                                  //歌曲所在专辑歌曲List
+                                  activeList.value = _songs;
+                                  //当前歌曲队列
+                                  activeIndex.value = index;
+                                },
+                                child: ValueListenableBuilder<Map>(
+                                    valueListenable: activeSong,
+                                    builder: ((context, value, child) {
+                                      return myRowList(
+                                          _title,
+                                          (value.isNotEmpty &&
+                                                  value["value"] == _tem.id)
+                                              ? activeText
+                                              : nomalText);
+                                    }))));
+                      }))
+              : Container(),
+        )
       ],
     );
   }
@@ -153,33 +161,37 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     return Column(
       children: [
         _buildAlbumHeaderWidget(),
-        _albums.length > 0
-            ? MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: _albums.length,
-                    itemExtent: 50.0, //强制高度为50.0
-                    itemBuilder: (BuildContext context, int index) {
-                      Albums _tem = _albums[index];
-                      List<String> _title = [
-                        _tem.title,
-                        _tem.artist.toString(),
-                        _tem.songCount.toString(),
-                        formatDuration(_tem.duration),
-                        _tem.playCount.toString(),
-                      ];
-                      return ListTile(
-                          title: InkWell(
-                              onTap: () {
-                                activeID.value = _tem.id;
-                                indexValue.value = 8;
-                              },
-                              child: myRowList(_title, nomalText)));
-                    }))
-            : Container()
+        Container(
+            height: (isMobile)
+                ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
+                : windowsHeight.value - (106 + bottomHeight + 50 + 30),
+            child: _albums.length > 0
+                ? MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: _albums.length,
+                        itemExtent: 50.0, //强制高度为50.0
+                        itemBuilder: (BuildContext context, int index) {
+                          Albums _tem = _albums[index];
+                          List<String> _title = [
+                            _tem.title,
+                            _tem.artist.toString(),
+                            _tem.songCount.toString(),
+                            formatDuration(_tem.duration),
+                            _tem.playCount.toString(),
+                          ];
+                          return ListTile(
+                              title: InkWell(
+                                  onTap: () {
+                                    activeID.value = _tem.id;
+                                    indexValue.value = 8;
+                                  },
+                                  child: myRowList(_title, nomalText)));
+                        }))
+                : Container())
       ],
     );
   }
@@ -188,30 +200,34 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     return Column(
       children: [
         _buildArtistsHeaderWidget(),
-        _artists.length > 0
-            ? MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: _artists.length,
-                    itemExtent: 50.0, //强制高度为50.0
-                    itemBuilder: (BuildContext context, int index) {
-                      Artists _tem = _artists[index];
-                      List<String> _title = [
-                        _tem.name,
-                        _tem.albumCount.toString()
-                      ];
-                      return ListTile(
-                          title: InkWell(
-                              onTap: () {
-                                activeID.value = _tem.id;
-                                indexValue.value = 9;
-                              },
-                              child: myRowList(_title, nomalText)));
-                    }))
-            : Container()
+        Container(
+            height: (isMobile)
+                ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
+                : windowsHeight.value - (106 + bottomHeight + 50 + 30),
+            child: _artists.length > 0
+                ? MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: _artists.length,
+                        itemExtent: 50.0, //强制高度为50.0
+                        itemBuilder: (BuildContext context, int index) {
+                          Artists _tem = _artists[index];
+                          List<String> _title = [
+                            _tem.name,
+                            _tem.albumCount.toString()
+                          ];
+                          return ListTile(
+                              title: InkWell(
+                                  onTap: () {
+                                    activeID.value = _tem.id;
+                                    indexValue.value = 9;
+                                  },
+                                  child: myRowList(_title, nomalText)));
+                        }))
+                : Container())
       ],
     );
   }
