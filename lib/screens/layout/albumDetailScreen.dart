@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
@@ -11,8 +13,10 @@ import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
+  final AudioPlayer player;
   const AlbumDetailScreen({
     Key? key,
+    required this.player,
   }) : super(key: key);
   @override
   _AlbumDetailScreenState createState() => _AlbumDetailScreenState();
@@ -271,11 +275,15 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
-                            activeSongValue.value = _tem.id;
-                            //歌曲所在专辑歌曲List
-                            activeList.value = _songs!;
-                            //当前歌曲队列
-                            activeIndex.value = index;
+                            if (listEquals(activeList.value, _songs!)) {
+                              widget.player.seek(Duration.zero, index: index);
+                            } else {
+                              //当前歌曲队列
+                              activeIndex.value = index;
+                              activeSongValue.value = _tem.id;
+                              //歌曲所在专辑歌曲List
+                              activeList.value = _songs!;
+                            }
                           },
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,

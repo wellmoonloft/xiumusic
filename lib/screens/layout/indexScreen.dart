@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
@@ -9,7 +11,8 @@ import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
 
 class IndexScreen extends StatefulWidget {
-  const IndexScreen({Key? key}) : super(key: key);
+  final AudioPlayer player;
+  const IndexScreen({Key? key, required this.player}) : super(key: key);
   @override
   _IndexScreenState createState() => _IndexScreenState();
 }
@@ -136,11 +139,15 @@ class _IndexScreenState extends State<IndexScreen> {
                   alignment: Alignment.center,
                   child: InkWell(
                       onTap: () async {
-                        activeSongValue.value = _tem.id;
-                        //歌曲所在专辑歌曲List
-                        activeList.value = _songs!;
-                        //当前歌曲队列
-                        activeIndex.value = index;
+                        if (listEquals(activeList.value, _songs!)) {
+                          widget.player.seek(Duration.zero, index: index);
+                        } else {
+                          //当前歌曲队列
+                          activeIndex.value = index;
+                          activeSongValue.value = _tem.id;
+                          //歌曲所在专辑歌曲List
+                          activeList.value = _songs!;
+                        }
                       },
                       child: ValueListenableBuilder<Map>(
                           valueListenable: activeSong,

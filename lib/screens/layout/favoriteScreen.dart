@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
@@ -8,7 +10,8 @@ import '../../util/mycss.dart';
 import '../common/myStructure.dart';
 
 class FavoriteScreen extends StatefulWidget {
-  const FavoriteScreen({Key? key}) : super(key: key);
+  final AudioPlayer player;
+  const FavoriteScreen({Key? key, required this.player}) : super(key: key);
   @override
   _FavoriteScreenState createState() => _FavoriteScreenState();
 }
@@ -134,11 +137,16 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                         return ListTile(
                             title: InkWell(
                                 onTap: () async {
-                                  activeSongValue.value = _tem.id;
-                                  //歌曲所在专辑歌曲List
-                                  activeList.value = _songs;
-                                  //当前歌曲队列
-                                  activeIndex.value = index;
+                                  if (listEquals(activeList.value, _songs)) {
+                                    widget.player
+                                        .seek(Duration.zero, index: index);
+                                  } else {
+                                    //当前歌曲队列
+                                    activeIndex.value = index;
+                                    activeSongValue.value = _tem.id;
+                                    //歌曲所在专辑歌曲List
+                                    activeList.value = _songs;
+                                  }
                                 },
                                 child: ValueListenableBuilder<Map>(
                                     valueListenable: activeSong,

@@ -7,7 +7,7 @@ import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
-import '../components/myAudio/audioTools.dart';
+import '../../util/audioTools.dart';
 
 class PlayListScreen extends StatefulWidget {
   const PlayListScreen({Key? key}) : super(key: key);

@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/mainScreen.dart';
 import 'package:xiumusic/util/mycss.dart';
 import 'models/myModel.dart';
 import 'models/notifierValue.dart';
+import 'util/audioTools.dart';
 import 'util/dbProvider.dart';
 
 void main() async {
@@ -57,13 +59,20 @@ void main() async {
     // });
   }
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+  //注册唯一播放器
+  final AudioPlayer _player = AudioPlayer();
+  //监听器
+  audioCurrentIndexStream(_player);
+  audioActiveSongListener(_player);
 
-  runApp(MyApp());
+  runApp(MyApp(player: _player));
 }
 
 class MyApp extends StatelessWidget {
+  final AudioPlayer player;
   const MyApp({
     Key? key,
+    required this.player,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -76,7 +85,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
 
-      home: MainScreen(),
+      home: MainScreen(player: player),
     );
   }
 }

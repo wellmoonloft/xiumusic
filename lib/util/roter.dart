@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import '../screens/layout/albumDetailScreen.dart';
 import '../screens/layout/albumScreen.dart';
 import '../screens/layout/artistDetailScreen.dart';
@@ -14,10 +15,11 @@ import '../screens/layout/settings.dart';
 
 class Roter extends StatelessWidget {
   final int roter;
-
+  final AudioPlayer player;
   const Roter({
     Key? key,
     required this.roter,
+    required this.player,
   }) : super(key: key);
 
   @override
@@ -26,11 +28,11 @@ class Roter extends StatelessWidget {
       builder: (context, constraints) {
         switch (roter) {
           case 0: //首页
-            return IndexScreen();
+            return IndexScreen(player: player);
           case 2: //播放列表
             return PlayListScreen();
           case 3: //收藏
-            return FavoriteScreen();
+            return FavoriteScreen(player: player);
           case 4: //专辑
             return AlbumScreen();
           case 5: //歌手
@@ -41,15 +43,15 @@ class Roter extends StatelessWidget {
             return SearchLyricScreen();
           //不通过点击进入
           case 8: //专辑详情
-            return AlbumDetailScreen();
+            return AlbumDetailScreen(player: player);
           case 9: //艺人详情
             return ArtistDetailScreen();
           case 10: //搜索
-            return SearchScreen();
+            return SearchScreen(player: player);
           case 11: //设置
             return Settings();
           case 12: //播放列表详细
-            return PlaylistDetailScreen();
+            return PlaylistDetailScreen(player: player);
 
           default:
             return Settings();

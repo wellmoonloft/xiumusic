@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'models/notifierValue.dart';
 import 'util/mycss.dart';
 import 'screens/bottomScreen.dart';
@@ -8,8 +9,10 @@ import 'screens/leftScreen.dart';
 import 'util/roter.dart';
 
 class MainScreen extends StatelessWidget {
+  final AudioPlayer player;
   const MainScreen({
     Key? key,
+    required this.player,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -66,7 +69,8 @@ class MainScreen extends StatelessWidget {
                                   ? ValueListenableBuilder<int>(
                                       valueListenable: indexValue,
                                       builder: ((context, value, child) {
-                                        return Roter(roter: value);
+                                        return Roter(
+                                            roter: value, player: player);
                                       }))
                                   : Settings(),
                             );
@@ -78,7 +82,7 @@ class MainScreen extends StatelessWidget {
               width: windowsWidth.value,
               child: Column(
                 children: [
-                  BottomScreen(),
+                  BottomScreen(player: player),
                 ],
               )),
           if (isMobile)

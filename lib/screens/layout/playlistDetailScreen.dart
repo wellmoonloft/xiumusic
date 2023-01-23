@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
@@ -13,8 +15,10 @@ import '../common/myTextButton.dart';
 import '../common/myToast.dart';
 
 class PlaylistDetailScreen extends StatefulWidget {
+  final AudioPlayer player;
   const PlaylistDetailScreen({
     Key? key,
+    required this.player,
   }) : super(key: key);
   @override
   _PlaylistDetailScreenState createState() => _PlaylistDetailScreenState();
@@ -273,33 +277,70 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     _song.playCount.toString(),
                   ];
 
-                  return ListTile(
-                      title: GestureDetector(
-                          onTap: () async {
-                            activeSongValue.value = _song.id;
-                            //歌曲所在专辑歌曲List
-                            activeList.value = _songslist;
-                            //当前歌曲队列
-                            activeIndex.value = index;
-                          },
-                          onLongPressEnd: (details) {
-                            _delSong(context, details.globalPosition.dx,
-                                details.globalPosition.dy, index);
-                          },
-                          onSecondaryTapDown: (details) {
-                            _delSong(context, details.globalPosition.dx,
-                                details.globalPosition.dy, index);
-                          },
-                          child: ValueListenableBuilder<Map>(
-                              valueListenable: activeSong,
-                              builder: ((context, value, child) {
-                                return myRowList(
-                                    _title,
-                                    (value.isNotEmpty &&
-                                            value["value"] == _song.id)
-                                        ? activeText
-                                        : nomalText);
-                              }))));
+                  return Dismissible(
+                      // Key
+                      key: Key(_song.id),
+                      onDismissed: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          // 从右向左  也就是删除
+                        } else if (direction == DismissDirection.startToEnd) {
+                          //从左向右
+                        }
+
+                        await delSongfromPlaylist(
+                            activeID.value, index.toString());
+                        await getPlaylistsFromNet();
+                        _getSongs(activeID.value);
+                        MyToast.show(context: context, message: "删除成功");
+                      },
+                      background: Container(
+                        color: badgeRed,
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.delete,
+                            color: textGray,
+                          ),
+                        ),
+                      ),
+                      secondaryBackground: Container(
+                        color: badgeRed,
+                        child: ListTile(
+                          trailing: Icon(
+                            Icons.delete,
+                            color: textGray,
+                          ),
+                        ),
+                      ),
+
+                      // Child
+                      child: ListTile(
+                          title: GestureDetector(
+                              onTap: () async {
+                                if (listEquals(activeList.value, _songslist)) {
+                                  widget.player
+                                      .seek(Duration.zero, index: index);
+                                } else {
+                                  //当前歌曲队列
+                                  activeIndex.value = index;
+                                  activeSongValue.value = _song.id;
+                                  //歌曲所在专辑歌曲List
+                                  activeList.value = _songslist;
+                                }
+                              },
+                              onSecondaryTapDown: (details) {
+                                _delSong(context, details.globalPosition.dx,
+                                    details.globalPosition.dy, index);
+                              },
+                              child: ValueListenableBuilder<Map>(
+                                  valueListenable: activeSong,
+                                  builder: ((context, value, child) {
+                                    return myRowList(
+                                        _title,
+                                        (value.isNotEmpty &&
+                                                value["value"] == _song.id)
+                                            ? activeText
+                                            : nomalText);
+                                  })))));
                 }))
         : Container();
   }

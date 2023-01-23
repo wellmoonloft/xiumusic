@@ -6,7 +6,7 @@ const huang = Color.fromARGB(255, 237, 207, 106);
 const bai = Color.fromARGB(255, 250, 250, 250);
 const xuan = Color.fromARGB(255, 48, 46, 44);
 
-const badgeRed = Color.fromARGB(255, 209, 45, 49);
+const badgeRed = Color.fromARGB(255, 185, 64, 65);
 const badgeDark = Color.fromARGB(255, 61, 63, 67);
 const textGray = Color.fromARGB(255, 216, 216, 216);
 const rightColor = Color.fromARGB(255, 24, 24, 25);
