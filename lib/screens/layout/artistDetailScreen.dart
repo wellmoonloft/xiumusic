@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
 import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
-import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
@@ -123,12 +123,12 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                             press: () {
                               indexValue.value = 5;
                             },
-                            title: "$artistLocal"),
+                            title: S.of(context).artist),
                         SizedBox(
                           width: 5,
                         ),
                         Text(
-                          "$albumLocal: " + _albumsnum.toString(),
+                          S.of(context).album + ": " + _albumsnum.toString(),
                           style: nomalText,
                         ),
                       ],
@@ -138,26 +138,24 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     height: 5,
                   ),
                   Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "$songLocal: " + _songs.toString(),
-                          style: nomalText,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "$drationLocal: " + formatDuration(_duration),
-                          style: nomalText,
-                        ),
-                      ],
+                    child: Text(
+                      S.of(context).song + ": " + _songs.toString(),
+                      style: nomalText,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    child: Text(
+                      S.of(context).dration + ": " + formatDuration(_duration),
+                      style: nomalText,
                     ),
                   ),
                   Container(
                       child: Row(children: [
                     Text(
-                      "$playCountLocal: " + _playCount.toString(),
+                      S.of(context).playCount + ": " + _playCount.toString(),
                       style: nomalText,
                     ),
                     Container(
@@ -211,11 +209,11 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [
-      albumLocal,
-      yearLocal,
-      songLocal,
-      drationLocal,
-      playCountLocal
+      S.of(context).album,
+      S.of(context).year,
+      S.of(context).song,
+      S.of(context).dration,
+      if (!isMobile) S.of(context).playCount
     ];
     return myRowList(_title, subText);
   }
@@ -237,7 +235,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     _tem.year.toString(),
                     _tem.songCount.toString(),
                     formatDuration(_tem.duration),
-                    _tem.playCount.toString(),
+                    if (!isMobile) _tem.playCount.toString(),
                   ];
                   return ListTile(
                       title: InkWell(

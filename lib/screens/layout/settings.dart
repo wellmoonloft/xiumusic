@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/dbProvider.dart';
 import '../../util/handling.dart';
 import '../../util/httpClient.dart';
-import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myLoadingDialog.dart';
@@ -32,9 +32,10 @@ class _SettingsState extends State<Settings>
   final taskTimecontroller = new TextEditingController();
   late TabController tabController;
   late ServerInfo _myServerInfo;
-  static const List<Tab> myTabs = <Tab>[
-    Tab(text: '服务器设置'),
-    Tab(text: '其他设置'),
+
+  List<Tab> myTabs = <Tab>[
+    Tab(text: ""),
+    Tab(text: ''),
   ];
 
   _saveServer() async {
@@ -62,7 +63,7 @@ class _SettingsState extends State<Settings>
             neteaseapi: "");
         await DbProvider.instance.addServerInfo(_serverInfo);
         //初始化服务器
-        showMyLoadingDialog(context, "初始化中...");
+        showMyLoadingDialog(context, S.of(context).initialize);
         //初始化服务器
         await getGenresFromNet();
         await getArtistsFromNet();
@@ -73,10 +74,11 @@ class _SettingsState extends State<Settings>
 
         isServers.value = true;
       } else {
-        showMyAlertDialog(context, noticeLocal, servererrLocal);
+        showMyAlertDialog(
+            context, S.of(context).notive, S.of(context).serverErr);
       }
     } else {
-      showMyAlertDialog(context, noticeLocal, contenterrLocal);
+      showMyAlertDialog(context, S.of(context).notive, S.of(context).noContent);
     }
   }
 
@@ -92,9 +94,10 @@ class _SettingsState extends State<Settings>
       _myServerInfo.neteaseapi = _serverURL;
       await DbProvider.instance.updateServerInfo(_myServerInfo);
       isSNetease.value = true;
-      showMyAlertDialog(context, "成功", "保存成功");
+      showMyAlertDialog(context, S.of(context).success,
+          S.of(context).save + S.of(context).success);
     } else {
-      showMyAlertDialog(context, noticeLocal, contenterrLocal);
+      showMyAlertDialog(context, S.of(context).notive, S.of(context).noContent);
     }
   }
 
@@ -128,13 +131,18 @@ class _SettingsState extends State<Settings>
         neteasecontroller.text = "";
       });
     }
-    showMyAlertDialog(context, "成功", "服务器已删除");
+    showMyAlertDialog(context, S.of(context).success,
+        S.of(context).server + S.of(context).delete);
   }
 
   @override
   initState() {
     super.initState();
     _getServerInfo();
+    myTabs = <Tab>[
+      Tab(text: S.current.server + S.current.settings),
+      Tab(text: S.current.other + S.current.settings),
+    ];
     tabController = TabController(length: myTabs.length, vsync: this);
   }
 
@@ -158,7 +166,7 @@ class _SettingsState extends State<Settings>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(settingsLocal, style: titleText1),
+            Text(S.of(context).settings, style: titleText1),
             Row(
               children: [
                 ValueListenableBuilder<bool>(
@@ -167,7 +175,8 @@ class _SettingsState extends State<Settings>
                       return isServers.value
                           ? MyTextButton(
                               press: () async {
-                                showMyLoadingDialog(context, "刷新中...");
+                                showMyLoadingDialog(
+                                    context, S.of(context).refresh);
                                 //初始化服务器
                                 await getGenresFromNet();
                                 await getArtistsFromNet();
@@ -176,7 +185,7 @@ class _SettingsState extends State<Settings>
                                 await getPlaylistsFromNet();
                                 Navigator.pop(context);
                               },
-                              title: "强制刷新")
+                              title: S.of(context).enforceRefresh)
                           : Container();
                     })),
                 SizedBox(
@@ -184,11 +193,10 @@ class _SettingsState extends State<Settings>
                 ),
                 MyTextButton(
                     press: () {
-                      showMyAlertDialog(context, "尚未完工", "敬请期待");
-                      //showMyToast(context, "sssss");
-                      //showMyLoadingDialog(context, "初始化中...");
+                      showMyAlertDialog(
+                          context, S.of(context).version, version);
                     },
-                    title: versionLocal + version)
+                    title: S.of(context).version + version)
               ],
             )
           ],
@@ -218,7 +226,7 @@ class _SettingsState extends State<Settings>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "音乐服务器",
+                          S.of(context).song + S.of(context).server,
                           style: titleText2,
                         ),
                         ValueListenableBuilder<bool>(
@@ -228,13 +236,15 @@ class _SettingsState extends State<Settings>
                                   press: () {
                                     _value ? _deleteServer() : _saveServer();
                                   },
-                                  title: _value ? unConnectLocal : saveLocal);
+                                  title: _value
+                                      ? S.of(context).disConnect
+                                      : S.of(context).save);
                             }))
                       ],
                     ),
                     Container(
                       child: Text(
-                        "需要先行保存服务器之后才可以正常使用",
+                        S.of(context).serverSaveNotive,
                         style: subText,
                       ),
                     ),
@@ -243,32 +253,42 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextInput(
                       control: servercontroller,
-                      label: serverURLLocal,
-                      hintLabel: pleasInputLocal + serverURLLocal,
+                      label: S.of(context).serverURL,
+                      hintLabel:
+                          S.of(context).pleaseInput + S.of(context).serverURL,
                       hideText: false,
                       icon: Icons.dns,
                       titleStyle: nomalText,
                       mainaxis: MainAxisAlignment.spaceBetween,
                       crossaxis: CrossAxisAlignment.center,
+                      press: () {
+                        _saveServer();
+                      },
                     ),
                     MyTextInput(
                       control: usernamecontroller,
-                      label: userNameLocal,
-                      hintLabel: pleasInputLocal + userNameLocal,
+                      label: S.of(context).username,
+                      hintLabel:
+                          S.of(context).pleaseInput + S.of(context).username,
                       hideText: false,
                       icon: Icons.person,
-                      press: null,
+                      press: () {
+                        _saveServer();
+                      },
                       titleStyle: nomalText,
                       mainaxis: MainAxisAlignment.spaceBetween,
                       crossaxis: CrossAxisAlignment.center,
                     ),
                     MyTextInput(
                       control: passwordcontroller,
-                      label: passWordLocal,
-                      hintLabel: pleasInputLocal + passWordLocal,
+                      label: S.of(context).password,
+                      hintLabel:
+                          S.of(context).pleaseInput + S.of(context).password,
                       hideText: true,
                       icon: Icons.password,
-                      press: null,
+                      press: () {
+                        _saveServer();
+                      },
                       titleStyle: nomalText,
                       mainaxis: MainAxisAlignment.spaceBetween,
                       crossaxis: CrossAxisAlignment.center,
@@ -287,7 +307,7 @@ class _SettingsState extends State<Settings>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "歌词服务器",
+                          S.of(context).lyric + S.of(context).server,
                           style: titleText2,
                         ),
                         ValueListenableBuilder<bool>(
@@ -301,16 +321,20 @@ class _SettingsState extends State<Settings>
                                           _saveNetease();
                                         } else {
                                           showMyAlertDialog(
-                                              context, "提醒", "请先保存音乐服务器");
+                                              context,
+                                              S.of(context).notive,
+                                              S.of(context).serverSaveFirst);
                                         }
                                       },
-                                      title: "保存歌词服务器");
+                                      title: S.of(context).save +
+                                          S.of(context).lyric +
+                                          S.of(context).server);
                             }))
                       ],
                     ),
                     Container(
                       child: Text(
-                        "需要先行保存歌词服务器之后才才会出现搜索歌词按钮",
+                        S.of(context).serverSaveSub,
                         style: subText,
                       ),
                     ),
@@ -319,8 +343,9 @@ class _SettingsState extends State<Settings>
                     ), //网易api监听，再做个左侧菜单隐藏
                     MyTextInput(
                       control: neteasecontroller,
-                      label: "歌词服务器",
-                      hintLabel: pleasInputLocal + serverURLLocal,
+                      label: S.of(context).lyric + S.of(context).server,
+                      hintLabel:
+                          S.of(context).pleaseInput + S.of(context).serverURL,
                       hideText: false,
                       icon: Icons.dns,
                       titleStyle: nomalText,
@@ -348,10 +373,10 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextButton(
                         press: () async {
-                          showMyAlertDialog(
-                              context, "提醒", "暂时未开放，默认不自动刷新，新增歌曲请点击手动刷新");
+                          showMyAlertDialog(context, S.of(context).notive,
+                              "暂时未开放，默认不自动刷新，新增歌曲请点击手动刷新");
                         },
-                        title: "保存设置"),
+                        title: S.of(context).save + S.of(context).settings),
                   ],
                 ),
                 SizedBox(
@@ -360,7 +385,7 @@ class _SettingsState extends State<Settings>
                 MyTextInput(
                   control: taskTimecontroller,
                   label: "定时任务间隔时间",
-                  hintLabel: pleasInputLocal + "间隔时间（分钟）",
+                  hintLabel: S.of(context).pleaseInput + "间隔时间（分钟）",
                   hideText: false,
                   icon: Icons.watch_later,
                   titleStyle: nomalText,

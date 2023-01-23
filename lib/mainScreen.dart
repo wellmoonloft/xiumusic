@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'generated/l10n.dart';
 import 'models/notifierValue.dart';
 import 'util/mycss.dart';
 import 'screens/bottomScreen.dart';
@@ -17,6 +18,7 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> myLeftStateKey = GlobalKey<ScaffoldState>();
+    //S.load(Locale('zh', 'CN'));
     _drawer() {
       myLeftStateKey.currentState?.openDrawer();
     }

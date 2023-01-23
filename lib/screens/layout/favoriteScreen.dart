@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
-import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myStructure.dart';
@@ -19,11 +19,7 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  static const List<Tab> myTabs = <Tab>[
-    Tab(text: '歌曲'),
-    Tab(text: '专辑'),
-    Tab(text: '艺人')
-  ];
+  List<Tab> myTabs = <Tab>[Tab(text: ''), Tab(text: ''), Tab(text: '')];
   List<Songs> _songs = [];
   List<Albums> _albums = [];
   List<Artists> _artists = [];
@@ -61,6 +57,11 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   @override
   initState() {
     super.initState();
+    myTabs = <Tab>[
+      Tab(text: S.current.song),
+      Tab(text: S.current.album),
+      Tab(text: S.current.artist)
+    ];
     tabController = TabController(length: myTabs.length, vsync: this);
     _getFavorite();
   }
@@ -72,7 +73,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   }
 
   Widget _buildArtistsHeaderWidget() {
-    List<String> _title = [artistLocal, albumLocal];
+    List<String> _title = [S.of(context).artist, S.of(context).album];
     return Container(
         height: 30,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
@@ -82,11 +83,11 @@ class _FavoriteScreenState extends State<FavoriteScreen>
 
   Widget _buildAlbumHeaderWidget() {
     List<String> _title = [
-      albumLocal,
-      yearLocal,
-      songLocal,
-      drationLocal,
-      playCountLocal
+      S.of(context).album,
+      S.of(context).year,
+      S.of(context).song,
+      S.of(context).dration,
+      S.of(context).playCount
     ];
     return Container(
         height: 30,
@@ -97,10 +98,10 @@ class _FavoriteScreenState extends State<FavoriteScreen>
 
   Widget _buildSongHeaderWidget() {
     List<String> _title = [
-      songLocal,
-      drationLocal,
-      bitRangeLocal,
-      playCountLocal
+      S.of(context).song,
+      S.of(context).dration,
+      S.of(context).bitRange,
+      S.of(context).playCount
     ];
     return Container(
         height: 30,
@@ -245,25 +246,25 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(child: Text(favoriteLocal, style: titleText1)),
+        Container(child: Text(S.of(context).favorite, style: titleText1)),
         Row(
           children: [
             Text(
-              "歌曲: " + _songs.length.toString(),
+              S.of(context).song + ": " + _songs.length.toString(),
               style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "专辑: " + _albums.length.toString(),
+              S.of(context).album + ": " + _albums.length.toString(),
               style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "艺人: " + _artists.length.toString(),
+              S.of(context).artist + ": " + _artists.length.toString(),
               style: nomalText,
             ),
           ],

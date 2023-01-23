@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
+import '../../generated/l10n.dart';
 import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
-import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
@@ -128,7 +128,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                             press: () {
                               indexValue.value = 5;
                             },
-                            title: "$artistLocal"),
+                            title: S.of(context).artist),
                         SizedBox(
                           width: 10,
                         ),
@@ -147,7 +147,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                   Row(
                     children: [
                       Text(
-                        "$yearLocal: " + _year.toString(),
+                        S.of(context).year + ": " + _year.toString(),
                         style: nomalText,
                       ),
                       SizedBox(
@@ -155,7 +155,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       ),
                       _genre == "0"
                           ? Container()
-                          : MyTextButton(press: () {}, title: "$genresLocal"),
+                          : MyTextButton(
+                              press: () {}, title: S.of(context).genres),
                       _genre == "0"
                           ? Container()
                           : SizedBox(
@@ -170,27 +171,27 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                     height: 5,
                   ),
                   Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          "$songLocal: " + _songsnum.toString(),
-                          style: nomalText,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "$drationLocal: " + formatDuration(_duration),
-                          style: nomalText,
-                        ),
-                      ],
+                    child: Text(
+                      S.of(context).song + ": " + _songsnum.toString(),
+                      style: nomalText,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    child: Text(
+                      S.of(context).dration + ": " + formatDuration(_duration),
+                      style: nomalText,
                     ),
                   ),
                   Container(
                     child: Row(
                       children: [
                         Text(
-                          "$playCountLocal: " + _playCount.toString(),
+                          S.of(context).playCount +
+                              ": " +
+                              _playCount.toString(),
                           style: nomalText,
                         ),
                         Container(
@@ -246,10 +247,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [
-      songLocal,
-      drationLocal,
-      bitRangeLocal,
-      playCountLocal
+      S.of(context).song,
+      S.of(context).dration,
+      S.of(context).bitRange,
+      S.of(context).playCount
     ];
     return myRowList(_title, subText);
   }
@@ -302,7 +303,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 222,
+        top: 238,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

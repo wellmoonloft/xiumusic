@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
@@ -23,7 +24,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
   final songController = new TextEditingController();
   final artistController = new TextEditingController();
   late TabController tabController;
-  static const List<Tab> myTabs = <Tab>[
+  List<Tab> myTabs = <Tab>[
     Tab(text: '我的歌曲'),
     Tab(text: '云端歌曲'),
     Tab(text: '歌词'),
@@ -65,6 +66,11 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
   @override
   initState() {
     super.initState();
+    myTabs = <Tab>[
+      Tab(text: S.current.my + S.current.song),
+      Tab(text: S.current.net + S.current.song),
+      Tab(text: S.current.lyric),
+    ];
     tabController = TabController(length: myTabs.length, vsync: this);
   }
 
@@ -83,13 +89,19 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
         builder: (BuildContext context) {
           return SimpleDialog(
             backgroundColor: rightColor,
-            title: Text('请确认查询信息', style: nomalText),
+            title: Text(
+                S.of(context).confrim +
+                    S.of(context).search +
+                    S.of(context).info,
+                style: nomalText),
             contentPadding: EdgeInsets.only(left: 20, bottom: 20),
             children: <Widget>[
               MyTextInput(
                 control: songController,
-                label: "歌曲名",
-                hintLabel: "请输入歌曲名...",
+                label: S.of(context).song + S.of(context).name,
+                hintLabel: S.of(context).pleaseInput +
+                    S.of(context).song +
+                    S.of(context).name,
                 hideText: false,
                 icon: Icons.search,
                 press: () {},
@@ -99,8 +111,10 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
               ),
               MyTextInput(
                 control: artistController,
-                label: "艺人名",
-                hintLabel: "请输入艺人名...",
+                label: S.of(context).artist + S.of(context).name,
+                hintLabel: S.of(context).pleaseInput +
+                    S.of(context).artist +
+                    S.of(context).name,
                 hideText: false,
                 icon: Icons.search,
                 press: () {},
@@ -112,15 +126,16 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MyTextButton(
-                    title: "取消",
+                    title: S.of(context).cancel,
                     press: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MyTextButton(
-                    title: "搜索",
+                    title: S.of(context).search,
                     press: () async {
-                      showMyLoadingDialog(context, "搜索中...");
+                      showMyLoadingDialog(
+                          context, S.of(context).search + "...");
                       var _result = await searchNeteasAPI(
                           songController.text + " " + artistController.text,
                           "1");
@@ -159,7 +174,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
-                            showMyLoadingDialog(context, "搜索中...");
+                            showMyLoadingDialog(
+                                context, S.of(context).search + "...");
                             var _lyritem =
                                 await getLyric(_tem["id"].toString());
                             Navigator.pop(context);
@@ -168,7 +184,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 _lyric = _lyritem;
                               });
                               tabController.animateTo(0);
-                              showMyAlertDialog(context, "成功", "歌词下载成功，请检查并绑定");
+                              showMyAlertDialog(context, S.of(context).success,
+                                  S.of(context).lyricDownloadSuccess);
                             }
                           },
                           child: Row(
@@ -209,7 +226,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _tem = _songs![index];
-                  String _islyr = _isLyric[index] ? "有" : "无";
+                  String _islyr =
+                      _isLyric[index] ? S.of(context).have : S.of(context).no;
                   _isChecked.add(false);
 
                   return ListTile(
@@ -281,8 +299,10 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
       children: [
         MyTextInput(
           control: searchController,
-          label: "搜索歌词",
-          hintLabel: "请输入歌曲名...",
+          label: S.of(context).search + S.of(context).lyric,
+          hintLabel: S.of(context).pleaseInput +
+              S.of(context).song +
+              S.of(context).name,
           hideText: false,
           icon: Icons.search,
           press: () {
@@ -298,13 +318,16 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
           children: [
             Container(
                 child: (_songs != null && _songs!.length > 0)
-                    ? Text("结果:" + _songs!.length.toString(), style: nomalText)
-                    : Text("结果: 0", style: nomalText)),
+                    ? Text(
+                        S.of(context).result + ":" + _songs!.length.toString(),
+                        style: nomalText)
+                    : Text(S.of(context).result + ": 0", style: nomalText)),
             MyTextButton(
-              title: "绑定歌词",
+              title: S.of(context).binding + S.of(context).lyric,
               press: () async {
                 if (_lyric == "") {
-                  showMyAlertDialog(context, "错误", "没有歌词");
+                  showMyAlertDialog(context, S.of(context).notive,
+                      S.of(context).no + S.of(context).lyric);
                 } else {
                   for (var i = 0; i < _isChecked.length; i++) {
                     if (_isChecked[i]) {
@@ -318,7 +341,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                       }
                     }
                   }
-                  showMyAlertDialog(context, "成功", "绑定成功");
+                  showMyAlertDialog(context, S.of(context).success,
+                      S.of(context).binding + S.of(context).success);
                 }
               },
             )
@@ -331,7 +355,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 136,
+        top: 138,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

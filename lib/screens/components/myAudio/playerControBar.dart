@@ -263,30 +263,34 @@ class _PlayerControBarState extends State<PlayerControBar> {
           },
         ),
         if (isMobile && !widget.isPlayScreen)
-          IconButton(
-            icon: Icon(
-              Icons.playlist_play,
-              color: (activeList.value.length > 0) ? textGray : badgeDark,
-              size: 30.0,
-            ),
-            onPressed: (activeList.value.length > 0)
-                ? () {
-                    if (isactivePlay) {
-                      Overlay.of(context)?.insert(activePlaylistOverlay);
-                      setState(() {
-                        isactivePlay = false;
-                      });
-                    } else {
-                      if (activePlaylistOverlay.mounted) {
-                        activePlaylistOverlay.remove();
-                      }
-                      setState(() {
-                        isactivePlay = true;
-                      });
-                    }
-                  }
-                : null,
-          ),
+          ValueListenableBuilder<List>(
+              valueListenable: activeList,
+              builder: (context, _activeList, child) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.playlist_play,
+                    color: (_activeList.length > 0) ? textGray : badgeDark,
+                    size: 30.0,
+                  ),
+                  onPressed: (_activeList.length > 0)
+                      ? () {
+                          if (isactivePlay) {
+                            Overlay.of(context)?.insert(activePlaylistOverlay);
+                            setState(() {
+                              isactivePlay = false;
+                            });
+                          } else {
+                            if (activePlaylistOverlay.mounted) {
+                              activePlaylistOverlay.remove();
+                            }
+                            setState(() {
+                              isactivePlay = true;
+                            });
+                          }
+                        }
+                      : null,
+                );
+              }),
         if (!isMobile)
           IconButton(
             icon: const Icon(

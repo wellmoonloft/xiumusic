@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../util/localizations.dart';
+import '../../generated/l10n.dart';
 import '../../util/mycss.dart';
 import 'myTextButton.dart';
 
@@ -22,7 +22,7 @@ showMyAlertDialog(BuildContext _context, String _title, String _content) {
         ),
         actions: <Widget>[
           MyTextButton(
-            title: confirmLocal,
+            title: S.of(_context).confrim,
             press: () {
               Navigator.of(_context).pop();
             },

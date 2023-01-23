@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/mainScreen.dart';
 import 'package:xiumusic/util/mycss.dart';
+import 'generated/l10n.dart';
 import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/audioTools.dart';
@@ -79,7 +81,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       //useInheritedMediaQuery: true,
-      title: 'XiuMusic',
+      title: "Xiu Music",
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale.fromSubtags(languageCode: 'zh'),
+        Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+        Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+        Locale.fromSubtags(
+            languageCode: 'zh', scriptCode: 'Hans', countryCode: 'CN'),
+        Locale.fromSubtags(
+            languageCode: 'zh', scriptCode: 'Hant', countryCode: 'TW'),
+        Locale.fromSubtags(
+            languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK'),
+        Locale.fromSubtags(languageCode: 'en'),
+      ],
       theme: ThemeData(
         fontFamily: 'NotoSansSC',
         brightness: Brightness.dark,

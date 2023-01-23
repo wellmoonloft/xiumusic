@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/dbProvider.dart';
-import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
 class AlbumScreen extends StatefulWidget {
@@ -114,9 +114,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(child: Text(albumLocal, style: titleText1)),
+        Container(child: Text(S.of(context).album, style: titleText1)),
         Text(
-          "$albumLocal: " + _albumsnum.toString(),
+          S.of(context).album + ": " + _albumsnum.toString(),
           style: nomalText,
         )
       ],

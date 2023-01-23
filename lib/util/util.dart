@@ -125,3 +125,5 @@ converToTraditional(String simplified) {
   }
   return traditional;
 }
+
+final String version = "v0.1.0";

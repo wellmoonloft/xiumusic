@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
 import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
-import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
 class ArtistsScreen extends StatefulWidget {
@@ -46,18 +46,18 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(child: Text(artistLocal, style: titleText1)),
+        Container(child: Text(S.of(context).artist, style: titleText1)),
         Row(
           children: [
             Text(
-              "艺人: " + artistsnum.toString(),
+              S.of(context).artist + ": " + artistsnum.toString(),
               style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "$albumLocal: " + albumsnum.toString(),
+              S.of(context).album + ": " + albumsnum.toString(),
               style: nomalText,
             ),
           ],
@@ -67,7 +67,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
   }
 
   Widget _buildHeaderWidget() {
-    List<String> _title = [artistLocal, albumLocal];
+    List<String> _title = [S.of(context).artist, S.of(context).album];
     return myRowList(_title, subText);
   }
 

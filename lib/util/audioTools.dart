@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import '../generated/l10n.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import 'httpClient.dart';
@@ -162,7 +163,7 @@ Future<int> newPlaylistDialog(
                     Container(
                       padding: allPadding,
                       child: Text(
-                        "新增播放列表",
+                        S.of(context).create + S.of(context).playlist,
                         style: nomalText,
                       ),
                     ),
@@ -176,7 +177,9 @@ Future<int> newPlaylistDialog(
                           cursorColor: textGray,
                           onSubmitted: (value) {},
                           decoration: InputDecoration(
-                              hintText: "请输入播放列表名称...",
+                              hintText: S.of(context).pleaseInput +
+                                  S.of(context).playlist +
+                                  S.of(context).name,
                               labelStyle: nomalText,
                               border: InputBorder.none,
                               hintStyle: nomalText,
@@ -209,7 +212,7 @@ Future<int> newPlaylistDialog(
                             press: () async {
                               Navigator.of(context).pop(3);
                             },
-                            title: '取消',
+                            title: S.of(context).cancel,
                           ),
                           MyTextButton(
                             press: () async {
@@ -241,7 +244,7 @@ Future<int> newPlaylistDialog(
                                 Navigator.of(context).pop(2);
                               }
                             },
-                            title: '创建',
+                            title: S.of(context).create,
                           )
                         ],
                       ),

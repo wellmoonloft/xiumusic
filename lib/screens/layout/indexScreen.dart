@@ -2,10 +2,10 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
-import '../../util/localizations.dart';
 import '../../util/mycss.dart';
 import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
@@ -102,12 +102,12 @@ class _IndexScreenState extends State<IndexScreen> {
         SliverToBoxAdapter(
           child: Container(
               padding: leftrightPadding,
-              child: Text(indexLocal, style: titleText1)),
+              child: Text(S.of(context).index, style: titleText1)),
         ),
         if (_albums != null && _albums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: "随机专辑",
+            title: S.of(context).random + S.of(context).album,
             controller: _randomAlbumcontroller,
           )),
         if (_albums != null && _albums!.length > 0)
@@ -119,7 +119,7 @@ class _IndexScreenState extends State<IndexScreen> {
               child: Container(
             padding: allPadding,
             child: Text(
-              "最多播放歌曲",
+              S.of(context).most + S.of(context).play + S.of(context).song,
               style: titleText2,
             ),
           )),
@@ -163,7 +163,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_lastalbums != null && _lastalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: "最近添加专辑",
+            title: S.of(context).last + S.of(context).add + S.of(context).album,
             controller: _lastAlbumcontroller,
           )),
         if (_lastalbums != null && _lastalbums!.length > 0)

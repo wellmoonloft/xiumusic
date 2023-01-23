@@ -3,12 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
+import '../../generated/l10n.dart';
 import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
 import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
-import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
@@ -65,14 +65,16 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         position: RelativeRect.fromLTRB(_x, _y, _x, _y),
         items: [
           PopupMenuItem(
-            child: Text('移除当前歌曲'),
+            child: Text(S.of(context).delete + S.of(context).song),
             value: _index.toString(),
           ),
         ]).then((value) async {
       if (value != null) {
         await delSongfromPlaylist(activeID.value, value);
         await getPlaylistsFromNet();
-        MyToast.show(context: context, message: "删除成功");
+        MyToast.show(
+            context: context,
+            message: S.of(context).delete + S.of(context).success);
         _getSongs(activeID.value);
       }
     });
@@ -140,13 +142,13 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                           press: () {
                             indexValue.value = 2;
                           },
-                          title: "$playlistLocal",
+                          title: S.of(context).playlist,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "创建人: " + _artist,
+                          S.of(context).createuser + ": " + _artist,
                           style: nomalText,
                         ),
                       ],
@@ -159,14 +161,16 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     child: Row(
                       children: [
                         Text(
-                          "$songLocal: " + _songsnum.toString(),
+                          S.of(context).song + ": " + _songsnum.toString(),
                           style: nomalText,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          "$drationLocal: " + formatDuration(_duration),
+                          S.of(context).dration +
+                              ": " +
+                              formatDuration(_duration),
                           style: nomalText,
                         ),
                       ],
@@ -179,7 +183,9 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     child: Row(
                       children: [
                         Text(
-                          "修改日期: " + timeISOtoString(_changed),
+                          S.of(context).udpateDate +
+                              ": " +
+                              timeISOtoString(_changed),
                           style: nomalText,
                         ),
                       ],
@@ -191,7 +197,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                   Container(
                       child: Row(children: [
                     Text(
-                      "$playCountLocal: " + _playCount.toString(),
+                      S.of(context).playCount + ": " + _playCount.toString(),
                       style: nomalText,
                     ),
                     SizedBox(
@@ -210,20 +216,20 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                                 contentTextStyle: nomalText,
                                 backgroundColor: badgeDark,
                                 title: Text(
-                                  "删除",
+                                  S.of(context).delete,
                                 ),
                                 content: Text(
-                                  "是否删除" + _albumsname + "?",
+                                  S.of(context).delete + _albumsname + "?",
                                 ),
                                 actions: <Widget>[
                                   MyTextButton(
-                                    title: cancelLocal,
+                                    title: S.of(_context).cancel,
                                     press: () {
                                       Navigator.of(_context).pop();
                                     },
                                   ),
                                   MyTextButton(
-                                    title: confirmLocal,
+                                    title: S.of(_context).confrim,
                                     press: () async {
                                       await deletePlaylist(_palylistId);
                                       await DbProvider.instance
@@ -237,7 +243,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                             },
                           );
                         },
-                        title: "删除")
+                        title: S.of(context).delete)
                   ]))
                 ],
               ),
@@ -250,10 +256,10 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [
-      songLocal,
-      drationLocal,
-      bitRangeLocal,
-      playCountLocal
+      S.of(context).song,
+      S.of(context).dration,
+      S.of(context).bitRange,
+      S.of(context).playCount
     ];
     return myRowList(_title, subText);
   }
@@ -291,7 +297,10 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                             activeID.value, index.toString());
                         await getPlaylistsFromNet();
                         _getSongs(activeID.value);
-                        MyToast.show(context: context, message: "删除成功");
+                        MyToast.show(
+                            context: context,
+                            message:
+                                S.of(context).delete + S.of(context).success);
                       },
                       background: Container(
                         color: badgeRed,

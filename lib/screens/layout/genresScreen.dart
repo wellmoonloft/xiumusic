@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
 import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../util/mycss.dart';
-import '../../util/localizations.dart';
 import '../common/myStructure.dart';
 
 class GenresScreen extends StatefulWidget {
@@ -45,27 +45,27 @@ class _GenresScreenState extends State<GenresScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(child: Text(genresLocal, style: titleText1)),
+        Container(child: Text(S.of(context).genres, style: titleText1)),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              "$genresLocal: " + genresnum.toString(),
+              S.of(context).genres + ": " + genresnum.toString(),
               style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "$albumLocal: " + albumsnum.toString(),
+              S.of(context).album + ": " + albumsnum.toString(),
               style: nomalText,
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "$songLocal: " + songsnum.toString(),
+              S.of(context).song + ": " + songsnum.toString(),
               style: nomalText,
             ),
           ],
@@ -75,7 +75,11 @@ class _GenresScreenState extends State<GenresScreen> {
   }
 
   Widget _buildHeaderWidget() {
-    List<String> _title = [nameLocal, albumLocal, songLocal];
+    List<String> _title = [
+      S.of(context).name,
+      S.of(context).album,
+      S.of(context).song
+    ];
     return myRowList(_title, subText);
   }
 

@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../generated/l10n.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
-import '../../util/localizations.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
 
@@ -102,12 +102,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [
-      songLocal,
-      albumLocal,
-      artistLocal,
-      if (!isMobile) drationLocal,
-      if (!isMobile) bitRangeLocal,
-      if (!isMobile) playCountLocal
+      S.of(context).song,
+      S.of(context).album,
+      S.of(context).artist,
+      if (!isMobile) S.of(context).dration,
+      if (!isMobile) S.of(context).bitRange,
+      if (!isMobile) S.of(context).playCount
     ];
     return myRowList(_title, subText);
   }
@@ -119,8 +119,10 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         MyTextInput(
           control: searchController,
-          label: searchLocal,
-          hintLabel: "请输入歌曲名...",
+          label: S.of(context).search,
+          hintLabel: S.of(context).pleaseInput +
+              S.of(context).song +
+              S.of(context).name,
           hideText: false,
           icon: Icons.search,
           press: () {
@@ -133,8 +135,9 @@ class _SearchScreenState extends State<SearchScreen> {
         SizedBox(height: 10),
         Container(
             child: (_songs != null && _songs!.length > 0)
-                ? Text("结果:" + _songs!.length.toString(), style: nomalText)
-                : Text("结果: 0", style: nomalText)),
+                ? Text(S.of(context).result + ":" + _songs!.length.toString(),
+                    style: nomalText)
+                : Text(S.of(context).result + ": 0", style: nomalText)),
       ],
     );
   }

@@ -4,9 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/localizations.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../components/myAudio/playerControBar.dart';
@@ -26,15 +26,10 @@ class PlayScreen extends StatefulWidget {
   _PlayScreenState createState() => _PlayScreenState();
 }
 
-class _PlayScreenState extends State<PlayScreen>
-// with AutomaticKeepAliveClientMixin
-{
+class _PlayScreenState extends State<PlayScreen> {
   var lyricUI = UINetease();
   var lyricPadding = 40.0;
   var playing = true;
-
-  // @override
-  // bool get wantKeepAlive => true;
 
   @override
   initState() {
@@ -101,7 +96,10 @@ class _PlayScreenState extends State<PlayScreen>
                     Container(
                       height: 50,
                       width: !isMobile ? _width / 2 : _width,
-                      child: Text((value.isEmpty) ? "未知" : value["title"],
+                      child: Text(
+                          (value.isEmpty)
+                              ? S.of(context).unknown
+                              : value["title"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -111,8 +109,8 @@ class _PlayScreenState extends State<PlayScreen>
                         width: !isMobile ? _width / 2 : _width,
                         child: Text(
                           (value.isEmpty)
-                              ? "未知"
-                              : artistLocal + ": " + value["artist"],
+                              ? S.of(context).unknown
+                              : S.of(context).artist + ": " + value["artist"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: nomalText,
@@ -125,8 +123,8 @@ class _PlayScreenState extends State<PlayScreen>
                         width: !isMobile ? _width / 2 : _width,
                         child: Text(
                           (value.isEmpty)
-                              ? "未知"
-                              : albumLocal + ": " + value["album"],
+                              ? S.of(context).unknown
+                              : S.of(context).album + ": " + value["album"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: nomalText,
@@ -167,7 +165,7 @@ class _PlayScreenState extends State<PlayScreen>
                       : Size(windowsWidth.value, windowsHeight.value - 385),
                   emptyBuilder: () => Center(
                     child: Text(
-                      "No lyrics",
+                      S.of(context).no + S.of(context).lyric,
                       style: lyricUI.getOtherMainTextStyle(),
                     ),
                   ),
@@ -176,7 +174,6 @@ class _PlayScreenState extends State<PlayScreen>
                       children: [
                         IconButton(
                             onPressed: () {
-                              LyricsLog.logD("点击事件");
                               confirm.call();
                               //setState(() {
                               widget.player

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:xiumusic/screens/common/myTextButton.dart';
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/dbProvider.dart';
@@ -81,7 +82,12 @@ class _PlayListScreenState extends State<PlayListScreen> {
   }
 
   Widget _buildHeaderWidget() {
-    List<String> _title = ["名称", "歌曲数", "创建人", "修改时间"];
+    List<String> _title = [
+      S.of(context).name,
+      S.of(context).song,
+      S.of(context).createuser,
+      S.of(context).udpateDate
+    ];
     return myRowList(_title, subText);
   }
 
@@ -96,7 +102,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  child: Text("播放列表", style: titleText1),
+                  child: Text(S.of(context).playlist, style: titleText1),
                 ),
                 Row(
                   children: [
@@ -107,29 +113,37 @@ class _PlayListScreenState extends State<PlayListScreen> {
                           _getPlaylist();
                           switch (value) {
                             case 0:
-                              showMyAlertDialog(context, "成功", "新建成功");
+                              showMyAlertDialog(context, S.of(context).success,
+                                  S.of(context).create + S.of(context).success);
                               break;
                             case 1:
-                              showMyAlertDialog(context, "失败", "新建失败");
+                              showMyAlertDialog(context, S.of(context).notive,
+                                  S.of(context).create + S.of(context).failure);
                               break;
                             case 2:
-                              showMyAlertDialog(context, "提示", "请输入列表名称");
+                              showMyAlertDialog(
+                                  context,
+                                  S.of(context).notive,
+                                  S.of(context).pleaseInput +
+                                      S.of(context).playlist +
+                                      S.of(context).name);
                               break;
                             case 3:
                               break;
                             default:
-                              showMyAlertDialog(context, "成功", "新建成功");
+                              showMyAlertDialog(context, S.of(context).success,
+                                  S.of(context).create + S.of(context).success);
                           }
                         });
                       },
-                      title: '新建',
+                      title: S.of(context).create,
                     ),
                     SizedBox(
                       width: 15,
                     ),
                     Container(
                       child: Text(
-                        "播放列表: " + _playlistnum.toString(),
+                        S.of(context).playlist + ": " + _playlistnum.toString(),
                         style: nomalText,
                       ),
                     )

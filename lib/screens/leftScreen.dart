@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import '../generated/l10n.dart';
 import '../models/notifierValue.dart';
 import '../util/mycss.dart';
-import '../util/localizations.dart';
 
 class LeftScreen extends StatefulWidget {
   const LeftScreen({
@@ -26,35 +26,35 @@ class _LeftScreenState extends State<LeftScreen> {
                   indexValue.value = 0;
                   if (isMobile) Navigator.pop(context);
                 },
-                title: indexLocal,
+                title: S.of(context).index,
                 icon: Icons.home),
             MyTextIconButton(
                 press: () {
                   indexValue.value = 2;
                   if (isMobile) Navigator.pop(context);
                 },
-                title: playlistLocal,
+                title: S.of(context).playlist,
                 icon: Icons.queue_music),
             MyTextIconButton(
                 press: () {
                   indexValue.value = 3;
                   if (isMobile) Navigator.pop(context);
                 },
-                title: favoriteLocal,
+                title: S.of(context).favorite,
                 icon: Icons.favorite),
             MyTextIconButton(
                 press: () {
                   indexValue.value = 4;
                   if (isMobile) Navigator.pop(context);
                 },
-                title: albumLocal,
+                title: S.of(context).album,
                 icon: Icons.album),
             MyTextIconButton(
                 press: () {
                   indexValue.value = 5;
                   if (isMobile) Navigator.pop(context);
                 },
-                title: artistLocal,
+                title: S.of(context).artist,
                 icon: Icons.people_alt),
             // MyTextIconButton(
             //     press: () {
@@ -69,7 +69,7 @@ class _LeftScreenState extends State<LeftScreen> {
                     indexValue.value = 7;
                     if (isMobile) Navigator.pop(context);
                   },
-                  title: "搜索歌词",
+                  title: S.of(context).search + S.of(context).lyric,
                   icon: Icons.public),
           ],
         ));
