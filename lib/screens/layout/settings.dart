@@ -32,6 +32,8 @@ class _SettingsState extends State<Settings>
   final taskTimecontroller = new TextEditingController();
   late TabController tabController;
   late ServerInfo _myServerInfo;
+  String _selectedSort = 'en';
+  List<DropdownMenuItem<String>> _sortItems = [];
 
   List<Tab> myTabs = <Tab>[
     Tab(text: ""),
@@ -144,6 +146,18 @@ class _SettingsState extends State<Settings>
       Tab(text: S.current.other + S.current.settings),
     ];
     tabController = TabController(length: myTabs.length, vsync: this);
+    _sortItems = [
+      DropdownMenuItem(
+          value: "en", child: Text(S.current.english, style: nomalText)),
+      DropdownMenuItem(
+          value: "zh", child: Text(S.current.chinese, style: nomalText)),
+      DropdownMenuItem(
+          value: "zh_Hans",
+          child: Text(S.current.simplified, style: nomalText)),
+      DropdownMenuItem(
+          value: "zh_Hant",
+          child: Text(S.current.traditional, style: nomalText))
+    ];
   }
 
   @override
@@ -365,34 +379,83 @@ class _SettingsState extends State<Settings>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "系统设置",
+                      S.of(context).appearance + S.of(context).settings,
                       style: titleText2,
                     ),
-                    MyTextButton(
-                        press: () async {
-                          showMyAlertDialog(context, S.of(context).notive,
-                              "暂时未开放，默认不自动刷新，新增歌曲请点击手动刷新");
-                        },
-                        title: S.of(context).save + S.of(context).settings),
+                    // MyTextButton(
+                    //     press: () async {
+                    //       showMyAlertDialog(context, S.of(context).notive,
+                    //           "暂时未开放，默认不自动刷新，新增歌曲请点击手动刷新");
+                    //     },
+                    //     title: S.of(context).save + S.of(context).settings),
                   ],
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                MyTextInput(
-                  control: taskTimecontroller,
-                  label: "定时任务间隔时间",
-                  hintLabel: S.of(context).pleaseInput + "间隔时间（分钟）",
-                  hideText: false,
-                  icon: Icons.watch_later,
-                  titleStyle: nomalText,
-                  keyboardType: TextInputType.number,
-                  mainaxis: MainAxisAlignment.spaceBetween,
-                  crossaxis: CrossAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      S.of(context).language,
+                      style: nomalText,
+                    ),
+                    Container(
+                      decoration: circularBorder,
+                      padding: EdgeInsets.only(
+                          left: 10, top: 5, right: 10, bottom: 5),
+                      width: 200,
+                      height: 35,
+                      child: Theme(
+                          data: Theme.of(context).copyWith(
+                            canvasColor: badgeDark,
+                          ),
+                          child: DropdownButton(
+                            value: _selectedSort,
+                            items: _sortItems,
+                            isDense: true,
+                            isExpanded: true,
+                            underline: Container(),
+                            onChanged: (value) {
+                              switch (value) {
+                                case "en":
+                                  S.load(Locale('en', ''));
+                                  break;
+                                case "zh":
+                                  S.load(Locale('zh', ''));
+                                  break;
+                                case "zh_Hans":
+                                  S.load(Locale('zh', 'Hans'));
+                                  break;
+                                case "zh_Hant":
+                                  S.load(Locale('zh', 'Hant'));
+                                  break;
+                                default:
+                              }
+                              setState(() {
+                                _selectedSort = value.toString();
+                              });
+
+                              indexValue.value = 0;
+                            },
+                          )),
+                    )
+                  ],
                 ),
+                // MyTextInput(
+                //   control: taskTimecontroller,
+                //   label: "定时任务间隔时间",
+                //   hintLabel: S.of(context).pleaseInput + "间隔时间（分钟）",
+                //   hideText: false,
+                //   icon: Icons.watch_later,
+                //   titleStyle: nomalText,
+                //   keyboardType: TextInputType.number,
+                //   mainaxis: MainAxisAlignment.spaceBetween,
+                //   crossaxis: CrossAxisAlignment.center,
+                // ),
               ],
             ))
       ]),

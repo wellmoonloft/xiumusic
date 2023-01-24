@@ -59,6 +59,12 @@
     "lyricDownloadSuccess":"歌詞下載成功，請檢查並綁定",
     "info":"訊息",
     "my":"我的",
-    "net":"雲端"
+    "net":"雲端",
+    "appearance":"外觀",
+    "language":"語言",
+    "english":"英文",
+    "chinese":"中文",
+    "simplified":"簡體中文",
+    "traditional":"正體中文"
 
 }

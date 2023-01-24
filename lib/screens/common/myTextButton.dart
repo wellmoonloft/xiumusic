@@ -20,7 +20,9 @@ class MyTextButton extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                decoration: TextDecoration.underline, color: textGray)),
+                decoration: TextDecoration.underline,
+                color: textGray,
+                fontSize: 14)),
       ),
     );
   }

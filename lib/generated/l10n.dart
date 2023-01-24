@@ -639,6 +639,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Appearance `
+  String get appearance {
+    return Intl.message(
+      'Appearance ',
+      name: 'appearance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language `
+  String get language {
+    return Intl.message(
+      'Language ',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `English`
+  String get english {
+    return Intl.message(
+      'English',
+      name: 'english',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chinese`
+  String get chinese {
+    return Intl.message(
+      'Chinese',
+      name: 'chinese',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Simplified`
+  String get simplified {
+    return Intl.message(
+      'Simplified',
+      name: 'simplified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Traditional`
+  String get traditional {
+    return Intl.message(
+      'Traditional',
+      name: 'traditional',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

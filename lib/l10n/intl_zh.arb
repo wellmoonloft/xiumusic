@@ -59,6 +59,12 @@
     "lyricDownloadSuccess":"歌词下载成功，请检查并绑定",
     "info":"信息",
     "my":"我的",
-    "net":"云端"
+    "net":"云端",
+    "appearance":"外观",
+    "language":"语言",
+    "english":"英文",
+    "chinese":"中文",
+    "simplified":"简体中文",
+    "traditional":"繁体中文"
 
 }

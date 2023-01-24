@@ -59,6 +59,13 @@
     "lyricDownloadSuccess":"Lyric Download Success,Please check it and Binding",
     "info":"Infomation",
     "my":"My ",
-    "net":"Net "
+    "net":"Net ",
+    "appearance":"Appearance ",
+    "language":"Language ",
+    "english":"English",
+    "chinese":"Chinese",
+    "simplified":"Simplified",
+    "traditional":"Traditional"
+   
 
 }

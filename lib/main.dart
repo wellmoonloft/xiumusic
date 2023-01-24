@@ -88,22 +88,20 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        Locale.fromSubtags(languageCode: 'zh'),
-        Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
-        Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
-        Locale.fromSubtags(
-            languageCode: 'zh', scriptCode: 'Hans', countryCode: 'CN'),
-        Locale.fromSubtags(
-            languageCode: 'zh', scriptCode: 'Hant', countryCode: 'TW'),
-        Locale.fromSubtags(
-            languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK'),
-        Locale.fromSubtags(languageCode: 'en'),
-      ],
-      theme: ThemeData(
-        fontFamily: 'NotoSansSC',
-        brightness: Brightness.dark,
-      ),
+      // supportedLocales: [
+      //   Locale.fromSubtags(languageCode: 'zh'),
+      //   Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
+      //   Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
+      //   Locale.fromSubtags(
+      //       languageCode: 'zh', scriptCode: 'Hans', countryCode: 'CN'),
+      //   Locale.fromSubtags(
+      //       languageCode: 'zh', scriptCode: 'Hant', countryCode: 'TW'),
+      //   Locale.fromSubtags(
+      //       languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK'),
+      //   Locale.fromSubtags(languageCode: 'en'),
+      // ],
+      supportedLocales: S.delegate.supportedLocales,
+      theme: ThemeData(fontFamily: 'NotoSansSC', brightness: Brightness.dark),
 
       home: MainScreen(player: player),
     );
