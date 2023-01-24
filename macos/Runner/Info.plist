@@ -28,11 +28,17 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>UILaunchStoryboardName</key>
-	<string>MainMenu.xib</string>
-    <key>UIBackgroundModes</key>
+	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
-	</array>	
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>MainMenu.xib</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.music</string>	
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<string>NO</string>	
+
+	
 </dict>
 </plist>

@@ -63,14 +63,20 @@ class _LeftScreenState extends State<LeftScreen> {
             //     },
             //     title: genresLocal,
             //     icon: Icons.public),
-            if (isSNetease.value)
-              MyTextIconButton(
-                  press: () {
-                    indexValue.value = 7;
-                    if (isMobile) Navigator.pop(context);
-                  },
-                  title: S.of(context).search + S.of(context).lyric,
-                  icon: Icons.public),
+
+            ValueListenableBuilder<bool>(
+                valueListenable: isSNetease,
+                builder: (context, _value, child) {
+                  return _value
+                      ? MyTextIconButton(
+                          press: () {
+                            indexValue.value = 7;
+                            if (isMobile) Navigator.pop(context);
+                          },
+                          title: S.of(context).search + S.of(context).lyric,
+                          icon: Icons.public)
+                      : Container();
+                })
           ],
         ));
   }

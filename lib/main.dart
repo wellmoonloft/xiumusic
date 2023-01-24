@@ -19,7 +19,7 @@ void main() async {
   if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = WindowOptions(
-      size: Size(1024, 768),
+      size: Size(1280, 800),
       minimumSize: Size(800, 600),
       //maximumSize: Size(1024, 768),
       center: true,
