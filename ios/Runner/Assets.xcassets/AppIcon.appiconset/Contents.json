@@ -61,7 +61,7 @@
       "size" : "20x20"
     },
     {
-      "filename" : "iPhone Notification-20@2x.png",
+      "filename" : "iPad Notifications-20@2x.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
@@ -73,7 +73,7 @@
       "size" : "29x29"
     },
     {
-      "filename" : "iPhone Settings-29@2x.png",
+      "filename" : "iPad Settings-29@2x.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
