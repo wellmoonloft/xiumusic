@@ -28,6 +28,7 @@ This is developed and debugged on the server environment of [Navidrome](https://
 
 **Notice! ! !** The downloaded lyrics are saved in the database of the APP document. Currently, there is no export function. Play less and do not blame me for not being able to output lyrics.
 
+[The v0.4 version of macOS has been released and can be used directly](https://apps.apple.com/us/app/xiu-music/id1667473545)
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 

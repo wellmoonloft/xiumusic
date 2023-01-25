@@ -24,6 +24,7 @@
 
 注意！！！下载了歌词是保存在APP文档的数据库里的，目前没有做导出功能，少玩一点，省的歌词找不出来怪我
 
+[macOS的v0.4版本已经上架了，可以直接用](https://apps.apple.com/us/app/xiu-music/id1667473545)
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
