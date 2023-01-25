@@ -242,7 +242,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                               ? () {
                                   if (isactivePlay) {
                                     Overlay.of(context)
-                                        ?.insert(activePlaylistOverlay);
+                                        .insert(activePlaylistOverlay);
                                     setState(() {
                                       isactivePlay = false;
                                     });
@@ -274,7 +274,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                               ),
                               onPressed: () {
                                 if (isVolume) {
-                                  Overlay.of(context)?.insert(volumeOverlay);
+                                  Overlay.of(context).insert(volumeOverlay);
                                   setState(() {
                                     isVolume = false;
                                   });

@@ -91,8 +91,8 @@
   - [x] 建表、增删改查、初始化
 
 - [ ] 用户体验  理论支持IOS/安卓/macOS/Windows/Linux
-  - [x] 调试过的: macOS iOS
-  - [ ] 还没调试的: 安卓/Windows/Linux 理论上应该没问题
+  - [x] 调试过的: macOS iOS 安卓
+  - [ ] 还没调试的: Windows/Linux 理论上应该没问题
   - [ ] 后台抛错到前台
   - [ ] 桌面快捷键  
   - [ ] 分页    

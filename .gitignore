@@ -32,6 +32,7 @@
 /build/
 /web/
 /windows/
+/linux/
 .vscode
 
 # Web related

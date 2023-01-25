@@ -24,7 +24,7 @@ class MyToast {
           ));
     });
 
-    Overlay.of(context)?.insert(overlayEntry);
+    Overlay.of(context).insert(overlayEntry);
     Future.delayed(Duration(seconds: 1)).then((value) {
       overlayEntry.remove();
     });

@@ -275,7 +275,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                   onPressed: (_activeList.length > 0)
                       ? () {
                           if (isactivePlay) {
-                            Overlay.of(context)?.insert(activePlaylistOverlay);
+                            Overlay.of(context).insert(activePlaylistOverlay);
                             setState(() {
                               isactivePlay = false;
                             });

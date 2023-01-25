@@ -95,8 +95,8 @@ lock screen playback
    - [x] Create table, add, delete, modify, check, initialize
 
 - [ ] User Experience Theoretical support for IOS/Android/macOS/Windows/Linux
-   - [x] Debugged: macOS iOS
-   - [ ] Not yet debugged: Android/Windows/Linux should be fine in theory
+   - [x] Debugged: macOS iOS Android
+   - [ ] Not yet debugged: Windows/Linux should be fine in theory
    - [ ] Throw an error from the background to the foreground
    - [ ] desktop shortcut key
    - [ ] tab
