@@ -180,11 +180,32 @@ class DbProvider {
       batch.delete(ServerInfoTable);
       //清空数据库，后面前端加个提示
       batch.delete(ServerStatusTable);
+      batch.delete(PlaylistTable);
+      batch.delete(PlaylistAndSongTable);
       batch.delete(GenresTable);
       batch.delete(ArtistsTable);
       batch.delete(AlbumsTable);
       batch.delete(SongsTable);
-      var res = await batch.commit();
+      batch.delete(FavoriteTable);
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  forchrefresh() async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
+      batch.delete(PlaylistTable);
+      batch.delete(PlaylistAndSongTable);
+      batch.delete(GenresTable);
+      batch.delete(ArtistsTable);
+      batch.delete(AlbumsTable);
+      batch.delete(SongsTable);
+      batch.delete(FavoriteTable);
+      var res = await batch.commit(noResult: true);
       return res;
     } catch (err) {
       print('err is 👉 $err');
@@ -235,8 +256,6 @@ class DbProvider {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(GenresTable);
-      await batch.commit(noResult: true);
       for (Genres element in _genres) {
         batch.insert(GenresTable, element.toJson());
       }
@@ -278,8 +297,6 @@ class DbProvider {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(PlaylistTable, where: "id=?", whereArgs: [_playlist.id]);
-      await batch.commit(noResult: true);
       batch.insert(PlaylistTable, _playlist.toJson());
 
       var res = await batch.commit(noResult: true);
@@ -295,19 +312,6 @@ class DbProvider {
       Batch batch = db.batch();
       batch.update(PlaylistTable, _playlist.toJson(),
           where: "id=?", whereArgs: [_playlist.id]);
-
-      var res = await batch.commit(noResult: true);
-      return res;
-    } catch (err) {
-      print('err is 👉 $err');
-    }
-  }
-
-  delAllPlaylists() async {
-    try {
-      final db = await instance.db;
-      Batch batch = db.batch();
-      batch.delete(PlaylistTable);
 
       var res = await batch.commit(noResult: true);
       return res;
@@ -368,19 +372,29 @@ class DbProvider {
     }
   }
 
-  addForcePlaylistSongs(
-      List<PlaylistAndSong> _playlistAndSong, String _playlistId) async {
+  delPlaylistSongs(String _songId) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
 
       batch.delete(PlaylistAndSongTable,
-          where: "playlistId=?", whereArgs: [_playlistId]);
-      await batch.commit(noResult: true);
+          where: "songId=?", whereArgs: [_songId]);
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addForcePlaylistSongs(
+      List<PlaylistAndSong> _playlistAndSong, String _playlistId) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
       for (PlaylistAndSong _element in _playlistAndSong) {
         batch.insert(PlaylistAndSongTable, _element.toJson());
       }
-
       var res = await batch.commit(noResult: true);
       return res;
     } catch (err) {
@@ -437,8 +451,6 @@ class DbProvider {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(ArtistsTable);
-      await batch.commit(noResult: true);
       for (Artists element in _artists) {
         batch.insert(ArtistsTable, element.toJson());
       }
@@ -489,12 +501,24 @@ class DbProvider {
     }
   }
 
-  addAlbums(List<Albums> _albums, String artistId) async {
+  delAlbums() async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(AlbumsTable, where: "artistId = ?", whereArgs: [artistId]);
+      batch.delete(AlbumsTable);
       await batch.commit(noResult: true);
+
+      var res = await batch.commit(noResult: true);
+      return res;
+    } catch (err) {
+      print('err is 👉 $err');
+    }
+  }
+
+  addAlbums(List<Albums> _albums) async {
+    try {
+      final db = await instance.db;
+      Batch batch = db.batch();
       for (Albums element in _albums) {
         batch.insert(AlbumsTable, element.toJson());
       }
@@ -573,12 +597,10 @@ class DbProvider {
     }
   }
 
-  addSongs(List<Songs> _songs, String albumId) async {
+  addSongs(List<Songs> _songs) async {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(SongsTable, where: "albumId = ?", whereArgs: [albumId]);
-      await batch.commit(noResult: true);
       for (Songs element in _songs) {
         batch.insert(SongsTable, element.toJson());
       }
@@ -690,8 +712,6 @@ class DbProvider {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
-      batch.delete(FavoriteTable, where: "id = ?", whereArgs: [_favorite.id]);
-      await batch.commit(noResult: true);
       batch.insert(FavoriteTable, _favorite.toJson());
       var res = await batch.commit(noResult: true);
       return res;

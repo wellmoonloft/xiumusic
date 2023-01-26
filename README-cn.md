@@ -190,3 +190,10 @@ AndroidManifest.xml
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) 实现图片缓存，使用简单。
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) 整个pub上面独一份，使用简单。
+
+
+
+v0.4.1
+- 把初始化数据库、强制刷新数据库以及定时刷新数据库（20分钟）的操作移到后台
+- 定时刷新数据库会根据服务器的歌曲数以及文件夹数来判断是否需要刷新（这里有一个问题，当一个人在同一个文件夹对同一个专辑的歌曲进行了删除操作，定时刷新是不会开始的，需要手动强制刷新）
+- 在MacOS上点击关闭按钮最小化

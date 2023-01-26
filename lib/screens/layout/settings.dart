@@ -10,7 +10,6 @@ import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../common/myAlertDialog.dart';
-import '../common/myLoadingDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
@@ -64,17 +63,8 @@ class _SettingsState extends State<Settings>
             hash: _randomString,
             neteaseapi: "");
         await DbProvider.instance.addServerInfo(_serverInfo);
-        //初始化服务器
-        showMyLoadingDialog(context, S.of(context).initialize);
-        //初始化服务器
-        await getGenresFromNet();
-        await getArtistsFromNet();
-        await sacnServerStatus();
-        await getFavoriteFromNet();
-        await getPlaylistsFromNet();
-        Navigator.pop(context);
-
         isServers.value = true;
+        initialize();
       } else {
         showMyAlertDialog(
             context, S.of(context).notive, S.of(context).serverErr);
@@ -189,15 +179,11 @@ class _SettingsState extends State<Settings>
                       return isServers.value
                           ? MyTextButton(
                               press: () async {
-                                showMyLoadingDialog(
-                                    context, S.of(context).refresh);
-                                //初始化服务器
-                                await getGenresFromNet();
-                                await getArtistsFromNet();
-                                await sacnServerStatus();
-                                await getFavoriteFromNet();
-                                await getPlaylistsFromNet();
-                                Navigator.pop(context);
+                                initialize();
+                                showMyAlertDialog(
+                                    context,
+                                    S.of(context).enforceRefresh,
+                                    S.of(context).refresh);
                               },
                               title: S.of(context).enforceRefresh)
                           : Container();
@@ -385,12 +371,6 @@ class _SettingsState extends State<Settings>
                       S.of(context).appearance + S.of(context).settings,
                       style: titleText2,
                     ),
-                    // MyTextButton(
-                    //     press: () async {
-                    //       showMyAlertDialog(context, S.of(context).notive,
-                    //           "暂时未开放，默认不自动刷新，新增歌曲请点击手动刷新");
-                    //     },
-                    //     title: S.of(context).save + S.of(context).settings),
                   ],
                 ),
                 SizedBox(
@@ -445,17 +425,6 @@ class _SettingsState extends State<Settings>
                     )
                   ],
                 ),
-                // MyTextInput(
-                //   control: taskTimecontroller,
-                //   label: "定时任务间隔时间",
-                //   hintLabel: S.of(context).pleaseInput + "间隔时间（分钟）",
-                //   hideText: false,
-                //   icon: Icons.watch_later,
-                //   titleStyle: nomalText,
-                //   keyboardType: TextInputType.number,
-                //   mainaxis: MainAxisAlignment.spaceBetween,
-                //   crossaxis: CrossAxisAlignment.center,
-                // ),
               ],
             ))
       ]),

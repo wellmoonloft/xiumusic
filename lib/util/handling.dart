@@ -2,9 +2,12 @@ import '../models/myModel.dart';
 import 'dbProvider.dart';
 import 'httpClient.dart';
 
+bool isDBbusy = false;
+
 //0.对比服务器变化是否要更新
 sacnServerStatus() async {
   final _net = await getServerStatus();
+  if (_net["folderCount"] == null) _net["folderCount"] = 0;
   ServerStatus _netstatus = ServerStatus.fromJson(_net);
 
   final _database = await DbProvider.instance.getServerStatus();
@@ -15,8 +18,7 @@ sacnServerStatus() async {
     return true;
   } else {
     ServerStatus _databasestatus = _database;
-    if (_netstatus.count == _databasestatus.count &&
-        _netstatus.folderCount == _databasestatus.folderCount) {
+    if (_netstatus.count == _databasestatus.count) {
       //不需要更新
       return false;
     } else {
@@ -24,6 +26,15 @@ sacnServerStatus() async {
       return true;
     }
   }
+}
+
+initialize() async {
+  await DbProvider.instance.forchrefresh();
+  await getArtistsFromNet();
+  await getGenresFromNet();
+  await sacnServerStatus();
+  await getFavoriteFromNet();
+  await getPlaylistsFromNet();
 }
 
 //1.流派
@@ -66,12 +77,14 @@ getAlbumsFromNet(String artistId) async {
     if (_element["playCount"] == null) _element["playCount"] = 0;
     if (_element["year"] == null) _element["year"] = 0;
     if (_element["genre"] == null) _element["genre"] = "0";
+    if (_element["duration"] == null) _element["duration"] = 0;
     _element["coverUrl"] = _url;
     Albums _tem = Albums.fromJson(_element);
     _list.add(_tem);
     getSongsFromNet(_tem.id);
   }
-  await DbProvider.instance.addAlbums(_list, artistId);
+
+  await DbProvider.instance.addAlbums(_list);
 }
 
 getSongsFromNet(String albumId) async {
@@ -89,7 +102,7 @@ getSongsFromNet(String albumId) async {
     Songs _tem = Songs.fromJson(_element);
     _list.add(_tem);
   }
-  await DbProvider.instance.addSongs(_list, albumId);
+  await DbProvider.instance.addSongs(_list);
 }
 
 //4.收藏
@@ -124,7 +137,6 @@ getFavoriteFromNet() async {
 getPlaylistsFromNet() async {
   final _playlistsList = await getPlaylists();
   if (_playlistsList != null && _playlistsList.length > 0) {
-    await DbProvider.instance.delAllPlaylists();
     for (var _playlists in _playlistsList) {
       //写playlist表
       String _url = await getCoverArt(_playlists['id']);

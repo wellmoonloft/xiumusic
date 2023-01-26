@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/audioTools.dart';
 import 'util/dbProvider.dart';
+import 'util/handling.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,15 +52,15 @@ void main() async {
       isSNetease.value = true;
     }
     //自动刷新服务器
-    // Timer.periodic(const Duration(minutes: 20), (timer) async {
-    //   print("开始刷新" + DateTime.now().toString());
-    //   await getGenresFromNet();
-    //   await getArtistsFromNet();
-    //   await sacnServerStatus();
-    //   await getFavoriteFromNet();
-    //   await getPlaylistsFromNet();
-    //   print("刷新完成" + DateTime.now().toString());
-    // });
+    Timer.periodic(const Duration(minutes: 20), (timer) async {
+      print("开始刷新" + DateTime.now().toString());
+      var _isModified = await sacnServerStatus();
+      if (_isModified) {
+        print("需要刷新");
+        initialize();
+      }
+      print("刷新完成" + DateTime.now().toString());
+    });
   }
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   //注册唯一播放器

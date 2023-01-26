@@ -17,7 +17,7 @@ class MyTextButton extends StatelessWidget {
       onTap: press,
       child: Container(
         child: Text(title,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 decoration: TextDecoration.underline,

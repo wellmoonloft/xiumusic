@@ -18,10 +18,10 @@ class MySliverControlList extends StatelessWidget {
     double _rightWidth = 0;
     if (isMobile) {
       _rightWidth =
-          (windowsHeight.value / 4 > 300) ? 300 : windowsHeight.value / 4;
+          (windowsHeight.value / 4 > 250) ? 250 : windowsHeight.value / 4;
     } else {
-      _rightWidth = ((windowsWidth.value - drawerWidth) / 4 > 300)
-          ? 300
+      _rightWidth = ((windowsWidth.value - drawerWidth) / 4 > 250)
+          ? 250
           : (windowsWidth.value - drawerWidth) / 4;
     }
     return Container(
@@ -77,7 +77,14 @@ class MySliverControlList extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                    Container(child: Text(_tem.artist, style: subText))
+                    Container(
+                        constraints: BoxConstraints(
+                          maxWidth: _rightWidth - 67,
+                        ),
+                        child: Text(_tem.artist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: subText))
                   ],
                 )),
           );

@@ -16,7 +16,7 @@ So I need an APP like this:
 
 1. Support lyrics
 
-2. Support fuzzy search (simplified and traditional, this is a big problem, for example, if you search for Jay Chou and Jay Chou)
+2. Support fuzzy search (simplified and traditional, this is a big problem, for example, if you search for 周杰伦 and 周杰倫)
 
 3. Concise (listening to music is listening to music)
 
@@ -194,3 +194,8 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) Realize waterfall flow, easy to use.
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) implements image caching, easy to use.
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) There is only one copy on the entire pub, which is easy to use.
+
+v0.4.1
+- Move the operations of initializing the database, forcing the database to refresh, and regularly refreshing the database (20 minutes) to the background
+- The scheduled refresh database will judge whether it needs to be refreshed according to the number of songs and folders on the server (there is a problem here, when a person deletes the songs of the same album in the same folder, the scheduled refresh will not start , you need to manually force refresh)
+- Tap the close button to minimize on MacOS

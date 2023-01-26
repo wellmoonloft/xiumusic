@@ -6,7 +6,6 @@ import 'package:xiumusic/models/myModel.dart';
 import '../../generated/l10n.dart';
 import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
-import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../../util/util.dart';
@@ -71,7 +70,23 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         ]).then((value) async {
       if (value != null) {
         await delSongfromPlaylist(activeID.value, value);
-        await getPlaylistsFromNet();
+        //。2.删除播放列表歌曲对应表
+        var _playlisttem = await getPlaylistbyId(activeID.value);
+
+        String _url = await getCoverArt(activeID.value);
+        Playlist _playlist = Playlist(
+            id: _playlisttem['id'],
+            name: _playlisttem['name'],
+            songCount: _playlisttem['songCount'],
+            duration: _playlisttem['duration'],
+            public: _playlisttem['public'] ? 0 : 1,
+            owner: _playlisttem['owner'],
+            created: _playlisttem['created'],
+            changed: _playlisttem['changed'],
+            imageUrl: _url);
+        await DbProvider.instance.updatePlaylists(_playlist);
+        Songs _song = _songslist[_index];
+        await DbProvider.instance.delPlaylistSongs(_song.id);
         MyToast.show(
             context: context,
             message: S.of(context).delete + S.of(context).success);
@@ -295,7 +310,25 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
 
                         await delSongfromPlaylist(
                             activeID.value, index.toString());
-                        await getPlaylistsFromNet();
+
+                        //。2.删除播放列表歌曲对应表
+                        var _playlisttem =
+                            await getPlaylistbyId(activeID.value);
+
+                        String _url = await getCoverArt(activeID.value);
+                        Playlist _playlist = Playlist(
+                            id: _playlisttem['id'],
+                            name: _playlisttem['name'],
+                            songCount: _playlisttem['songCount'],
+                            duration: _playlisttem['duration'],
+                            public: _playlisttem['public'] ? 0 : 1,
+                            owner: _playlisttem['owner'],
+                            created: _playlisttem['created'],
+                            changed: _playlisttem['changed'],
+                            imageUrl: _url);
+                        await DbProvider.instance.updatePlaylists(_playlist);
+                        Songs _song = _songslist[index];
+                        await DbProvider.instance.delPlaylistSongs(_song.id);
                         _getSongs(activeID.value);
                         MyToast.show(
                             context: context,

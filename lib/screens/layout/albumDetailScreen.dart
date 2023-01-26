@@ -132,12 +132,23 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         SizedBox(
                           width: 10,
                         ),
-                        MyTextButton(
-                            press: () {
-                              activeID.value = _artistID;
-                              indexValue.value = 9;
-                            },
-                            title: _artist),
+                        Container(
+                            width: isMobile
+                                ? windowsWidth.value -
+                                    screenImageWidthAndHeight -
+                                    30 -
+                                    60
+                                : windowsWidth.value -
+                                    drawerWidth -
+                                    screenImageWidthAndHeight -
+                                    30 -
+                                    60,
+                            child: MyTextButton(
+                                press: () {
+                                  activeID.value = _artistID;
+                                  indexValue.value = 9;
+                                },
+                                title: _artist)),
                       ],
                     ),
                   ),
