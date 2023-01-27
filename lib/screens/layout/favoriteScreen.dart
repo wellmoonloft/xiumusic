@@ -34,16 +34,22 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       for (var _element in _favorite) {
         Favorite _tem = _element;
         if (_tem.type == "song") {
-          Songs _song = await DbProvider.instance.getSongById(_tem.id);
-          _songs1.add(_song);
+          var _song = await DbProvider.instance.getSongById(_tem.id);
+          if (_song != null) {
+            _songs1.add(_song);
+          }
         } else if (_tem.type == "album") {
           var _albumsList = await DbProvider.instance.getAlbumsByID(_tem.id);
-          Albums album = _albumsList[0];
-          _albums1.add(album);
+          if (_albumsList != null) {
+            Albums album = _albumsList[0];
+            _albums1.add(album);
+          }
         } else if (_tem.type == "artist") {
           var _artistsList = await DbProvider.instance.getArtistsByID(_tem.id);
-          Artists artist = _artistsList[0];
-          _artists1.add(artist);
+          if (_artistsList != null) {
+            Artists artist = _artistsList[0];
+            _artists1.add(artist);
+          }
         }
       }
       setState(() {

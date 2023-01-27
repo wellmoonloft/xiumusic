@@ -60,8 +60,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
               removeTop: true,
               child: MasonryGridView.count(
                 crossAxisCount: _count,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
+                mainAxisSpacing: 15,
+                crossAxisSpacing: 15,
                 itemCount: _albums!.length,
                 itemBuilder: (context, index) {
                   Albums _tem = _albums![index];

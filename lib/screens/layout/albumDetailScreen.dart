@@ -115,7 +115,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               30 -
                               15,
                       child: Text(_albumsname,
-                          maxLines: 2,
+                          maxLines: isMobile ? 1 : 2,
                           overflow: TextOverflow.ellipsis,
                           style: titleText2)),
                   SizedBox(
@@ -161,23 +161,22 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         S.of(context).year + ": " + _year.toString(),
                         style: nomalText,
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      _genre == "0"
-                          ? Container()
-                          : MyTextButton(
-                              press: () {}, title: S.of(context).genres),
-                      _genre == "0"
-                          ? Container()
-                          : SizedBox(
-                              width: 10,
-                            ),
-                      _genre == "0"
-                          ? Container()
-                          : MyTextButton(press: () {}, title: _genre),
                     ],
                   ),
+                  if (_genre != "0")
+                    SizedBox(
+                      height: 5,
+                    ),
+                  if (_genre != "0")
+                    Row(
+                      children: [
+                        MyTextButton(press: () {}, title: S.of(context).genres),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        MyTextButton(press: () {}, title: _genre),
+                      ],
+                    ),
                   SizedBox(
                     height: 5,
                   ),
@@ -187,15 +186,19 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       style: nomalText,
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Text(
-                      S.of(context).dration + ": " + formatDuration(_duration),
-                      style: nomalText,
+                  if (!isMobile)
+                    SizedBox(
+                      height: 5,
                     ),
-                  ),
+                  if (!isMobile)
+                    Container(
+                      child: Text(
+                        S.of(context).dration +
+                            ": " +
+                            formatDuration(_duration),
+                        style: nomalText,
+                      ),
+                    ),
                   Container(
                     child: Row(
                       children: [
@@ -314,7 +317,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 238,
+        top: 218,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

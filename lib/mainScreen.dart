@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/mycss.dart';
 import 'screens/bottomScreen.dart';
@@ -62,11 +63,11 @@ class MainScreen extends StatelessWidget {
                           ? windowsWidth.value
                           : windowsWidth.value - drawerWidth,
                       color: bkColor,
-                      child: ValueListenableBuilder<bool>(
-                          valueListenable: isServers,
+                      child: ValueListenableBuilder<ServerInfo>(
+                          valueListenable: isServersInfo,
                           builder: ((context, _value, child) {
                             return Container(
-                              child: _value
+                              child: _value.baseurl.isNotEmpty
                                   ? ValueListenableBuilder<int>(
                                       valueListenable: indexValue,
                                       builder: ((context, value, child) {

@@ -63,7 +63,8 @@ class _SettingsState extends State<Settings>
             hash: _randomString,
             neteaseapi: "");
         await DbProvider.instance.addServerInfo(_serverInfo);
-        isServers.value = true;
+        isServersInfo.value = _serverInfo;
+        await sacnServerStatus();
         initialize();
       } else {
         showMyAlertDialog(
@@ -85,7 +86,7 @@ class _SettingsState extends State<Settings>
 
       _myServerInfo.neteaseapi = _serverURL;
       await DbProvider.instance.updateServerInfo(_myServerInfo);
-      isSNetease.value = true;
+      isServersInfo.value = _myServerInfo;
       showMyAlertDialog(context, S.of(context).success,
           S.of(context).save + S.of(context).success);
     } else {
@@ -97,12 +98,9 @@ class _SettingsState extends State<Settings>
     final _infoList = await DbProvider.instance.getServerInfo();
     if (_infoList != null) {
       _myServerInfo = _infoList;
-      if (_myServerInfo.neteaseapi.isNotEmpty) {
-        isSNetease.value = true;
-      }
       if (mounted) {
         setState(() {
-          isServers.value = true;
+          isServersInfo.value = _infoList;
           servercontroller.text = _myServerInfo.baseurl;
           usernamecontroller.text = _myServerInfo.username;
           passwordcontroller.text = "******";
@@ -116,7 +114,8 @@ class _SettingsState extends State<Settings>
     await DbProvider.instance.deleteServerInfo();
     if (mounted) {
       setState(() {
-        isServers.value = false;
+        isServersInfo.value = ServerInfo(
+            baseurl: '', hash: '', neteaseapi: '', salt: '', username: '');
         servercontroller.text = "";
         usernamecontroller.text = "";
         passwordcontroller.text = "";
@@ -173,10 +172,10 @@ class _SettingsState extends State<Settings>
             Text(S.of(context).settings, style: titleText1),
             Row(
               children: [
-                ValueListenableBuilder<bool>(
-                    valueListenable: isServers,
+                ValueListenableBuilder<ServerInfo>(
+                    valueListenable: isServersInfo,
                     builder: ((context, _value, child) {
-                      return isServers.value
+                      return _value.baseurl.isNotEmpty
                           ? MyTextButton(
                               press: () async {
                                 initialize();
@@ -229,14 +228,16 @@ class _SettingsState extends State<Settings>
                           S.of(context).song + S.of(context).server,
                           style: titleText2,
                         ),
-                        ValueListenableBuilder<bool>(
-                            valueListenable: isServers,
+                        ValueListenableBuilder<ServerInfo>(
+                            valueListenable: isServersInfo,
                             builder: ((context, _value, child) {
                               return MyTextButton(
                                   press: () {
-                                    _value ? _deleteServer() : _saveServer();
+                                    _value.baseurl.isNotEmpty
+                                        ? _deleteServer()
+                                        : _saveServer();
                                   },
-                                  title: _value
+                                  title: _value.baseurl.isNotEmpty
                                       ? S.of(context).disConnect
                                       : S.of(context).save);
                             }))
@@ -310,14 +311,14 @@ class _SettingsState extends State<Settings>
                           S.of(context).lyric + S.of(context).server,
                           style: titleText2,
                         ),
-                        ValueListenableBuilder<bool>(
-                            valueListenable: isSNetease,
+                        ValueListenableBuilder<ServerInfo>(
+                            valueListenable: isServersInfo,
                             builder: ((context, _value, child) {
-                              return _value
+                              return _value.neteaseapi.isNotEmpty
                                   ? Container()
                                   : MyTextButton(
                                       press: () async {
-                                        if (isServers.value) {
+                                        if (_value.baseurl.isNotEmpty) {
                                           _saveNetease();
                                         } else {
                                           showMyAlertDialog(
@@ -417,9 +418,15 @@ class _SettingsState extends State<Settings>
                               }
                               setState(() {
                                 _selectedSort = value.toString();
+                                myTabs = <Tab>[
+                                  Tab(
+                                      text: S.current.server +
+                                          S.current.settings),
+                                  Tab(
+                                      text:
+                                          S.current.other + S.current.settings),
+                                ];
                               });
-
-                              indexValue.value = 0;
                             },
                           )),
                     )

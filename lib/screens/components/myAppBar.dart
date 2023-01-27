@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 
@@ -28,16 +29,16 @@ class _MyAppBarState extends State<MyAppBar> {
     return Row(
       children: [
         Container(
-            child: ValueListenableBuilder<bool>(
-                valueListenable: isServers,
+            child: ValueListenableBuilder<ServerInfo>(
+                valueListenable: isServersInfo,
                 builder: ((context, _value, child) {
                   return IconButton(
                     icon: Icon(
                       Icons.search,
-                      color: _value ? textGray : badgeDark,
+                      color: _value.baseurl.isNotEmpty ? textGray : badgeDark,
                       size: 15,
                     ),
-                    onPressed: _value
+                    onPressed: _value.baseurl.isNotEmpty
                         ? () async {
                             indexValue.value = 10;
                           }

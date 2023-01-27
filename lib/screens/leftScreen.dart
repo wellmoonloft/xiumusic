@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../generated/l10n.dart';
+import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import '../util/mycss.dart';
 
@@ -64,10 +65,10 @@ class _LeftScreenState extends State<LeftScreen> {
             //     title: genresLocal,
             //     icon: Icons.public),
 
-            ValueListenableBuilder<bool>(
-                valueListenable: isSNetease,
+            ValueListenableBuilder<ServerInfo>(
+                valueListenable: isServersInfo,
                 builder: (context, _value, child) {
-                  return _value
+                  return _value.neteaseapi.isNotEmpty
                       ? MyTextIconButton(
                           press: () {
                             indexValue.value = 7;
@@ -96,11 +97,11 @@ class MyTextIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-        valueListenable: isServers,
+    return ValueListenableBuilder<ServerInfo>(
+        valueListenable: isServersInfo,
         builder: ((context, _value, child) {
           return InkWell(
-            onTap: _value ? press : null,
+            onTap: _value.baseurl.isNotEmpty ? press : null,
             child: Container(
               padding: updownPadding,
               child: Row(
@@ -108,11 +109,14 @@ class MyTextIconButton extends StatelessWidget {
                   Icon(
                     icon,
                     size: 15,
-                    color: _value ? textGray : badgeDark,
+                    color: _value.baseurl.isNotEmpty ? textGray : badgeDark,
                   ),
                   SizedBox(width: 15),
                   Text(title,
-                      style: TextStyle(color: _value ? textGray : badgeDark)),
+                      style: TextStyle(
+                          color: _value.baseurl.isNotEmpty
+                              ? textGray
+                              : badgeDark)),
                   Spacer(),
                 ],
               ),

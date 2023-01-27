@@ -5,8 +5,10 @@ import 'httpClient.dart';
 bool isDBbusy = false;
 
 //0.对比服务器变化是否要更新
+//0. Compare server changes and whether to update
 sacnServerStatus() async {
   final _net = await getServerStatus();
+
   if (_net["folderCount"] == null) _net["folderCount"] = 0;
   ServerStatus _netstatus = ServerStatus.fromJson(_net);
 
@@ -14,14 +16,17 @@ sacnServerStatus() async {
 
   if (_database == null) {
     //新数据库，需要更新
+    //New database, need to update
     await DbProvider.instance.addServerStatus(_netstatus);
     return true;
   } else {
     ServerStatus _databasestatus = _database;
     if (_netstatus.count == _databasestatus.count) {
       //不需要更新
+      //songs count no changed.
       return false;
     } else {
+      //need refresh.
       await DbProvider.instance.addServerStatus(_netstatus);
       return true;
     }
@@ -32,7 +37,6 @@ initialize() async {
   await DbProvider.instance.forchrefresh();
   await getArtistsFromNet();
   await getGenresFromNet();
-  await sacnServerStatus();
   await getFavoriteFromNet();
   await getPlaylistsFromNet();
 }
@@ -51,58 +55,65 @@ getGenresFromNet() async {
 //2.艺人/专辑/歌曲
 getArtistsFromNet() async {
   List<Artists> _list = [];
-  Map _genresList = await getArtists();
-  for (var _element in _genresList["index"]) {
-    var _temp = _element["artist"];
-    for (dynamic _element1 in _temp) {
-      //这个lastfm的网址开始报错了，暂时这么写
-      if (_element1["artistImageUrl"] == null ||
-          _element1["artistImageUrl"] ==
-              "https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png")
-        _element1["artistImageUrl"] =
-            "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
-      Artists _tem = Artists.fromJson(_element1);
-      _list.add(_tem);
-      getAlbumsFromNet(_tem.id);
+  var _artisList = await getArtists();
+  if (_artisList != null) {
+    for (var _element in _artisList["index"]) {
+      var _temp = _element["artist"];
+      for (dynamic _element1 in _temp) {
+        //这个lastfm的网址开始报错了，暂时这么写
+        if (_element1["artistImageUrl"] == null ||
+            _element1["artistImageUrl"] ==
+                "https://lastfm.freetls.fastly.net/i/u/174s/2a96cbd8b46e442fc41c2b86b821562f.png")
+          _element1["artistImageUrl"] =
+              "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
+        Artists _tem = Artists.fromJson(_element1);
+        _list.add(_tem);
+        await getAlbumsFromNet(_tem.id);
+      }
     }
+    await DbProvider.instance.addArtists(_list);
   }
-  await DbProvider.instance.addArtists(_list);
 }
 
 getAlbumsFromNet(String artistId) async {
   List<Albums> _list = [];
-  Map _genresList = await getAlbums(artistId);
-  for (dynamic _element in _genresList["album"]) {
-    String _url = await getCoverArt(_element["id"]);
-    if (_element["playCount"] == null) _element["playCount"] = 0;
-    if (_element["year"] == null) _element["year"] = 0;
-    if (_element["genre"] == null) _element["genre"] = "0";
-    if (_element["duration"] == null) _element["duration"] = 0;
-    _element["coverUrl"] = _url;
-    Albums _tem = Albums.fromJson(_element);
-    _list.add(_tem);
-    getSongsFromNet(_tem.id);
-  }
+  var _genresList = await getAlbums(artistId);
+  if (_genresList != null) {
+    for (dynamic _element in _genresList["album"]) {
+      String _url = await getCoverArt(_element["id"]);
+      if (_element["playCount"] == null) _element["playCount"] = 0;
+      if (_element["year"] == null) _element["year"] = 0;
+      if (_element["genre"] == null) _element["genre"] = "0";
+      if (_element["duration"] == null) _element["duration"] = 0;
+      _element["coverUrl"] = _url;
+      Albums _tem = Albums.fromJson(_element);
+      _list.add(_tem);
+      await getSongsFromNet(_tem.id);
+    }
 
-  await DbProvider.instance.addAlbums(_list);
+    await DbProvider.instance.addAlbums(_list);
+  }
 }
 
 getSongsFromNet(String albumId) async {
   List<Songs> _list = [];
-  Map _songsList = await getSongs(albumId);
-
-  for (dynamic _element in _songsList["song"]) {
-    String _stream = await getServerInfo("stream");
-    String _url = await getCoverArt(_element["id"]);
-    if (_element["playCount"] == null) _element["playCount"] = 0;
-    if (_element["year"] == null) _element["year"] = 0;
-    if (_element["genre"] == null) _element["genre"] = "0";
-    _element["stream"] = _stream + '&id=' + _element["id"];
-    _element["coverUrl"] = _url;
-    Songs _tem = Songs.fromJson(_element);
-    _list.add(_tem);
+  var _songsList = await getSongs(albumId);
+  if (_songsList != null) {
+    for (dynamic _element in _songsList["song"]) {
+      String _stream = await getServerInfo("stream");
+      String _url = await getCoverArt(_element["id"]);
+      if (_element["playCount"] == null) _element["playCount"] = 0;
+      if (_element["year"] == null) _element["year"] = 0;
+      if (_element["genre"] == null) _element["genre"] = "0";
+      if (_element["duration"] == null) _element["duration"] = 0;
+      if (_element["bitRate"] == null) _element["bitRate"] = 0;
+      _element["stream"] = _stream + '&id=' + _element["id"];
+      _element["coverUrl"] = _url;
+      Songs _tem = Songs.fromJson(_element);
+      _list.add(_tem);
+    }
+    await DbProvider.instance.addSongs(_list);
   }
-  await DbProvider.instance.addSongs(_list);
 }
 
 //4.收藏

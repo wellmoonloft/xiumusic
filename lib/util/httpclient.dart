@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import '../models/myModel.dart';
-import 'dbProvider.dart';
+import '../models/notifierValue.dart';
 
 testServer(String _baseUrl, String _username, String _password) async {
   try {
@@ -29,27 +29,25 @@ testServer(String _baseUrl, String _username, String _password) async {
   }
 }
 
-_getServerInfo(String _api) async {
-  final _infoList = await DbProvider.instance.getServerInfo();
-  String _request = _infoList.baseurl +
+_getServerInfo(String _api) {
+  String _request = isServersInfo.value.baseurl +
       '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
-      _infoList.username +
+      isServersInfo.value.username +
       '&s=' +
-      _infoList.salt +
+      isServersInfo.value.salt +
       '&t=' +
-      _infoList.hash;
+      isServersInfo.value.hash;
   return _request;
 }
 
-getServerInfo(String _api) async {
-  final _infoList = await DbProvider.instance.getServerInfo();
-  String _request = _infoList.baseurl +
+getServerInfo(String _api) {
+  String _request = isServersInfo.value.baseurl +
       '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
-      _infoList.username +
+      isServersInfo.value.username +
       '&s=' +
-      _infoList.salt +
+      isServersInfo.value.salt +
       '&t=' +
-      _infoList.hash;
+      isServersInfo.value.hash;
   return _request;
 }
 
@@ -329,8 +327,7 @@ getCoverArt(String _id) async {
 }
 
 searchNeteasAPI(String _name, String _type) async {
-  final _infoList = await DbProvider.instance.getServerInfo();
-  String _neteaseapi = _infoList.neteaseapi;
+  String _neteaseapi = isServersInfo.value.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request = _neteaseapi +
       "/search?limit=5&type=$_type&offset=0&keywords=$_name&timestamp=$_timestamp";
@@ -351,8 +348,7 @@ searchNeteasAPI(String _name, String _type) async {
 }
 
 getLyric(String _songId) async {
-  final _infoList = await DbProvider.instance.getServerInfo();
-  String _neteaseapi = _infoList.neteaseapi;
+  String _neteaseapi = isServersInfo.value.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request = _neteaseapi + "/lyric?id=$_songId&timestamp=$_timestamp";
   try {
@@ -410,6 +406,7 @@ getStarred() async {
     }
   } catch (e) {
     print(e);
+    return false;
   }
 }
 

@@ -9,7 +9,6 @@ import 'package:window_manager/window_manager.dart';
 import 'package:xiumusic/mainScreen.dart';
 import 'package:xiumusic/util/mycss.dart';
 import 'generated/l10n.dart';
-import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/audioTools.dart';
 import 'util/dbProvider.dart';
@@ -37,6 +36,7 @@ void main() async {
   } else {
     isMobile = true;
     //移动端开启后台播放
+    //Enable background playback on the mobile terminal
     await JustAudioBackground.init(
       androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
       androidNotificationChannelName: 'Audio playback',
@@ -46,26 +46,25 @@ void main() async {
 
   final _infoList = await DbProvider.instance.getServerInfo();
   if (_infoList != null) {
-    isServers.value = true;
-    ServerInfo _myServerInfo = _infoList;
-    if (_myServerInfo.neteaseapi.isNotEmpty) {
-      isSNetease.value = true;
-    }
+    isServersInfo.value = _infoList;
     //自动刷新服务器
+    //auto refresh server
     Timer.periodic(const Duration(minutes: 20), (timer) async {
-      print("开始刷新" + DateTime.now().toString());
+      print("Start compare..." + DateTime.now().toString());
       var _isModified = await sacnServerStatus();
       if (_isModified) {
-        print("需要刷新");
-        initialize();
+        print("need refresh");
+        await initialize();
       }
-      print("刷新完成" + DateTime.now().toString());
+      print("refresh done" + DateTime.now().toString());
     });
   }
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   //注册唯一播放器
+  //Register Unique Player
   final AudioPlayer _player = AudioPlayer();
   //监听器
+  //register listener
   audioCurrentIndexStream(_player);
   audioActiveSongListener(_player);
 

@@ -2,17 +2,16 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:just_audio/just_audio.dart';
 
+import 'myModel.dart';
+
 //左侧按钮更改右侧的监控器，默认起始页为首页 0
 ValueNotifier<int> indexValue = ValueNotifier<int>(0);
 
 //监听当前歌曲
 ValueNotifier<String> activeSongValue = ValueNotifier<String>("1");
 
-//监听服务器是否保存
-ValueNotifier<bool> isServers = ValueNotifier<bool>(false);
-
-//监听服务器是否保存
-ValueNotifier<bool> isSNetease = ValueNotifier<bool>(false);
+ValueNotifier<ServerInfo> isServersInfo = ValueNotifier<ServerInfo>(
+    ServerInfo(baseurl: '', hash: '', neteaseapi: '', salt: '', username: ''));
 
 //监听当前资源ID 艺人/专辑/歌曲都是它
 ValueNotifier<String> activeID = ValueNotifier<String>("1");

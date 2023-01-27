@@ -187,6 +187,8 @@ class DbProvider {
       batch.delete(AlbumsTable);
       batch.delete(SongsTable);
       batch.delete(FavoriteTable);
+      batch.delete(SongsAndLyricTable);
+      batch.delete("sqlite_sequence");
       var res = await batch.commit(noResult: true);
       return res;
     } catch (err) {
@@ -205,6 +207,28 @@ class DbProvider {
       batch.delete(AlbumsTable);
       batch.delete(SongsTable);
       batch.delete(FavoriteTable);
+
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        PlaylistTable,
+      ]);
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        PlaylistAndSongTable,
+      ]);
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        GenresTable,
+      ]);
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        ArtistsTable,
+      ]);
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        AlbumsTable,
+      ]);
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        SongsTable,
+      ]);
+      db.delete("sqlite_sequence", where: "name=?", whereArgs: [
+        FavoriteTable,
+      ]);
       var res = await batch.commit(noResult: true);
       return res;
     } catch (err) {
