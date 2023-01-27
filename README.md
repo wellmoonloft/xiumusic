@@ -29,6 +29,10 @@ This is developed and debugged on the server environment of [Navidrome](https://
 **Notice! ! !** The downloaded lyrics are saved in the database of the APP document. Currently, there is no export function. Play less and do not blame me for not being able to output lyrics.
 
 [The v0.4 version of macOS has been released and can be used directly](https://apps.apple.com/us/app/xiu-music/id1667473545)
+This version has two problems:
+1. The UI is locked during initialization. If your songs exceed 5000, it may be locked
+2. Judgment refresh is based on the two data of getScanStatus interface, but I just learned that one of the data is unique to Navidrome, so it may need to be manually refreshed
+v0.4.1 solves this problem, but I don't want to submit appstore frequently
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
@@ -195,7 +199,3 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) implements image caching, easy to use.
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) There is only one copy on the entire pub, which is easy to use.
 
-v0.4.1
-- Move the operations of initializing the database, forcing the database to refresh, and regularly refreshing the database (20 minutes) to the background
-- The scheduled refresh database will judge whether it needs to be refreshed according to the number of songs and folders on the server (there is a problem here, when a person deletes the songs of the same album in the same folder, the scheduled refresh will not start , you need to manually force refresh)
-- Tap the close button to minimize on MacOS
