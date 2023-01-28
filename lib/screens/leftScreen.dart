@@ -45,6 +45,7 @@ class _LeftScreenState extends State<LeftScreen> {
                 icon: Icons.favorite),
             MyTextIconButton(
                 press: () {
+                  activeID.value = "1";
                   indexValue.value = 4;
                   if (isMobile) Navigator.pop(context);
                 },
@@ -57,14 +58,13 @@ class _LeftScreenState extends State<LeftScreen> {
                 },
                 title: S.of(context).artist,
                 icon: Icons.people_alt),
-            // MyTextIconButton(
-            //     press: () {
-            //       indexValue.value = 6;
-            //       if (isMobile) Navigator.pop(context);
-            //     },
-            //     title: genresLocal,
-            //     icon: Icons.public),
-
+            MyTextIconButton(
+                press: () {
+                  indexValue.value = 6;
+                  if (isMobile) Navigator.pop(context);
+                },
+                title: S.of(context).genres,
+                icon: Icons.public),
             ValueListenableBuilder<ServerInfo>(
                 valueListenable: isServersInfo,
                 builder: (context, _value, child) {
@@ -114,6 +114,7 @@ class MyTextIconButton extends StatelessWidget {
                   SizedBox(width: 15),
                   Text(title,
                       style: TextStyle(
+                          fontSize: 14,
                           color: _value.baseurl.isNotEmpty
                               ? textGray
                               : badgeDark)),

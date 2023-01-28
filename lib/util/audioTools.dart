@@ -26,7 +26,12 @@ void audioCurrentIndexStream(AudioPlayer _player) {
       isLastSongNotifier.value = playlist.last == currentItem;
 
       MediaItem _tag = currentItem.tag;
-      Songs _song = await DbProvider.instance.getSongById(_tag.id);
+      var _songtem = await getSong(_tag.id);
+      String _stream = getServerInfo("stream");
+      String _url = getCoverArt(_songtem["id"]);
+      _songtem["stream"] = _stream + '&id=' + _songtem["id"];
+      _songtem["coverUrl"] = _url;
+      Songs _song = Songs.fromJson(_songtem);
       //拼装当前歌曲
       Map _activeSong = new Map();
       _activeSong["value"] = _song.id;
@@ -35,8 +40,7 @@ void audioCurrentIndexStream(AudioPlayer _player) {
       _activeSong["title"] = _song.title;
       _activeSong["album"] = _song.album;
       _activeSong["albumId"] = _song.albumId;
-      var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
-      if (_favorite != null) {
+      if (_songtem["starred"] != null) {
         _activeSong["starred"] = true;
       } else {
         _activeSong["starred"] = false;
@@ -86,7 +90,7 @@ Future<void> setAudioSource(AudioPlayer _player) async {
             artist: _song.artist,
             genre: _song.genre,
             title: _song.title,
-            artUri: Uri.parse(_song.coverUrl)),
+            artUri: Uri.parse(getCoverArt(_song.id))),
       ),
     );
   }
@@ -103,7 +107,12 @@ Future<void> setAudioSource(AudioPlayer _player) async {
   _player.play();
   final currentItem = _player.sequenceState!.currentSource;
   MediaItem _tag = currentItem?.tag;
-  Songs _song = await DbProvider.instance.getSongById(_tag.id);
+  var _songtem = await getSong(_tag.id);
+  String _stream = getServerInfo("stream");
+  String _url = getCoverArt(_songtem["id"]);
+  _songtem["stream"] = _stream + '&id=' + _songtem["id"];
+  _songtem["coverUrl"] = _url;
+  Songs _song = Songs.fromJson(_songtem);
   //拼装当前歌曲
   Map _activeSong = new Map();
   _activeSong["value"] = _song.id;
@@ -112,8 +121,7 @@ Future<void> setAudioSource(AudioPlayer _player) async {
   _activeSong["title"] = _song.title;
   _activeSong["album"] = _song.album;
   _activeSong["albumId"] = _song.albumId;
-  var _favorite = await DbProvider.instance.getFavoritebyId(_song.id);
-  if (_favorite != null) {
+  if (_songtem["starred"] != null) {
     _activeSong["starred"] = true;
   } else {
     _activeSong["starred"] = false;
@@ -221,21 +229,6 @@ Future<int> newPlaylistDialog(
                                     await createPlaylist(controller.text, "");
                                 if (_response != null &&
                                     _response["status"] == "ok") {
-                                  var _playlist = _response["playlist"];
-                                  String _url =
-                                      await getCoverArt(_playlist['id']);
-                                  Playlist _tem = Playlist(
-                                      changed: _playlist["changed"],
-                                      created: _playlist["created"],
-                                      duration: _playlist["duration"],
-                                      id: _playlist["id"],
-                                      name: _playlist["name"],
-                                      owner: _playlist["owner"],
-                                      public: _playlist["public"] ? 0 : 1,
-                                      songCount: _playlist["songCount"],
-                                      imageUrl: _url);
-                                  await DbProvider.instance.addPlaylists(_tem);
-
                                   Navigator.of(context).pop(0);
                                 } else {
                                   Navigator.of(context).pop(1);

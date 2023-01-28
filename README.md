@@ -33,6 +33,7 @@ This version has two problems:
 1. The UI is locked during initialization. If your songs exceed 5000, it may be locked
 2. Judgment refresh is based on the two data of getScanStatus interface, but I just learned that one of the data is unique to Navidrome, so it may need to be manually refreshed
 v0.4.1 solves this problem, but I don't want to submit appstore frequently
+Please note that v0.5.0 has updated the table structure, please delete the app and reinstall, do not update or overwrite
 
 ![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
 
@@ -63,24 +64,24 @@ lock screen playback
    - [x] search page
    - [x] Simplified Chinese can search traditional Chinese songs
 
-- [ ] Album
+- [x] Album
    - [x] album list
    - [x] Album Details
-   - [ ] Filter by artist
+   - [x] filter by genre and newest, recent, most
   
 - [x] singer
    - [x] list of singers
    - [x] Artist home page
    - [x] Album Details
   
-- [ ] The genre is temporarily closed, it feels really useless
+- [x] genre
    - [x] page impressions
-   - [ ] Jump to the corresponding album and song
+   - [x] Jump to the corresponding album and song
   
 - [ ] configure
    - [x] Server configuration: test, connect, save server and account information
    - [ ] Personalization: Don't think about it
-   - [x] Multilingual: Made English, Chinese, Simplified Chinese and Traditional Chinese, but it was loaded according to the terminal configuration, and switching was also done, but it was not saved
+   - [x] Multilingual: Made English, Chinese, Simplified Chinese and Traditional Chinese, Load according to the terminal configuration, after saving, load according to the saved
 
 - [x] Lyrics lookup
    - [x] Find the lyrics on Netease Cloud according to the artist and song title
@@ -199,3 +200,8 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) implements image caching, easy to use.
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) There is only one copy on the entire pub, which is easy to use.
 
+v0.5.0
+- Remove most of the database, only keep the server information
+- Modify the size of the progress bar, otherwise it will be particularly bad on mobile phones
+- Add song suffix and exclude ape
+- add genre

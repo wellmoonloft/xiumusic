@@ -51,6 +51,56 @@ getServerInfo(String _api) {
   return _request;
 }
 
+//type:random/newest/highest/frequent/recent/
+//subsonic 1.8.0 alphabeticalByName/alphabeticalByArtist/starred
+//size 10 if no
+//offset 0
+//byGenre  need genre
+//byYear  fromYear  toYear
+getAlbumList(String _type, String _by, int _offset, int _size) async {
+  String _sql = _getServerInfo("getAlbumList2") +
+      '&offset=' +
+      _offset.toString() +
+      '&size=' +
+      _size.toString();
+  switch (_type) {
+    case "byGenre":
+      _sql += '&type=' + _type + '&genre=' + _by;
+      break;
+    default:
+      _sql += '&type=' + _type;
+  }
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _subsonicData = response.data['subsonic-response'];
+      Map albumList = _subsonicData['albumList2'];
+      List albums = albumList['album'];
+
+      return albums;
+    }
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
+search3(String _query) async {
+  String _sql = _getServerInfo("search3") + '&query=' + _query;
+  try {
+    var response = await Dio().get(_sql);
+    if (response.statusCode == 200) {
+      Map _value1 = response.data['subsonic-response'];
+      Map scanStatus = _value1['searchResult3'];
+
+      return scanStatus;
+    }
+  } catch (e) {
+    print(e);
+    return false;
+  }
+}
+
 getServerStatus() async {
   String _sql = await _getServerInfo("getScanStatus");
   try {
@@ -321,8 +371,8 @@ getSong(String _id) async {
   }
 }
 
-getCoverArt(String _id) async {
-  String _sql = await _getServerInfo("getCoverArt");
+getCoverArt(String _id) {
+  String _sql = _getServerInfo("getCoverArt");
   return _sql + '&id=' + _id;
 }
 

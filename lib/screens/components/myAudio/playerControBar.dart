@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../../models/myModel.dart';
 import '../../../models/notifierValue.dart';
-import '../../../util/dbProvider.dart';
 import '../../../util/httpClient.dart';
 import '../../../util/mycss.dart';
 import '../../common/myToast.dart';
@@ -332,7 +331,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                           Favorite _favorite =
                               Favorite(id: _song["value"], type: 'song');
                           await delStarred(_favorite);
-                          await DbProvider.instance.delFavorite(_song["value"]);
+
                           setState(() {
                             activeSong.value["starred"] = false;
                           });
@@ -348,7 +347,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                           Favorite _favorite =
                               Favorite(id: _song["value"], type: 'song');
                           await addStarred(_favorite);
-                          await DbProvider.instance.addFavorite(_favorite);
+
                           setState(() {
                             activeSong.value["starred"] = true;
                           });

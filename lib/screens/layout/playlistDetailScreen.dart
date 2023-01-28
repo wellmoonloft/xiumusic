@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../generated/l10n.dart';
-import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
@@ -25,7 +24,6 @@ class PlaylistDetailScreen extends StatefulWidget {
 
 class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   List<Songs> _songslist = [];
-
   int _songsnum = 0;
   int _playCount = 0;
   int _duration = 0;
@@ -36,11 +34,23 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   String _changed = "2023-01-18T16:37:18Z";
 
   _getSongs(String _playlistId) async {
-    final _playlisttem = await DbProvider.instance.getPlaylistById(_playlistId);
+    final _playlisttem = await getPlaylistbyId(_playlistId);
     if (_playlisttem != null) {
-      Playlist _playlist = _playlisttem;
-      final _songlist =
-          await DbProvider.instance.getPlaylistSongs(_playlisttem.id);
+      String _url = await getCoverArt(_playlisttem['id']);
+      _playlisttem["imageUrl"] = _url;
+      Playlist _playlist = Playlist.fromJson(_playlisttem);
+      List<Songs> _temsong = [];
+      if (_playlisttem["entry"] != null && _playlisttem["entry"].length > 0) {
+        for (var _element in _playlisttem["entry"]) {
+          String _stream = getServerInfo("stream");
+          String _url = await getCoverArt(_element["id"]);
+          _element["stream"] = _stream + '&id=' + _element["id"];
+          _element["coverUrl"] = _url;
+          Songs _song = Songs.fromJson(_element);
+          _temsong.add(_song);
+        }
+      }
+
       setState(() {
         _songsnum = _playlist.songCount;
         _albumsname = _playlist.name;
@@ -49,12 +59,8 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         _changed = _playlist.changed;
         _arturl = _playlist.imageUrl;
         _palylistId = _playlist.id;
+        _songslist = _temsong;
       });
-      if (_songlist != null && _songlist.length > 0) {
-        setState(() {
-          _songslist = _songlist;
-        });
-      }
     }
   }
 
@@ -70,23 +76,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         ]).then((value) async {
       if (value != null) {
         await delSongfromPlaylist(activeID.value, value);
-        //。2.删除播放列表歌曲对应表
-        var _playlisttem = await getPlaylistbyId(activeID.value);
 
-        String _url = await getCoverArt(activeID.value);
-        Playlist _playlist = Playlist(
-            id: _playlisttem['id'],
-            name: _playlisttem['name'],
-            songCount: _playlisttem['songCount'],
-            duration: _playlisttem['duration'],
-            public: _playlisttem['public'] ? 0 : 1,
-            owner: _playlisttem['owner'],
-            created: _playlisttem['created'],
-            changed: _playlisttem['changed'],
-            imageUrl: _url);
-        await DbProvider.instance.updatePlaylists(_playlist);
-        Songs _song = _songslist[_index];
-        await DbProvider.instance.delPlaylistSongs(_song.id);
         MyToast.show(
             context: context,
             message: S.of(context).delete + S.of(context).success);
@@ -247,8 +237,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                                     title: S.of(_context).confrim,
                                     press: () async {
                                       await deletePlaylist(_palylistId);
-                                      await DbProvider.instance
-                                          .delPlaylistById(_palylistId);
+
                                       Navigator.of(_context).pop();
                                       indexValue.value = 2;
                                     },
@@ -311,24 +300,6 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                         await delSongfromPlaylist(
                             activeID.value, index.toString());
 
-                        //。2.删除播放列表歌曲对应表
-                        var _playlisttem =
-                            await getPlaylistbyId(activeID.value);
-
-                        String _url = await getCoverArt(activeID.value);
-                        Playlist _playlist = Playlist(
-                            id: _playlisttem['id'],
-                            name: _playlisttem['name'],
-                            songCount: _playlisttem['songCount'],
-                            duration: _playlisttem['duration'],
-                            public: _playlisttem['public'] ? 0 : 1,
-                            owner: _playlisttem['owner'],
-                            created: _playlisttem['created'],
-                            changed: _playlisttem['changed'],
-                            imageUrl: _url);
-                        await DbProvider.instance.updatePlaylists(_playlist);
-                        Songs _song = _songslist[index];
-                        await DbProvider.instance.delPlaylistSongs(_song.id);
                         _getSongs(activeID.value);
                         MyToast.show(
                             context: context,

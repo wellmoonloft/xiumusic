@@ -6,7 +6,6 @@ import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/dbProvider.dart';
-import '../../util/handling.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../common/myAlertDialog.dart';
@@ -61,11 +60,10 @@ class _SettingsState extends State<Settings>
             username: usernamecontroller.text.toString(),
             salt: _randomNumber,
             hash: _randomString,
-            neteaseapi: "");
+            neteaseapi: "",
+            languageCode: '');
         await DbProvider.instance.addServerInfo(_serverInfo);
         isServersInfo.value = _serverInfo;
-        await sacnServerStatus();
-        initialize();
       } else {
         showMyAlertDialog(
             context, S.of(context).notive, S.of(context).serverErr);
@@ -76,9 +74,7 @@ class _SettingsState extends State<Settings>
   }
 
   _saveNetease() async {
-    if (neteasecontroller.text != "" &&
-        servercontroller.text == _myServerInfo.baseurl &&
-        usernamecontroller.text == _myServerInfo.username) {
+    if (neteasecontroller.text != "") {
       String _serverURL = neteasecontroller.text;
       if (_serverURL.endsWith("/")) {
         _serverURL = _serverURL.substring(0, _serverURL.length - 1);
@@ -100,6 +96,9 @@ class _SettingsState extends State<Settings>
       _myServerInfo = _infoList;
       if (mounted) {
         setState(() {
+          _selectedSort = _myServerInfo.languageCode.isNotEmpty
+              ? _myServerInfo.languageCode
+              : "en";
           isServersInfo.value = _infoList;
           servercontroller.text = _myServerInfo.baseurl;
           usernamecontroller.text = _myServerInfo.username;
@@ -115,7 +114,12 @@ class _SettingsState extends State<Settings>
     if (mounted) {
       setState(() {
         isServersInfo.value = ServerInfo(
-            baseurl: '', hash: '', neteaseapi: '', salt: '', username: '');
+            baseurl: '',
+            hash: '',
+            neteaseapi: '',
+            salt: '',
+            username: '',
+            languageCode: '');
         servercontroller.text = "";
         usernamecontroller.text = "";
         passwordcontroller.text = "";
@@ -129,7 +133,6 @@ class _SettingsState extends State<Settings>
   @override
   initState() {
     super.initState();
-    _getServerInfo();
     myTabs = <Tab>[
       Tab(text: S.current.server + S.current.settings),
       Tab(text: S.current.other + S.current.settings),
@@ -147,6 +150,7 @@ class _SettingsState extends State<Settings>
           value: "zh_Hant",
           child: Text(S.current.traditional, style: nomalText))
     ];
+    _getServerInfo();
   }
 
   @override
@@ -178,7 +182,6 @@ class _SettingsState extends State<Settings>
                       return _value.baseurl.isNotEmpty
                           ? MyTextButton(
                               press: () async {
-                                initialize();
                                 showMyAlertDialog(
                                     context,
                                     S.of(context).enforceRefresh,
@@ -341,7 +344,7 @@ class _SettingsState extends State<Settings>
                     ),
                     SizedBox(
                       height: 10,
-                    ), //网易api监听，再做个左侧菜单隐藏
+                    ),
                     MyTextInput(
                       control: neteasecontroller,
                       label: S.of(context).lyric + S.of(context).server,
@@ -400,7 +403,7 @@ class _SettingsState extends State<Settings>
                             isDense: true,
                             isExpanded: true,
                             underline: Container(),
-                            onChanged: (value) {
+                            onChanged: (value) async {
                               switch (value) {
                                 case "en":
                                   S.load(Locale('en', ''));
@@ -416,6 +419,7 @@ class _SettingsState extends State<Settings>
                                   break;
                                 default:
                               }
+
                               setState(() {
                                 _selectedSort = value.toString();
                                 myTabs = <Tab>[
@@ -427,6 +431,13 @@ class _SettingsState extends State<Settings>
                                           S.current.other + S.current.settings),
                                 ];
                               });
+
+                              if (isServersInfo.value.baseurl.isNotEmpty) {
+                                _myServerInfo.languageCode = value.toString();
+                                await DbProvider.instance
+                                    .updateServerInfo(_myServerInfo);
+                                isServersInfo.value = _myServerInfo;
+                              }
                             },
                           )),
                     )

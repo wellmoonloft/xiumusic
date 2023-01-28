@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
-import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
+import '../../models/notifierValue.dart';
+import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../common/myStructure.dart';
 
@@ -12,23 +13,25 @@ class GenresScreen extends StatefulWidget {
 }
 
 class _GenresScreenState extends State<GenresScreen> {
-  List? _genres;
+  List<Genres> _genres = [];
   int albumsnum = 0;
   int songsnum = 0;
   int genresnum = 0;
 
   _getGenres() async {
-    final _genresList = await DbProvider.instance.getGenres();
+    final _genresList = await getGenres();
     if (_genresList != null) {
+      List<Genres> _genreslist = [];
       for (var element in _genresList) {
-        Genres _tem = element;
-        songsnum += _tem.songCount;
-        albumsnum += _tem.albumCount;
+        Genres _genres = Genres.fromJson(element);
+        _genreslist.add(_genres);
+        songsnum += _genres.songCount;
+        albumsnum += _genres.albumCount;
         genresnum++;
       }
       if (mounted) {
         setState(() {
-          _genres = _genresList;
+          _genres = _genreslist;
         });
       }
     }
@@ -84,7 +87,7 @@ class _GenresScreenState extends State<GenresScreen> {
   }
 
   Widget _itemBuildWidget() {
-    return _genres != null && _genres!.length > 0
+    return _genres.length > 0
         ? Container(
             child: MediaQuery.removePadding(
                 context: context,
@@ -92,16 +95,22 @@ class _GenresScreenState extends State<GenresScreen> {
                 child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: _genres!.length,
+                    itemCount: _genres.length,
                     itemExtent: 50.0, //强制高度为50.0
                     itemBuilder: (BuildContext context, int index) {
-                      Genres _tem = _genres![index];
+                      Genres _tem = _genres[index];
                       List<String> _title = [
                         _tem.value,
                         _tem.albumCount.toString(),
                         _tem.songCount.toString()
                       ];
-                      return ListTile(title: myRowList(_title, nomalText));
+                      return ListTile(
+                          title: InkWell(
+                              onTap: () {
+                                activeID.value = _tem.value;
+                                indexValue.value = 4;
+                              },
+                              child: myRowList(_title, nomalText)));
                     })))
         : Container();
   }

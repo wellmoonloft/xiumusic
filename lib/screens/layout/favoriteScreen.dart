@@ -4,7 +4,7 @@ import 'package:just_audio/just_audio.dart';
 import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/dbProvider.dart';
+import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myStructure.dart';
@@ -25,31 +25,37 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   List<Artists> _artists = [];
 
   _getFavorite() async {
-    var _favorite = await DbProvider.instance.getFavorite();
-
-    if (_favorite != null) {
+    final _favoriteList = await getStarred();
+    if (_favoriteList != null) {
+      var songs = _favoriteList["song"];
+      var albums = _favoriteList["album"];
+      var artists = _favoriteList["artist"];
       List<Songs> _songs1 = [];
       List<Albums> _albums1 = [];
       List<Artists> _artists1 = [];
-      for (var _element in _favorite) {
-        Favorite _tem = _element;
-        if (_tem.type == "song") {
-          var _song = await DbProvider.instance.getSongById(_tem.id);
-          if (_song != null) {
-            _songs1.add(_song);
-          }
-        } else if (_tem.type == "album") {
-          var _albumsList = await DbProvider.instance.getAlbumsByID(_tem.id);
-          if (_albumsList != null) {
-            Albums album = _albumsList[0];
-            _albums1.add(album);
-          }
-        } else if (_tem.type == "artist") {
-          var _artistsList = await DbProvider.instance.getArtistsByID(_tem.id);
-          if (_artistsList != null) {
-            Artists artist = _artistsList[0];
-            _artists1.add(artist);
-          }
+
+      if (songs != null && songs.length > 0) {
+        for (var _song in songs) {
+          String _stream = await getServerInfo("stream");
+          String _url = await getCoverArt(_song["id"]);
+          _song["stream"] = _stream + '&id=' + _song["id"];
+          _song["coverUrl"] = _url;
+          _songs1.add(Songs.fromJson(_song));
+        }
+      }
+      if (albums != null && albums.length > 0) {
+        for (var _album in albums) {
+          String _url = await getCoverArt(_album["id"]);
+          _album["coverUrl"] = _url;
+          _albums1.add(Albums.fromJson(_album));
+        }
+      }
+      if (artists != null && artists.length > 0) {
+        for (var _artist in artists) {
+          String _url = await getCoverArt(_artist["id"]);
+          _artist["artistImageUrl"] = _url;
+
+          _artists1.add(Artists.fromJson(_artist));
         }
       }
       setState(() {

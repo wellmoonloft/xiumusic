@@ -1,11 +1,8 @@
-import 'dart:math';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
-import '../../models/notifierValue.dart';
-import '../../util/dbProvider.dart';
+import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
@@ -18,47 +15,60 @@ class IndexScreen extends StatefulWidget {
 }
 
 class _IndexScreenState extends State<IndexScreen> {
-  ScrollController _lastSongcontroller = ScrollController();
+  ScrollController _recentAlbumscontroller = ScrollController();
   ScrollController _lastAlbumcontroller = ScrollController();
   ScrollController _randomAlbumcontroller = ScrollController();
-  List<Albums>? _albums;
+  ScrollController _mostAlbumscontroller = ScrollController();
+  List<Albums>? _randomalbums;
   List<Albums>? _lastalbums;
-  List<Songs>? _songs;
+  List<Albums>? _mostalbums;
+  List<Albums>? _recentalbums;
 
   _getRandomAlbums() async {
-    final _albumsList = await DbProvider.instance.getAllAlbums();
-    if (_albumsList != null) {
-      List<Albums> _list = [];
-      List<int> _indexList = [];
-      int _count = 0;
-      while (_count < 10) {
-        int _index = Random().nextInt(_albumsList.length);
-        if (!_indexList.contains(_index)) {
-          _indexList.add(_index);
-          _count++;
-        }
-      }
-
-      for (var element in _indexList) {
-        Albums _xx = _albumsList[element];
-        _list.add(_xx);
+    final _albumsList = await getAlbumList("random", "", 0, 10);
+    List<Albums> _list = [];
+    if (_albumsList != null && _albumsList.length > 0) {
+      for (var _element in _albumsList) {
+        String _url = getCoverArt(_element["id"]);
+        _element["coverUrl"] = _url;
+        Albums _album = Albums.fromJson(_element);
+        _list.add(_album);
       }
       if (mounted) {
         setState(() {
-          _albums = _list;
+          _randomalbums = _list;
+        });
+      }
+    }
+  }
+
+  _getMostAlbums() async {
+    final _albumsList = await getAlbumList("frequent", "", 0, 10);
+    List<Albums> _list = [];
+    if (_albumsList != null && _albumsList.length > 0) {
+      for (var _element in _albumsList) {
+        String _url = getCoverArt(_element["id"]);
+        _element["coverUrl"] = _url;
+        Albums _album = Albums.fromJson(_element);
+        _list.add(_album);
+      }
+      if (mounted) {
+        setState(() {
+          _mostalbums = _list;
         });
       }
     }
   }
 
   _getLastAlbums() async {
-    final _albumsList = await DbProvider.instance.getAlbumsByOrder(1);
-    if (_albumsList != null) {
-      List<Albums> _list = [];
-
-      for (var element in _albumsList) {
-        Albums _xx = element;
-        _list.add(_xx);
+    final _albumsList = await getAlbumList("newest", "", 0, 10);
+    List<Albums> _list = [];
+    if (_albumsList != null && _albumsList.length > 0) {
+      for (var _element in _albumsList) {
+        String _url = getCoverArt(_element["id"]);
+        _element["coverUrl"] = _url;
+        Albums _album = Albums.fromJson(_element);
+        _list.add(_album);
       }
       if (mounted) {
         setState(() {
@@ -68,18 +78,19 @@ class _IndexScreenState extends State<IndexScreen> {
     }
   }
 
-  _getRandomSongs() async {
-    final _songsList = await DbProvider.instance.getSongsByOrder(0);
-    if (_songsList != null) {
-      List<Songs> _list = [];
-
-      for (var element in _songsList) {
-        Songs _xx = element;
-        _list.add(_xx);
+  _getrecentAlbums() async {
+    final _albumsList = await getAlbumList("recent", "", 0, 10);
+    List<Albums> _list = [];
+    if (_albumsList != null && _albumsList.length > 0) {
+      for (var _element in _albumsList) {
+        String _url = getCoverArt(_element["id"]);
+        _element["coverUrl"] = _url;
+        Albums _album = Albums.fromJson(_element);
+        _list.add(_album);
       }
       if (mounted) {
         setState(() {
-          _songs = _list;
+          _recentalbums = _list;
         });
       }
     }
@@ -89,15 +100,17 @@ class _IndexScreenState extends State<IndexScreen> {
   initState() {
     super.initState();
     _getRandomAlbums();
+    _getMostAlbums();
+    _getrecentAlbums();
     _getLastAlbums();
-    _getRandomSongs();
   }
 
   @override
   void dispose() {
-    _lastSongcontroller.dispose();
+    _recentAlbumscontroller.dispose();
     _lastAlbumcontroller.dispose();
     _randomAlbumcontroller.dispose();
+    _mostAlbumscontroller.dispose();
     super.dispose();
   }
 
@@ -110,62 +123,38 @@ class _IndexScreenState extends State<IndexScreen> {
               padding: leftrightPadding,
               child: Text(S.of(context).index, style: titleText1)),
         ),
-        if (_albums != null && _albums!.length > 0)
+        if (_randomalbums != null && _randomalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
             title: S.of(context).random + S.of(context).album,
             controller: _randomAlbumcontroller,
           )),
-        if (_albums != null && _albums!.length > 0)
+        if (_randomalbums != null && _randomalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlList(
-                  controller: _randomAlbumcontroller, albums: _albums!)),
-        if (_songs != null && _songs!.length > 0)
+                  controller: _randomAlbumcontroller, albums: _randomalbums!)),
+        if (_mostalbums != null && _mostalbums!.length > 0)
           SliverToBoxAdapter(
-              child: Container(
-            padding: allPadding,
-            child: Text(
-              S.of(context).most + S.of(context).play + S.of(context).song,
-              style: titleText2,
-            ),
+              child: MySliverControlBar(
+            title:
+                S.of(context).play + S.of(context).most + S.of(context).album,
+            controller: _mostAlbumscontroller,
           )),
-        if (_songs != null && _songs!.length > 0)
-          SliverList(
-            delegate: SliverChildBuilderDelegate((content, index) {
-              Songs _tem = _songs![index];
-              List<String> _title = [
-                _tem.title,
-                _tem.album,
-                _tem.artist,
-                _tem.playCount.toString(),
-              ];
-              return Container(
-                  padding: leftrightPadding,
-                  height: 50,
-                  alignment: Alignment.center,
-                  child: InkWell(
-                      onTap: () async {
-                        if (listEquals(activeList.value, _songs!)) {
-                          widget.player.seek(Duration.zero, index: index);
-                        } else {
-                          //当前歌曲队列
-                          activeIndex.value = index;
-                          activeSongValue.value = _tem.id;
-                          //歌曲所在专辑歌曲List
-                          activeList.value = _songs!;
-                        }
-                      },
-                      child: ValueListenableBuilder<Map>(
-                          valueListenable: activeSong,
-                          builder: ((context, value, child) {
-                            return myRowList(
-                                _title,
-                                (value.isNotEmpty && value["value"] == _tem.id)
-                                    ? activeText
-                                    : nomalText);
-                          }))));
-            }, childCount: _songs!.length),
-          ),
+        if (_mostalbums != null && _mostalbums!.length > 0)
+          SliverToBoxAdapter(
+              child: MySliverControlList(
+                  controller: _mostAlbumscontroller, albums: _mostalbums!)),
+        if (_recentalbums != null && _recentalbums!.length > 0)
+          SliverToBoxAdapter(
+              child: MySliverControlBar(
+            title:
+                S.of(context).last + S.of(context).play + S.of(context).album,
+            controller: _recentAlbumscontroller,
+          )),
+        if (_recentalbums != null && _recentalbums!.length > 0)
+          SliverToBoxAdapter(
+              child: MySliverControlList(
+                  controller: _recentAlbumscontroller, albums: _recentalbums!)),
         if (_lastalbums != null && _lastalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(

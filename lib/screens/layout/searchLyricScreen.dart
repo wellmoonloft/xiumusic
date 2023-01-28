@@ -31,7 +31,6 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
   ];
   List? _songs;
   List? _netsongs;
-  List _isLyric = [];
   String _lyric = "";
   List<bool> _isChecked = [];
 
@@ -40,20 +39,31 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
     String _title2 = "";
     List<Songs> _list = [];
     _title2 = await converToTraditional(_title1);
-    final _songsList =
-        await DbProvider.instance.getSongByName(_title1, _title2);
-    if (_songsList != null) {
-      for (var element in _songsList) {
-        Songs _tem = element;
-
+    final _songsList = await search3(_title1);
+    final _songsList2 = await search3(_title2);
+    if (_songsList["song"] != null) {
+      for (var _element in _songsList["song"]) {
+        String _stream = getServerInfo("stream");
+        String _url = await getCoverArt(_element["id"]);
+        _element["stream"] = _stream + '&id=' + _element["id"];
+        _element["coverUrl"] = _url;
+        Songs _tem = Songs.fromJson(_element);
         _list.add(_tem);
-
-        final _lyric = await DbProvider.instance.getLyricById(_tem.id);
-        if (_lyric != null && _lyric!.isNotEmpty) {
-          _isLyric.add(true);
-        } else {
-          _isLyric.add(false);
-        }
+      }
+      if (mounted) {
+        setState(() {
+          _songs = _list;
+        });
+      }
+    }
+    if (_songsList2["song"] != null) {
+      for (var _element in _songsList2["song"]) {
+        String _stream = getServerInfo("stream");
+        String _url = await getCoverArt(_element["id"]);
+        _element["stream"] = _stream + '&id=' + _element["id"];
+        _element["coverUrl"] = _url;
+        Songs _tem = Songs.fromJson(_element);
+        _list.add(_tem);
       }
       if (mounted) {
         setState(() {
@@ -226,8 +236,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _tem = _songs![index];
-                  String _islyr =
-                      _isLyric[index] ? S.of(context).have : S.of(context).no;
+
                   _isChecked.add(false);
 
                   return ListTile(
@@ -252,14 +261,6 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                       _isChecked[index] = value!;
                                     });
                                   },
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  _islyr,
-                                  textDirection: TextDirection.ltr,
-                                  style: nomalText,
                                 ),
                               ),
                               Expanded(

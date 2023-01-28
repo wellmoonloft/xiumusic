@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
-import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
+import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../common/myStructure.dart';
 
@@ -19,16 +19,23 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
 
   _getArtists() async {
     if (_artists == null) {
-      final _artistsList = await DbProvider.instance.getArtists();
+      final _artistsList = await getArtists();
       if (_artistsList != null) {
-        for (var element in _artistsList) {
-          Artists _xx = element;
-          albumsnum += _xx.albumCount;
+        List<Artists> _list = [];
+        for (var _element in _artistsList["index"]) {
+          var _temp = _element["artist"];
+          for (var element in _temp) {
+            String _url = getCoverArt(element["id"]);
+            element["artistImageUrl"] = _url;
+            Artists _artist = Artists.fromJson(element);
+            albumsnum += _artist.albumCount;
+            _list.add(_artist);
+          }
         }
         if (mounted) {
           setState(() {
-            _artists = _artistsList;
-            artistsnum = _artistsList.length;
+            _artists = _list;
+            artistsnum = _artists!.length;
           });
         }
       }
@@ -87,7 +94,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
                   return ListTile(
                       title: InkWell(
                           onTap: () {
-                            //_getAlbums(_tem.id);
                             activeID.value = _tem.id;
                             indexValue.value = 9;
                           },

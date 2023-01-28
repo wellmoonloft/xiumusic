@@ -3,7 +3,7 @@ import 'package:xiumusic/screens/common/myTextButton.dart';
 import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/dbProvider.dart';
+import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myAlertDialog.dart';
@@ -23,11 +23,13 @@ class _PlayListScreenState extends State<PlayListScreen> {
   int _playlistnum = 0;
 
   _getPlaylist() async {
-    final _playlists = await DbProvider.instance.getPlaylists();
+    final _playlists = await getPlaylists();
     _playlistsList.clear();
     if (_playlists != null && _playlists.length > 0) {
       for (var element in _playlists) {
-        Playlist _playlist = element;
+        String _url = getCoverArt(element['id']);
+        element["imageUrl"] = _url;
+        Playlist _playlist = Playlist.fromJson(element);
         _playlistsList.add(_playlist);
       }
       setState(() {
@@ -112,10 +114,6 @@ class _PlayListScreenState extends State<PlayListScreen> {
                             .then((value) {
                           _getPlaylist();
                           switch (value) {
-                            case 0:
-                              showMyAlertDialog(context, S.of(context).success,
-                                  S.of(context).create + S.of(context).success);
-                              break;
                             case 1:
                               showMyAlertDialog(context, S.of(context).notive,
                                   S.of(context).create + S.of(context).failure);
@@ -131,8 +129,6 @@ class _PlayListScreenState extends State<PlayListScreen> {
                             case 3:
                               break;
                             default:
-                              showMyAlertDialog(context, S.of(context).success,
-                                  S.of(context).create + S.of(context).success);
                           }
                         });
                       },

@@ -41,7 +41,7 @@ class PlayerSeekBarState extends State<PlayerSeekBar> {
             inactiveTrackColor: borderColor,
             trackHeight: 3.0,
             thumbColor: textGray,
-            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 3),
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
             overlayShape: SliderComponentShape.noThumb),
         child: Container(
           width: widget.trackWidth,

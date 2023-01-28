@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../generated/l10n.dart';
-import '../../util/dbProvider.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
@@ -23,7 +22,7 @@ class AlbumDetailScreen extends StatefulWidget {
 }
 
 class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
-  List? _songs;
+  List<Songs> _songs = [];
   int _songsnum = 0;
   int _playCount = 0;
   int _duration = 0;
@@ -32,25 +31,42 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   String _genre = "";
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
   String _artist = "";
+  List<String> _genres = [];
   int _year = 0;
   bool _star = false;
 
   _getSongs(String albumId) async {
-    final _albumtem = await DbProvider.instance.getAlbumsByID(albumId);
+    final _albumtem = await getSongs(albumId);
     if (_albumtem != null && _albumtem.length > 0) {
-      final _songsList = await DbProvider.instance.getSongsByAlbumId(albumId);
+      final _songsList = _albumtem["song"];
+      String _url = getCoverArt(_albumtem["id"]);
+      _albumtem["coverUrl"] = _url;
+      _albumtem["title"] = _albumtem["name"];
+      Albums _albums = Albums.fromJson(_albumtem);
 
       if (_songsList != null) {
-        var _favorite = await DbProvider.instance.getFavoritebyId(albumId);
-        if (_favorite != null) {
+        List<String> _genrelist = [];
+        List<Songs> _songtem = [];
+        for (var _element in _songsList) {
+          String _stream = getServerInfo("stream");
+          String _url = await getCoverArt(_element["id"]);
+          _element["stream"] = _stream + '&id=' + _element["id"];
+          _element["coverUrl"] = _url;
+          Songs _song = Songs.fromJson(_element);
+          _songtem.add(_song);
+          if (_song.genre != "0" && !_genrelist.contains(_song.genre)) {
+            _genrelist.add(_song.genre);
+          }
+        }
+        if (_albumtem["starred"] != null) {
           _star = true;
         } else {
           _star = false;
         }
-        Albums _albums = _albumtem[0];
+
         if (mounted) {
           setState(() {
-            _songs = _songsList;
+            _songs = _songtem;
             _songsnum = _albums.songCount;
             _albumsname = _albums.title;
             _playCount = _albums.playCount;
@@ -60,10 +76,27 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             _artistID = _albums.artistId;
             _genre = _albums.genre;
             _arturl = _albums.coverUrl;
+            _genres = _genrelist;
           });
         }
       }
     }
+  }
+
+  List<Widget> mylistView(List<String> _title) {
+    List<Widget> _list = [];
+    for (var i = 0; i < _title.length; i++) {
+      _list.add(Container(
+        padding: EdgeInsets.only(left: 5),
+        child: MyTextButton(
+            press: () {
+              activeID.value = _title[i];
+              indexValue.value = 4;
+            },
+            title: _title[i]),
+      ));
+    }
+    return _list;
   }
 
   @override
@@ -115,7 +148,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               30 -
                               15,
                       child: Text(_albumsname,
-                          maxLines: isMobile ? 1 : 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: titleText2)),
                   SizedBox(
@@ -163,20 +196,47 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       ),
                     ],
                   ),
-                  if (_genre != "0")
+                  if (_genres.length > 0)
                     SizedBox(
                       height: 5,
                     ),
-                  if (_genre != "0")
-                    Row(
-                      children: [
-                        MyTextButton(press: () {}, title: S.of(context).genres),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        MyTextButton(press: () {}, title: _genre),
-                      ],
-                    ),
+                  if (_genres.length > 0)
+                    Container(
+                        width: isMobile
+                            ? windowsWidth.value -
+                                screenImageWidthAndHeight -
+                                30 -
+                                60
+                            : windowsWidth.value -
+                                drawerWidth -
+                                screenImageWidthAndHeight -
+                                30 -
+                                60,
+                        child: Row(
+                          children: [
+                            MyTextButton(
+                                press: () {
+                                  indexValue.value = 6;
+                                },
+                                title: S.of(context).genres),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            if (!isMobile)
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: mylistView(_genres)),
+                            if (isMobile)
+                              MyTextButton(
+                                  press: () {
+                                    activeID.value = _genre;
+                                    indexValue.value = 4;
+                                  },
+                                  title: _genre),
+                          ],
+                        )),
                   SizedBox(
                     height: 5,
                   ),
@@ -222,8 +282,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                     Favorite _favorite = Favorite(
                                         id: activeID.value, type: 'album');
                                     await delStarred(_favorite);
-                                    await DbProvider.instance
-                                        .delFavorite(activeID.value);
+
                                     setState(() {
                                       _star = false;
                                     });
@@ -239,8 +298,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                     Favorite _favorite = Favorite(
                                         id: activeID.value, type: 'album');
                                     await addStarred(_favorite);
-                                    await DbProvider.instance
-                                        .addFavorite(_favorite);
+
                                     setState(() {
                                       _star = true;
                                     });
@@ -270,34 +328,34 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   }
 
   Widget _itemBuildWidget() {
-    return _songs != null && _songs!.length > 0
+    return _songs.length > 0
         ? MediaQuery.removePadding(
             context: context,
             removeTop: true,
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: _songs!.length,
+                itemCount: _songs.length,
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
-                  Songs _tem = _songs![index];
+                  Songs _tem = _songs[index];
                   List<String> _title = [
                     _tem.title,
                     formatDuration(_tem.duration),
-                    _tem.bitRate.toString(),
+                    _tem.suffix + "(" + _tem.bitRate.toString() + ")",
                     _tem.playCount.toString(),
                   ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
-                            if (listEquals(activeList.value, _songs!)) {
+                            if (listEquals(activeList.value, _songs)) {
                               widget.player.seek(Duration.zero, index: index);
                             } else {
                               //当前歌曲队列
                               activeIndex.value = index;
                               activeSongValue.value = _tem.id;
                               //歌曲所在专辑歌曲List
-                              activeList.value = _songs!;
+                              activeList.value = _songs;
                             }
                           },
                           child: ValueListenableBuilder<Map>(
@@ -317,7 +375,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 218,
+        top: 228,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

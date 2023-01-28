@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
-import '../../util/dbProvider.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../common/myTextButton.dart';
@@ -24,13 +23,21 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
   List<Playlist> _playlists1 = [];
 
   _getPlaylist() async {
-    final _playlists = await DbProvider.instance.getPlaylists();
+    final _playlists = await getPlaylists();
     if (_playlists != null && _playlists.length > 0) {
       for (var i = 0; i < _playlists.length; i++) {
-        Playlist _playlist = _playlists[i];
+        var element = _playlists[i];
+        String _url = getCoverArt(element['id']);
+        element["imageUrl"] = _url;
+        Playlist _playlist = Playlist.fromJson(element);
+        //Playlist _playlist = _playlists[i];
         _playlists1.add(_playlist);
-        _sortItems.add(
-            DropdownMenuItem(value: _playlist.id, child: Text(_playlist.name)));
+        _sortItems.add(DropdownMenuItem(
+            value: _playlist.id,
+            child: Text(
+              _playlist.name,
+              style: nomalText,
+            )));
         if (i == 0) {
           _selectedSort = _playlist.id;
         }
@@ -67,7 +74,7 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                 Container(
                   padding: allPadding,
                   child: Text(
-                    "插入歌曲",
+                    S.of(context).add + S.of(context).song,
                     style: nomalText,
                   ),
                 ),
@@ -85,6 +92,7 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                           child: DropdownButton(
                             value: _selectedSort,
                             items: _sortItems,
+                            menuMaxHeight: windowsHeight.value / 2,
                             isDense: true,
                             isExpanded: true,
                             underline: Container(),
@@ -105,55 +113,24 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                         press: () async {
                           Navigator.of(context).pop(3);
                         },
-                        title: '取消',
+                        title: S.of(context).cancel,
                       ),
                       MyTextButton(
                         press: () async {
                           if (activeSong.value.isNotEmpty) {
-                            var _reco = await DbProvider.instance
-                                .checkPlaylistById(
+                            for (Playlist _playlists in _playlists1) {
+                              if (_playlists.id == _selectedSort) {
+                                await updatePlaylist(
                                     _selectedSort, activeSong.value["value"]);
-                            if (_reco.isEmpty) {
-                              for (Playlist _playlists in _playlists1) {
-                                if (_playlists.id == _selectedSort) {
-                                  await updatePlaylist(
-                                      _selectedSort, activeSong.value["value"]);
-
-                                  var _playlisttem =
-                                      await getPlaylistbyId(_selectedSort);
-
-                                  String _url =
-                                      await getCoverArt(_selectedSort);
-                                  Playlist _playlist = Playlist(
-                                      id: _playlisttem['id'],
-                                      name: _playlisttem['name'],
-                                      songCount: _playlisttem['songCount'],
-                                      duration: _playlisttem['duration'],
-                                      public: _playlisttem['public'] ? 0 : 1,
-                                      owner: _playlisttem['owner'],
-                                      created: _playlisttem['created'],
-                                      changed: _playlisttem['changed'],
-                                      imageUrl: _url);
-                                  await DbProvider.instance
-                                      .updatePlaylists(_playlist);
-                                }
                               }
-                              PlaylistAndSong _palylistandsong =
-                                  PlaylistAndSong(
-                                playlistId: _selectedSort,
-                                songId: activeSong.value["value"],
-                              );
-                              await DbProvider.instance
-                                  .addPlaylistSongs(_palylistandsong);
-                              Navigator.of(context).pop(0);
-                            } else {
-                              Navigator.of(context).pop(1);
                             }
+
+                            Navigator.of(context).pop(0);
                           } else {
                             Navigator.of(context).pop(2);
                           }
                         },
-                        title: '添加',
+                        title: S.of(context).add,
                       )
                     ],
                   ),

@@ -50,7 +50,7 @@ class _BottomScreenState extends State<BottomScreen>
           children: [
             Container(
               width: windowsWidth.value,
-              height: 6,
+              height: 10,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,

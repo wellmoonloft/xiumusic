@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'generated/l10n.dart';
 import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/mycss.dart';
@@ -17,6 +18,22 @@ class MainScreen extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    switch (isServersInfo.value.languageCode) {
+      case "en":
+        S.load(Locale('en', ''));
+        break;
+      case "zh":
+        S.load(Locale('zh', ''));
+        break;
+      case "zh_Hans":
+        S.load(Locale('zh', 'Hans'));
+        break;
+      case "zh_Hant":
+        S.load(Locale('zh', 'Hant'));
+        break;
+      default:
+        break;
+    }
     final GlobalKey<ScaffoldState> myLeftStateKey = GlobalKey<ScaffoldState>();
     //S.load(Locale('zh', 'CN'));
     _drawer() {

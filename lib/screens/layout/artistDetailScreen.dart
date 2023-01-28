@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
-import '../../util/dbProvider.dart';
+
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
@@ -16,7 +16,7 @@ class ArtistDetailScreen extends StatefulWidget {
 }
 
 class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
-  List? _albums;
+  List<Albums> _albums = [];
   String _artilstname = "";
   int _albumsnum = 0;
   String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
@@ -27,29 +27,34 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   bool _star = false;
 
   _getAlbums(String artistId) async {
-    final _albumsList = await DbProvider.instance.getAlbums(artistId);
+    final _albumsList = await getAlbums(artistId);
     if (_albumsList != null) {
-      final _artistList = await DbProvider.instance.getArtistsByID(artistId);
-      var _favorite = await DbProvider.instance.getFavoritebyId(artistId);
-      if (_favorite != null) {
+      List<Albums> _list = [];
+      if (_albumsList != null && _albumsList.length > 0) {
+        for (var _element in _albumsList["album"]) {
+          String _url = getCoverArt(_element["id"]);
+          _element["coverUrl"] = _url;
+          Albums _album = Albums.fromJson(_element);
+          _list.add(_album);
+          _playCount += _album.playCount;
+          _duration += _album.duration;
+          _songs += _album.songCount;
+        }
+      }
+
+      if (_albumsList["starred"] != null) {
         _star = true;
       } else {
         _star = false;
       }
 
-      for (var element in _albumsList) {
-        Albums _xx = element;
-        _playCount += _xx.playCount;
-        _duration += _xx.duration;
-        _songs += _xx.songCount;
-      }
       if (mounted) {
         setState(() {
-          _albums = _albumsList;
-          _albumsnum = _albumsList.length;
-          _artilstname = _artistList[0].name;
+          _albums = _list;
+          _albumsnum = _albumsList["albumCount"];
+          _artilstname = _albumsList["name"];
 
-          _arturl = _artistList[0].artistImageUrl;
+          _arturl = getCoverArt(_albumsList["id"]);
         });
       }
     }
@@ -172,8 +177,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                                 Favorite _favorite = Favorite(
                                     id: activeID.value, type: 'artist');
                                 await delStarred(_favorite);
-                                await DbProvider.instance
-                                    .delFavorite(activeID.value);
+
                                 setState(() {
                                   _star = false;
                                 });
@@ -189,8 +193,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                                 Favorite _favorite = Favorite(
                                     id: activeID.value, type: 'artist');
                                 await addStarred(_favorite);
-                                await DbProvider.instance
-                                    .addFavorite(_favorite);
+
                                 setState(() {
                                   _star = true;
                                 });
@@ -219,17 +222,17 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   }
 
   Widget _itemBuildWidget() {
-    return _albums != null && _albums!.length > 0
+    return _albums.length > 0
         ? MediaQuery.removePadding(
             context: context,
             removeTop: true,
             child: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: _albums!.length,
+                itemCount: _albums.length,
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
-                  Albums _tem = _albums![index];
+                  Albums _tem = _albums[index];
                   List<String> _title = [
                     _tem.title,
                     _tem.year.toString(),

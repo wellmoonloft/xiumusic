@@ -4,8 +4,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
+import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
-import '../../util/dbProvider.dart';
 import '../common/myStructure.dart';
 
 class AlbumScreen extends StatefulWidget {
@@ -15,27 +15,97 @@ class AlbumScreen extends StatefulWidget {
 }
 
 class _AlbumScreenState extends State<AlbumScreen> {
-  List<Albums>? _albums;
+  List<Albums> _albums = [];
   int _albumsnum = 0;
+  String _selectOrder = '';
+  List<DropdownMenuItem<String>> _sortOrder = [
+    DropdownMenuItem(
+        value: "random",
+        child: Text(
+          S.current.random,
+          style: nomalText,
+        )),
+    DropdownMenuItem(
+        value: "newest",
+        child: Text(
+          S.current.last + S.current.add,
+          style: nomalText,
+        )),
+    DropdownMenuItem(
+        value: "recent",
+        child: Text(
+          S.current.last + S.current.play,
+          style: nomalText,
+        )),
+    DropdownMenuItem(
+        value: "frequent",
+        child: Text(
+          S.current.most + S.current.play,
+          style: nomalText,
+        ))
+  ];
+
+  bool isInit = false;
 
   _getAllAlbums() async {
-    final _albumsList = await DbProvider.instance.getAllAlbums();
-    List<Albums> _list = [];
-    for (var element in _albumsList) {
-      Albums _album = element;
-      _list.add(_album);
-      _albumsnum++;
+    _albumsnum = 0;
+    _albums.clear();
+    final _albumsList;
+    if (_selectOrder == "random" ||
+        _selectOrder == "newest" ||
+        _selectOrder == "recent" ||
+        _selectOrder == "frequent") {
+      _albumsList = await getAlbumList(_selectOrder, "", 0, 500);
+    } else {
+      _albumsList = await getAlbumList(
+          "byGenre", _selectOrder.replaceAll("&", "%26"), 0, 500);
     }
-    if (mounted) {
-      setState(() {
-        _albums = _albumsList;
-      });
+
+    List<Albums> _list = [];
+    if (_albumsList != null && _albumsList.length > 0) {
+      for (var _element in _albumsList) {
+        String _url = getCoverArt(_element["id"]);
+        _element["coverUrl"] = _url;
+        Albums _album = Albums.fromJson(_element);
+
+        _list.add(_album);
+        _albumsnum++;
+      }
+
+      if (mounted) {
+        setState(() {
+          _albums = _list;
+          isInit = true;
+        });
+      }
+    }
+  }
+
+  _getGenres() async {
+    final _genresList = await getGenres();
+    if (_genresList != null) {
+      for (var element in _genresList) {
+        Genres _genres = Genres.fromJson(element);
+        _sortOrder.add(DropdownMenuItem(
+            value: _genres.value,
+            child: Text(
+              _genres.value + "(" + _genres.albumCount.toString() + ")",
+              style: nomalText,
+            )));
+      }
     }
   }
 
   @override
   initState() {
     super.initState();
+    if (activeID.value == "1") {
+      _selectOrder = "random";
+    } else {
+      _selectOrder = activeID.value;
+    }
+
+    _getGenres();
     _getAllAlbums();
   }
 
@@ -54,7 +124,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     int _count = _rightWidth.truncate();
     return Container(
       color: bkColor,
-      child: _albums != null && _albums!.length > 0
+      child: _albums.length > 0
           ? MediaQuery.removePadding(
               context: context,
               removeTop: true,
@@ -62,9 +132,9 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 crossAxisCount: _count,
                 mainAxisSpacing: 15,
                 crossAxisSpacing: 15,
-                itemCount: _albums!.length,
+                itemCount: _albums.length,
                 itemBuilder: (context, index) {
-                  Albums _tem = _albums![index];
+                  Albums _tem = _albums[index];
                   return InkWell(
                       onTap: () {
                         activeID.value = _tem.id;
@@ -123,12 +193,48 @@ class _AlbumScreenState extends State<AlbumScreen> {
     );
   }
 
+  Widget _buildChoiceWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        isInit
+            ? Container(
+                width: 200,
+                height: 40,
+                child: Theme(
+                    data: Theme.of(context).copyWith(
+                      canvasColor: badgeDark,
+                    ),
+                    child: DropdownButton(
+                      value: _selectOrder,
+                      items: _sortOrder,
+                      menuMaxHeight: windowsHeight.value / 2,
+                      isDense: true,
+                      isExpanded: true,
+                      underline: Container(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectOrder = value.toString();
+                          _getAllAlbums();
+                        });
+                      },
+                    )))
+            : Container(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 80,
+        top: 130,
         headerWidget: Column(
-          children: [_buildTopWidget(), SizedBox(height: 20), Container()],
+          children: [
+            _buildTopWidget(),
+            SizedBox(height: 20),
+            _buildChoiceWidget()
+          ],
         ),
         contentWidget: _itemBuildWidget());
   }

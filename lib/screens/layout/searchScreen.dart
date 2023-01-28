@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../generated/l10n.dart';
 import '../../models/notifierValue.dart';
-import '../../util/dbProvider.dart';
 import '../../models/myModel.dart';
+import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myTextInput.dart';
@@ -26,11 +26,30 @@ class _SearchScreenState extends State<SearchScreen> {
     String _title2 = "";
     List<Songs> _list = [];
     _title2 = await converToTraditional(_title1);
-    final _songsList =
-        await DbProvider.instance.getSongByName(_title1, _title2);
-    if (_songsList != null) {
-      for (var element in _songsList) {
-        Songs _tem = element;
+    final _songsList = await search3(_title1);
+    final _songsList2 = await search3(_title2);
+    if (_songsList["song"] != null) {
+      for (var _element in _songsList["song"]) {
+        String _stream = getServerInfo("stream");
+        String _url = await getCoverArt(_element["id"]);
+        _element["stream"] = _stream + '&id=' + _element["id"];
+        _element["coverUrl"] = _url;
+        Songs _tem = Songs.fromJson(_element);
+        _list.add(_tem);
+      }
+      if (mounted) {
+        setState(() {
+          _songs = _list;
+        });
+      }
+    }
+    if (_songsList2["song"] != null) {
+      for (var _element in _songsList2["song"]) {
+        String _stream = getServerInfo("stream");
+        String _url = await getCoverArt(_element["id"]);
+        _element["stream"] = _stream + '&id=' + _element["id"];
+        _element["coverUrl"] = _url;
+        Songs _tem = Songs.fromJson(_element);
         _list.add(_tem);
       }
       if (mounted) {
@@ -44,7 +63,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   initState() {
     super.initState();
-    //print("object");
   }
 
   @override
@@ -70,7 +88,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     _tem.album,
                     _tem.artist,
                     if (!isMobile) formatDuration(_tem.duration),
-                    if (!isMobile) _tem.bitRate.toString(),
+                    if (!isMobile)
+                      _tem.suffix + "(" + _tem.bitRate.toString() + ")",
                     if (!isMobile) _tem.playCount.toString(),
                   ];
                   return ListTile(

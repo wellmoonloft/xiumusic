@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lyric/lyrics_reader.dart';
@@ -12,7 +11,6 @@ import '../../util/mycss.dart';
 import '../components/myAudio/playerControBar.dart';
 import '../components/myAudio/playerSeekBar.dart';
 import 'package:rxdart/rxdart.dart';
-
 import '../components/myAudio/playerVolumeBar.dart';
 
 class PlayScreen extends StatefulWidget {

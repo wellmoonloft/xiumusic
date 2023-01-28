@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +11,6 @@ import 'generated/l10n.dart';
 import 'models/notifierValue.dart';
 import 'util/audioTools.dart';
 import 'util/dbProvider.dart';
-import 'util/handling.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,17 +45,6 @@ void main() async {
   final _infoList = await DbProvider.instance.getServerInfo();
   if (_infoList != null) {
     isServersInfo.value = _infoList;
-    //自动刷新服务器
-    //auto refresh server
-    Timer.periodic(const Duration(minutes: 20), (timer) async {
-      print("Start compare..." + DateTime.now().toString());
-      var _isModified = await sacnServerStatus();
-      if (_isModified) {
-        print("need refresh");
-        await initialize();
-      }
-      print("refresh done" + DateTime.now().toString());
-    });
   }
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   //注册唯一播放器
@@ -89,18 +76,6 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // supportedLocales: [
-      //   Locale.fromSubtags(languageCode: 'zh'),
-      //   Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans'),
-      //   Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
-      //   Locale.fromSubtags(
-      //       languageCode: 'zh', scriptCode: 'Hans', countryCode: 'CN'),
-      //   Locale.fromSubtags(
-      //       languageCode: 'zh', scriptCode: 'Hant', countryCode: 'TW'),
-      //   Locale.fromSubtags(
-      //       languageCode: 'zh', scriptCode: 'Hant', countryCode: 'HK'),
-      //   Locale.fromSubtags(languageCode: 'en'),
-      // ],
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(fontFamily: 'NotoSansSC', brightness: Brightness.dark),
 

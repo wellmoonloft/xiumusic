@@ -10,8 +10,13 @@ ValueNotifier<int> indexValue = ValueNotifier<int>(0);
 //监听当前歌曲
 ValueNotifier<String> activeSongValue = ValueNotifier<String>("1");
 
-ValueNotifier<ServerInfo> isServersInfo = ValueNotifier<ServerInfo>(
-    ServerInfo(baseurl: '', hash: '', neteaseapi: '', salt: '', username: ''));
+ValueNotifier<ServerInfo> isServersInfo = ValueNotifier<ServerInfo>(ServerInfo(
+    baseurl: '',
+    hash: '',
+    neteaseapi: '',
+    salt: '',
+    username: '',
+    languageCode: ''));
 
 //监听当前资源ID 艺人/专辑/歌曲都是它
 ValueNotifier<String> activeID = ValueNotifier<String>("1");

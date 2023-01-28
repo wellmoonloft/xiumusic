@@ -12,13 +12,15 @@ class ServerInfo {
   late String salt;
   late String hash;
   late String neteaseapi;
+  late String languageCode;
 
   ServerInfo(
       {required this.baseurl,
       required this.username,
       required this.salt,
       required this.hash,
-      required this.neteaseapi});
+      required this.neteaseapi,
+      required this.languageCode});
 
   ServerInfo.fromJson(Map<String, dynamic> json) {
     baseurl = json['baseurl'];
@@ -26,6 +28,7 @@ class ServerInfo {
     salt = json['salt'];
     hash = json['hash'];
     neteaseapi = json['neteaseapi'];
+    languageCode = json['languageCode'];
   }
 
   Map<String, dynamic> toJson() {
@@ -35,28 +38,25 @@ class ServerInfo {
     _data['salt'] = this.salt;
     _data['hash'] = this.hash;
     _data['neteaseapi'] = this.neteaseapi;
+    _data['languageCode'] = this.languageCode;
     return _data;
   }
 }
 
 class ServerStatus {
   late int count;
-  late int folderCount;
   late String lastScan;
 
-  ServerStatus(
-      {required this.count, required this.folderCount, required this.lastScan});
+  ServerStatus({required this.count, required this.lastScan});
 
   ServerStatus.fromJson(Map<String, dynamic> json) {
     count = json['count'];
-    folderCount = json['folderCount'];
     lastScan = json['lastScan'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> _data = new Map<String, dynamic>();
     _data['count'] = this.count;
-    _data['folderCount'] = this.folderCount;
     _data['lastScan'] = this.lastScan;
     return _data;
   }
@@ -89,7 +89,7 @@ class Playlist {
     name = json['name'];
     songCount = json['songCount'];
     duration = json['duration'];
-    public = json['public'];
+    public = json['public'] ? 0 : 1;
     owner = json['owner'];
     created = json['created'];
     changed = json['changed'];
@@ -217,10 +217,10 @@ class Albums {
     artistId = json['artistId'];
     title = json['title'];
     artist = json['artist'];
-    genre = json['genre'];
-    year = json['year'];
-    duration = json['duration'];
-    playCount = json['playCount'];
+    genre = json['genre'] == null ? "0" : json['genre'];
+    year = json['year'] == null ? 0 : json['year'];
+    duration = json['duration'] == null ? 0 : json['duration'];
+    playCount = json['playCount'] == null ? 0 : json['playCount'];
     songCount = json['songCount'];
     created = json['created'];
     coverUrl = json['coverUrl'];
@@ -254,6 +254,7 @@ class Songs {
   late String albumId;
   late int duration;
   late int bitRate;
+  late String suffix;
   late String path;
   late int playCount;
   late String created;
@@ -269,6 +270,7 @@ class Songs {
       required this.albumId,
       required this.duration,
       required this.bitRate,
+      required this.suffix,
       required this.path,
       required this.playCount,
       required this.created,
@@ -280,12 +282,13 @@ class Songs {
     title = json['title'];
     album = json['album'];
     artist = json['artist'];
-    genre = json['genre'];
+    genre = json['genre'] == null ? "0" : json['genre'];
     albumId = json['albumId'];
-    duration = json['duration'];
-    bitRate = json['bitRate'];
+    duration = json['duration'] == null ? 0 : json['duration'];
+    bitRate = json['bitRate'] == null ? 0 : json['bitRate'];
+    suffix = json['suffix'];
     path = json['path'];
-    playCount = json['playCount'];
+    playCount = json['playCount'] == null ? 0 : json['playCount'];
     created = json['created'];
     stream = json['stream'];
     coverUrl = json['coverUrl'];
@@ -301,6 +304,7 @@ class Songs {
     _data['albumId'] = this.albumId;
     _data['duration'] = this.duration;
     _data['bitRate'] = this.bitRate;
+    _data['suffix'] = this.suffix;
     _data['path'] = this.path;
     _data['playCount'] = this.playCount;
     _data['created'] = this.created;
