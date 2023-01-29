@@ -23,67 +23,66 @@ class LeftScreenState extends State<LeftScreen> {
     return Container(
         color: isMobile ? rightColor : bkColor,
         padding: leftrightPadding,
-        child: Column(
-          children: [
-            SizedBox(height: isMobile ? 40 : 0),
-            MyTextIconButton(
-                press: () {
-                  indexValue.value = 0;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: S.of(context).index,
-                icon: Icons.home),
-            MyTextIconButton(
-                press: () {
-                  indexValue.value = 2;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: S.of(context).playlist,
-                icon: Icons.queue_music),
-            MyTextIconButton(
-                press: () {
-                  indexValue.value = 3;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: S.of(context).favorite,
-                icon: Icons.favorite),
-            MyTextIconButton(
-                press: () {
-                  activeID.value = "1";
-                  indexValue.value = 4;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: S.of(context).album,
-                icon: Icons.album),
-            MyTextIconButton(
-                press: () {
-                  indexValue.value = 5;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: S.of(context).artist,
-                icon: Icons.people_alt),
-            MyTextIconButton(
-                press: () {
-                  indexValue.value = 6;
-                  if (isMobile) Navigator.pop(context);
-                },
-                title: S.of(context).genres,
-                icon: Icons.public),
-            ValueListenableBuilder<ServerInfo>(
-                valueListenable: isServersInfo,
-                builder: (context, _value, child) {
-                  return _value.neteaseapi.isNotEmpty
-                      ? MyTextIconButton(
-                          press: () {
-                            indexValue.value = 7;
-                            if (isMobile) Navigator.pop(context);
-                          },
-                          title: S.of(context).search + S.of(context).lyric,
-                          icon: Icons.public)
-                      : Container();
-                })
-          ],
-        ));
+        child: ValueListenableBuilder<ServerInfo>(
+            valueListenable: isServersInfo,
+            builder: (context, _value, child) {
+              return Column(
+                children: [
+                  SizedBox(height: isMobile ? 40 : 0),
+                  MyTextIconButton(
+                      press: () {
+                        indexValue.value = 0;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.current.index,
+                      icon: Icons.home),
+                  MyTextIconButton(
+                      press: () {
+                        indexValue.value = 2;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.of(context).playlist,
+                      icon: Icons.queue_music),
+                  MyTextIconButton(
+                      press: () {
+                        indexValue.value = 3;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.of(context).favorite,
+                      icon: Icons.favorite),
+                  MyTextIconButton(
+                      press: () {
+                        activeID.value = "1";
+                        indexValue.value = 4;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.of(context).album,
+                      icon: Icons.album),
+                  MyTextIconButton(
+                      press: () {
+                        indexValue.value = 5;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.of(context).artist,
+                      icon: Icons.people_alt),
+                  MyTextIconButton(
+                      press: () {
+                        indexValue.value = 6;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.of(context).genres,
+                      icon: Icons.public),
+                  if (_value.neteaseapi.isNotEmpty)
+                    MyTextIconButton(
+                        press: () {
+                          indexValue.value = 7;
+                          if (isMobile) Navigator.pop(context);
+                        },
+                        title: S.of(context).search + S.of(context).lyric,
+                        icon: Icons.public)
+                ],
+              );
+            }));
   }
 }
 

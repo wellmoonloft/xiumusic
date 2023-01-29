@@ -32,7 +32,7 @@ This is developed and debugged on the server environment of [Navidrome](https://
 
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
 
-![](snapshot/snapshot/macos/WechatIMG681.png)
+![](snapshot/lyric.png)
 
 ![](snapshot/snapshot/ios/6.7/Simulator%20Screen%20Shot%20-%20iPhone%2014%20Pro%20Max%20-%202023-01-24%20at%2021.18.06.png)
 

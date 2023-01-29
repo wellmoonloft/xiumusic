@@ -84,7 +84,15 @@ class _SettingsState extends State<Settings>
 
       _myServerInfo.neteaseapi = _serverURL;
       await DbProvider.instance.updateServerInfo(_myServerInfo);
-      isServersInfo.value = _myServerInfo;
+      //new一个对象触发值的监听
+      ServerInfo newServerInfo = new ServerInfo(
+          baseurl: _myServerInfo.baseurl,
+          hash: _myServerInfo.hash,
+          languageCode: _myServerInfo.languageCode,
+          neteaseapi: _myServerInfo.neteaseapi,
+          salt: _myServerInfo.salt,
+          username: _myServerInfo.username);
+      isServersInfo.value = newServerInfo;
       showMyAlertDialog(context, S.of(context).success,
           S.of(context).save + S.of(context).success);
     } else {
@@ -438,7 +446,15 @@ class _SettingsState extends State<Settings>
                                 _myServerInfo.languageCode = value.toString();
                                 await DbProvider.instance
                                     .updateServerInfo(_myServerInfo);
-                                isServersInfo.value = _myServerInfo;
+                                //new一个对象触发值的监听
+                                ServerInfo newServerInfo = new ServerInfo(
+                                    baseurl: _myServerInfo.baseurl,
+                                    hash: _myServerInfo.hash,
+                                    languageCode: _myServerInfo.languageCode,
+                                    neteaseapi: _myServerInfo.neteaseapi,
+                                    salt: _myServerInfo.salt,
+                                    username: _myServerInfo.username);
+                                isServersInfo.value = newServerInfo;
                               }
                             },
                           )),
