@@ -44,61 +44,13 @@ lock screen playback
 ## Todo List 
 
 ### pages
-
-- [x] Home
-   - [x] Random Album, Most Played Songs, Recently Added Album...others are added as you like
-  
-- [x] now playing
-   - [x] Now Playing Page, Frosted Glass
-   - [x] Lyrics
-
-- [x] Playlist
-   - [x] playlist page
-   - [x] Add, delete playlist; add, delete songs
-
-- [x] favorite
-   - [x] Favorite page, favorite songs, albums and artists
-   - [x] Favorite and unfavorite songs and albums
-
-- [x] search
-   - [x] search page
-   - [x] Simplified Chinese can search traditional Chinese songs
-
-- [x] Album
-   - [x] album list
-   - [x] Album Details
-   - [x] filter by genre and newest, recent, most
-  
-- [x] singer
-   - [x] list of singers
-   - [x] Artist home page
-   - [x] Album Details
-  
-- [x] genre
-   - [x] page impressions
-   - [x] Jump to the corresponding album and song
   
 - [ ] configure
    - [x] Server configuration: test, connect, save server and account information
    - [ ] Personalization: Don't think about it
    - [x] Multilingual: Made English, Chinese, Simplified Chinese and Traditional Chinese, Load according to the terminal configuration, after saving, load according to the saved
 
-- [x] Lyrics lookup
-   - [x] Find the lyrics on Netease Cloud according to the artist and song title
-
 ### Base  
-
-- [x] play
-   - [x] Music playback, playback controls, mute, single loop
-   - [x] playlist, loop all
-   - [x] Mobile background playback and lock screen control
-
-- [x] network
-   - [x] Restful requests, server connections, etc.
-   - [x] Catch lyrics through NetEase cloud API, the information of singer album should be done by the server, although it can be caught, but it is still not caught
-
-- [x] database
-   - [x] Create table, add, delete, modify, check, initialize
 
 - [ ] User Experience Theoretical support for IOS/Android/macOS/Windows/Linux
    - [x] Debugged: macOS iOS Android
@@ -107,8 +59,7 @@ lock screen playback
    - [ ] desktop shortcut key
    - [ ] tab
 
-- [x] Background tasks
-   - [x] Set up a timer in the Main, and refresh the data from the Internet every 20 minutes (I think this time will be configurable and open later, and you can turn off adding and deleting songs for a long time, which is now turned off in the code dropped, in the main function)
+
 
 ![](https://s2.loli.net/2023/01/12/vMEGWZdzIblT9qx.jpg)
 

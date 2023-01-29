@@ -81,18 +81,20 @@ Future<void> setAudioSource(AudioPlayer _player) async {
   List _songs = activeList.value;
   for (var element in _songs) {
     Songs _song = element;
-    children.add(
-      AudioSource.uri(
-        Uri.parse(_song.stream),
-        tag: MediaItem(
-            id: _song.id,
-            album: _song.album,
-            artist: _song.artist,
-            genre: _song.genre,
-            title: _song.title,
-            artUri: Uri.parse(getCoverArt(_song.id))),
-      ),
-    );
+    if (_song.suffix != "ape") {
+      children.add(
+        AudioSource.uri(
+          Uri.parse(_song.stream),
+          tag: MediaItem(
+              id: _song.id,
+              album: _song.album,
+              artist: _song.artist,
+              genre: _song.genre,
+              title: _song.title,
+              artUri: Uri.parse(getCoverArt(_song.id))),
+        ),
+      );
+    }
   }
 
   final playlist = ConcatenatingAudioSource(

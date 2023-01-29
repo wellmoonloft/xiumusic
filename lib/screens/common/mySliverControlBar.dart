@@ -1,28 +1,42 @@
 import 'package:flutter/material.dart';
 
+import '../../generated/l10n.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
+import 'myTextButton.dart';
 
 class MySliverControlBar extends StatelessWidget {
   final String title;
   final controller;
+  final press;
 
   const MySliverControlBar(
-      {Key? key, required this.title, required this.controller});
+      {Key? key, required this.title, required this.controller, this.press});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: allPadding,
-      height: 60,
+      margin: allPadding,
+      height: 30,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              title,
-              style: titleText2,
-            ),
+            Row(children: [
+              Text(
+                title,
+                style: titleText3,
+              ),
+              if (press != null)
+                SizedBox(
+                  width: 5,
+                ),
+              if (press != null)
+                MyTextButton(
+                  press: press,
+                  title: S.current.more,
+                )
+            ]),
             Row(
               children: [
                 IconButton(

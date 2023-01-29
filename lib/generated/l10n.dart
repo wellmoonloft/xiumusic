@@ -590,6 +590,36 @@ class S {
     );
   }
 
+  /// `Top `
+  String get top {
+    return Intl.message(
+      'Top ',
+      name: 'top',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `More `
+  String get more {
+    return Intl.message(
+      'More ',
+      name: 'more',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Less `
+  String get less {
+    return Intl.message(
+      'Less ',
+      name: 'less',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Have `
   String get have {
     return Intl.message(

@@ -321,7 +321,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
     List<String> _title = [
       S.of(context).song,
       S.of(context).dration,
-      S.of(context).bitRange,
+      if (!isMobile) S.of(context).bitRange,
       S.of(context).playCount
     ];
     return myRowList(_title, subText);
@@ -342,7 +342,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                   List<String> _title = [
                     _tem.title,
                     formatDuration(_tem.duration),
-                    _tem.suffix + "(" + _tem.bitRate.toString() + ")",
+                    if (!isMobile)
+                      _tem.suffix + "(" + _tem.bitRate.toString() + ")",
                     _tem.playCount.toString(),
                   ];
                   return ListTile(

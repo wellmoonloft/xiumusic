@@ -126,7 +126,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_randomalbums != null && _randomalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: S.of(context).random + S.of(context).album,
+            title: S.of(context).random,
             controller: _randomAlbumcontroller,
           )),
         if (_randomalbums != null && _randomalbums!.length > 0)
@@ -136,8 +136,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_mostalbums != null && _mostalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title:
-                S.of(context).play + S.of(context).most + S.of(context).album,
+            title: S.of(context).play + S.of(context).most,
             controller: _mostAlbumscontroller,
           )),
         if (_mostalbums != null && _mostalbums!.length > 0)
@@ -147,8 +146,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_recentalbums != null && _recentalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title:
-                S.of(context).last + S.of(context).play + S.of(context).album,
+            title: S.of(context).last + S.of(context).play,
             controller: _recentAlbumscontroller,
           )),
         if (_recentalbums != null && _recentalbums!.length > 0)
@@ -158,7 +156,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_lastalbums != null && _lastalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: S.of(context).last + S.of(context).add + S.of(context).album,
+            title: S.of(context).last + S.of(context).add,
             controller: _lastAlbumcontroller,
           )),
         if (_lastalbums != null && _lastalbums!.length > 0)

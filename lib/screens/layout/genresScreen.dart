@@ -49,30 +49,31 @@ class _GenresScreenState extends State<GenresScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(child: Text(S.of(context).genres, style: titleText1)),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              S.of(context).genres + ": " + genresnum.toString(),
-              style: nomalText,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              S.of(context).album + ": " + albumsnum.toString(),
-              style: nomalText,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              S.of(context).song + ": " + songsnum.toString(),
-              style: nomalText,
-            ),
-          ],
-        ),
+        if (!isMobile)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                S.of(context).genres + ": " + genresnum.toString(),
+                style: nomalText,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                S.of(context).album + ": " + albumsnum.toString(),
+                style: nomalText,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                S.of(context).song + ": " + songsnum.toString(),
+                style: nomalText,
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -118,10 +119,34 @@ class _GenresScreenState extends State<GenresScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 100,
+        top: (isMobile) ? 120 : 100,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
+            if (isMobile)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    S.of(context).genres + ": " + genresnum.toString(),
+                    style: nomalText,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    S.of(context).album + ": " + albumsnum.toString(),
+                    style: nomalText,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    S.of(context).song + ": " + songsnum.toString(),
+                    style: nomalText,
+                  ),
+                ],
+              ),
             SizedBox(height: 25),
             _buildHeaderWidget()
           ],

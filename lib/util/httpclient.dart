@@ -288,7 +288,23 @@ getArtists() async {
   }
 }
 
-getAlbums(String _id) async {
+getArtistInfo2(String _id) async {
+  String _sql = await _getServerInfo("getArtistInfo2");
+  try {
+    var response = await Dio().get(
+      _sql + '&count=10' + '&id=' + _id,
+    );
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _artist = _response['artistInfo2'];
+      return _artist;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+getArtist(String _id) async {
   String _sql = await _getServerInfo("getArtist");
   try {
     var response = await Dio().get(
@@ -297,7 +313,6 @@ getAlbums(String _id) async {
     if (response.statusCode == 200) {
       Map _response = response.data['subsonic-response'];
       Map _artist = _response['artist'];
-//album
       return _artist;
     }
   } catch (e) {
@@ -314,8 +329,25 @@ getSongs(String _id) async {
     if (response.statusCode == 200) {
       Map _response = response.data['subsonic-response'];
       Map _artist = _response['album'];
-//song
       return _artist;
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+//count no 50
+getTopSongs(String _name) async {
+  String _sql = await _getServerInfo("getTopSongs");
+  try {
+    var response = await Dio().get(
+      _sql + '&artist=' + _name,
+    );
+    if (response.statusCode == 200) {
+      Map _response = response.data['subsonic-response'];
+      Map _topSongs = _response['topSongs'];
+
+      return _topSongs;
     }
   } catch (e) {
     print(e);

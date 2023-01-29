@@ -12,6 +12,7 @@ import '../common/myAlertDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
+import '../leftScreen.dart';
 
 class Settings extends StatefulWidget {
   const Settings({
@@ -23,6 +24,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings>
     with SingleTickerProviderStateMixin {
+  GlobalKey<LeftScreenState> leftScreen = GlobalKey();
   final servercontroller = new TextEditingController();
   final usernamecontroller = new TextEditingController();
   final passwordcontroller = new TextEditingController();

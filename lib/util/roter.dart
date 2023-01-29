@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../screens/layout/albumDetailScreen.dart';
 import '../screens/layout/albumScreen.dart';
+import '../screens/layout/artistAlbumScreen.dart';
 import '../screens/layout/artistDetailScreen.dart';
 import '../screens/layout/artistsScreen.dart';
 import '../screens/layout/favoriteScreen.dart';
@@ -45,13 +46,15 @@ class Roter extends StatelessWidget {
           case 8: //专辑详情
             return AlbumDetailScreen(player: player);
           case 9: //艺人详情
-            return ArtistDetailScreen();
+            return ArtistDetailScreen(player: player);
           case 10: //搜索
             return SearchScreen(player: player);
           case 11: //设置
             return Settings();
           case 12: //播放列表详细
             return PlaylistDetailScreen(player: player);
+          case 13: //艺人换季
+            return ArtistAlbumScreen();
 
           default:
             return Settings();

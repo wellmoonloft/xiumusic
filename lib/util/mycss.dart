@@ -21,6 +21,7 @@ const titleText1 =
     TextStyle(fontSize: 40, color: textGray, fontWeight: FontWeight.bold);
 const titleText2 =
     TextStyle(fontSize: 24, color: textGray, fontWeight: FontWeight.bold);
+const titleText3 = TextStyle(fontSize: 20, color: textGray);
 const activeText = TextStyle(color: badgeRed, fontSize: 14);
 const nomalText = TextStyle(color: textGray, fontSize: 14);
 const subText = TextStyle(color: borderColor, fontSize: 12);
