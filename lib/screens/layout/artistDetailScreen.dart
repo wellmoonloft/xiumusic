@@ -276,7 +276,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     List<String> _title = [
       S.of(context).song,
       S.of(context).album,
-      S.of(context).artist,
+      S.of(context).dration,
       if (!isMobile) S.of(context).playCount,
     ];
     return myRowList(_title, subText);
@@ -337,7 +337,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
             List<String> _title = [
               _tem.title,
               _tem.album,
-              _tem.artist,
+              formatDuration(_tem.duration),
               if (!isMobile) _tem.playCount.toString(),
             ];
             return Container(
@@ -389,7 +389,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       if (_similarArtist.length > 0)
         SliverToBoxAdapter(
             child: MySliverControlBar(
-          title: "相似艺人",
+          title: S.of(context).similar + S.of(context).artist,
           controller: _similarArtistcontroller,
         )),
       if (_similarArtist.length > 0)

@@ -670,6 +670,16 @@ class S {
     );
   }
 
+  /// `Similar `
+  String get similar {
+    return Intl.message(
+      'Similar ',
+      name: 'similar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Appearance `
   String get appearance {
     return Intl.message(

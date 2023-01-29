@@ -258,16 +258,6 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
     );
   }
 
-  Widget _buildHeaderWidget() {
-    List<String> _title = [
-      S.of(context).song,
-      S.of(context).dration,
-      S.of(context).bitRange,
-      S.of(context).playCount
-    ];
-    return myRowList(_title, subText);
-  }
-
   Widget _itemBuildWidget() {
     return _songslist.length > 0
         ? MediaQuery.removePadding(
@@ -283,7 +273,8 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                   List<String> _title = [
                     _song.title,
                     formatDuration(_song.duration),
-                    _song.bitRate.toString(),
+                    if (!isMobile)
+                      _song.suffix + "(" + _song.bitRate.toString() + ")",
                     _song.playCount.toString(),
                   ];
 
@@ -368,7 +359,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
             SizedBox(
               height: 20,
             ),
-            _buildHeaderWidget()
+            songsHeaderWidget()
           ],
         ),
         contentWidget: _itemBuildWidget());

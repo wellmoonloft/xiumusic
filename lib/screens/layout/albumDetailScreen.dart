@@ -317,62 +317,6 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
     );
   }
 
-  Widget _buildHeaderWidget() {
-    List<String> _title = [
-      S.of(context).song,
-      S.of(context).dration,
-      if (!isMobile) S.of(context).bitRange,
-      S.of(context).playCount
-    ];
-    return myRowList(_title, subText);
-  }
-
-  Widget _itemBuildWidget() {
-    return _songs.length > 0
-        ? MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _songs.length,
-                itemExtent: 50.0, //强制高度为50.0
-                itemBuilder: (BuildContext context, int index) {
-                  Songs _tem = _songs[index];
-                  List<String> _title = [
-                    _tem.title,
-                    formatDuration(_tem.duration),
-                    if (!isMobile)
-                      _tem.suffix + "(" + _tem.bitRate.toString() + ")",
-                    _tem.playCount.toString(),
-                  ];
-                  return ListTile(
-                      title: InkWell(
-                          onTap: () async {
-                            if (listEquals(activeList.value, _songs)) {
-                              widget.player.seek(Duration.zero, index: index);
-                            } else {
-                              //当前歌曲队列
-                              activeIndex.value = index;
-                              activeSongValue.value = _tem.id;
-                              //歌曲所在专辑歌曲List
-                              activeList.value = _songs;
-                            }
-                          },
-                          child: ValueListenableBuilder<Map>(
-                              valueListenable: activeSong,
-                              builder: ((context, value, child) {
-                                return myRowList(
-                                    _title,
-                                    (value.isNotEmpty &&
-                                            value["value"] == _tem.id)
-                                        ? activeText
-                                        : nomalText);
-                              }))));
-                }))
-        : Container();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MyStructure(
@@ -383,9 +327,9 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             SizedBox(
               height: 20,
             ),
-            _buildHeaderWidget()
+            songsHeaderWidget()
           ],
         ),
-        contentWidget: _itemBuildWidget());
+        contentWidget: songsBuildWidget(_songs, context, widget.player));
   }
 }

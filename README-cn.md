@@ -15,52 +15,24 @@
 因此我需要一个这样的APP：
 1. 支持歌词
 2. 支持模糊查找（简体、繁体，这是很大的问题，比如你搜周杰伦和周杰倫）
-3. 简洁（听歌就是听歌）
+3. 简洁
 4. 桌面端和移动端UI统一风格
 
 有了这四个需求，我决定自己撸一个APP给自己用
 
-这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic，想玩的都可以下载了试一试，如果接口相同那应该问题不大（绝大部份的DIO请求没有抛错，建议网络环境好的时候食用，等做完了再回去补用户交互）
+这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic
 
-注意！！！下载了歌词是保存在APP文档的数据库里的，目前没有做导出功能，少玩一点，省的歌词找不出来怪我
+**注意！！！**歌词是保存在APP文档的sqlite里的，目前没有做导出功能
 
-[macOS的v0.4版本已经上架了，可以直接用](https://apps.apple.com/us/app/xiu-music/id1667473545)
-这个版本有两个问题:
-1. 在初始化的时候把UI锁住了，如果你的歌曲超过5000首，可能会锁死
-2. 判断刷新是根据getScanStatus接口的两个数据判断，但是刚刚得知其中一个数据是Navidrome独有的，所以可能需要手动刷新
-v0.4.1解决了这个问题，但是我不想频繁的提交appstore
-请注意v0.5.0开始更新了表结构，请删除app重新安装，不要更新或者覆盖
+**请使用最新版本自行打包。 appstore上的版本逻辑有问题，但想改进一下再上架**
 
-
-![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
-
-锁屏播放
+**锁屏播放**
 
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
 
-## Todo List 
+![](snapshot/snapshot/macos/WechatIMG681.png)
 
-### 页面  
-  
-- [ ] 配置  
-  - [x] 服务器配置：测试、连接、保存服务器及账号信息
-  - [ ] 个性化：没想好做不做
-  - [x] 多语言：做了英文、中文、简体中文和繁体中文，根据终端配置来加载，保存后根据保存的加载
-
-### 基础  
-
-- [ ] 用户体验  理论支持IOS/安卓/macOS/Windows/Linux
-  - [x] 调试过的: macOS iOS 安卓
-  - [ ] 还没调试的: Windows/Linux 理论上应该没问题
-  - [ ] 后台抛错到前台
-  - [ ] 桌面快捷键  
-  - [ ] 分页    
-
-
-
-![](https://s2.loli.net/2023/01/12/vMEGWZdzIblT9qx.jpg)
-
-![](https://s2.loli.net/2023/01/10/BCPjVHlazr2mK1R.jpg)
+![](snapshot/snapshot/ios/6.7/Simulator%20Screen%20Shot%20-%20iPhone%2014%20Pro%20Max%20-%202023-01-24%20at%2021.18.06.png)
 
 ------------------------------
 
@@ -150,8 +122,10 @@ AndroidManifest.xml
 
 
 
-v0.5.0
-- 去掉大部分数据库，只保留服务器信息
-- 修改进度条大小，不然手机上特别不好点
-- 增加歌曲后缀名，排除掉ape
-- 增加流派
+## Todo List 
+
+- [x] 调试过的: macOS iOS 安卓
+- [ ] 还没调试的: Windows/Linux 理论上应该没问题
+- [ ] 桌面快捷键  
+- [ ] 分页?    
+

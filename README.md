@@ -18,52 +18,24 @@ So I need an APP like this:
 
 2. Support fuzzy search (simplified and traditional, this is a big problem, for example, if you search for 周杰伦 and 周杰倫)
 
-3. Concise (listening to music is listening to music)
+3. Concise
 
 4. Unified style of desktop and mobile UI
 
 With these four requirements, I decided to make an APP for myself
 
-This is developed and debugged on the server environment of [Navidrome](https://www.navidrome.org/) based on the interface of [Subsonic API](http://www.subsonic.org/pages/api.jsp) , so in theory it supports Subsonic, Navidrome and Airsonic. If you want to play, you can download it and have a try. If the interface is the same, it should not be a big problem (most of the DIO requests are not wrong, it is recommended to eat when the network environment is good. Go back and make up for user interaction when you're done)
+This is developed and debugged on the server environment of [Navidrome](https://www.navidrome.org/) based on the interface of [Subsonic API](http://www.subsonic.org/pages/api.jsp) , so in theory it supports Subsonic, Navidrome and Airsonic.
 
-**Notice! ! !** The downloaded lyrics are saved in the database of the APP document. Currently, there is no export function. Play less and do not blame me for not being able to output lyrics.
+**Notice! ! !** The lyrics are saved in the sqlite at document. Currently, there is no export function. 
 
-[The v0.4 version of macOS has been released and can be used directly](https://apps.apple.com/us/app/xiu-music/id1667473545)
-This version has two problems:
-1. The UI is locked during initialization. If your songs exceed 5000, it may be locked
-2. Judgment refresh is based on the two data of getScanStatus interface, but I just learned that one of the data is unique to Navidrome, so it may need to be manually refreshed
-v0.4.1 solves this problem, but I don't want to submit appstore frequently
-Please note that v0.5.0 has updated the table structure, please delete the app and reinstall, do not update or overwrite
-
-![](https://s2.loli.net/2023/01/10/3Wj8w7QfbZJ9N4y.jpg)
-
-lock screen playback
+**Please use the latest version to pack it yourself. The version on the appstore has logic problems, but I want to improve it a bit before putting it on appstore**
 
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
 
-## Todo List 
+![](snapshot/snapshot/macos/WechatIMG681.png)
 
-### pages
-  
-- [ ] configure
-   - [x] Server configuration: test, connect, save server and account information
-   - [ ] Personalization: Don't think about it
-   - [x] Multilingual: Made English, Chinese, Simplified Chinese and Traditional Chinese, Load according to the terminal configuration, after saving, load according to the saved
+![](snapshot/snapshot/ios/6.7/Simulator%20Screen%20Shot%20-%20iPhone%2014%20Pro%20Max%20-%202023-01-24%20at%2021.18.06.png)
 
-### Base  
-
-- [ ] User Experience Theoretical support for IOS/Android/macOS/Windows/Linux
-   - [x] Debugged: macOS iOS Android
-   - [ ] Not yet debugged: Windows/Linux should be fine in theory
-   - [ ] Throw an error from the background to the foreground
-   - [ ] desktop shortcut key
-   - [ ] tab
-
-
-
-![](https://s2.loli.net/2023/01/12/vMEGWZdzIblT9qx.jpg)
-
-![](https://s2.loli.net/2023/01/10/BCPjVHlazr2mK1R.jpg)
 
 ------------------------------
 
@@ -151,8 +123,11 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) implements image caching, easy to use.
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) There is only one copy on the entire pub, which is easy to use.
 
-v0.5.0
-- Remove most of the database, only keep the server information
-- Modify the size of the progress bar, otherwise it will be particularly bad on mobile phones
-- Add song suffix and exclude ape
-- add genre
+
+
+## Todo List 
+
+- [x] Debugged: macOS iOS Android
+- [ ] Not yet: Windows/Linux should be fine in theory
+- [ ] desktop shortcut key
+- [ ] tab?

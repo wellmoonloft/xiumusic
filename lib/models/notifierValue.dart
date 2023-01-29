@@ -44,7 +44,7 @@ ValueNotifier<bool> isFirstSongNotifier = ValueNotifier<bool>(true);
 ValueNotifier<bool> isLastSongNotifier = ValueNotifier<bool>(true);
 
 //歌词
-ValueNotifier<String> activeLyric = ValueNotifier<String>("没有歌词！！");
+ValueNotifier<String> activeLyric = ValueNotifier<String>("No Lyric");
 
 ValueNotifier<double> windowsWidth =
     ValueNotifier<double>(window.physicalSize.width / window.devicePixelRatio);

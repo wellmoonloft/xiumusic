@@ -82,6 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("需要先行保存歌词服务器之后才才会出现搜索歌词按钮"),
         "serverURL": MessageLookupByLibrary.simpleMessage("服务器地址"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
+        "similar": MessageLookupByLibrary.simpleMessage("相似"),
         "simplified": MessageLookupByLibrary.simpleMessage("简体中文"),
         "song": MessageLookupByLibrary.simpleMessage("歌曲"),
         "success": MessageLookupByLibrary.simpleMessage("成功"),
