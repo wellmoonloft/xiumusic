@@ -112,26 +112,6 @@ class Playlist {
   }
 }
 
-class PlaylistAndSong {
-  late String playlistId;
-  late String songId;
-
-  PlaylistAndSong({required this.playlistId, required this.songId});
-
-  PlaylistAndSong.fromJson(Map<String, dynamic> json) {
-    playlistId = json['playlistId'];
-    songId = json['songId'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> _data = new Map<String, dynamic>();
-    _data['playlistId'] = this.playlistId;
-    _data['songId'] = this.songId;
-
-    return _data;
-  }
-}
-
 class Genres {
   late String value;
   late int songCount;

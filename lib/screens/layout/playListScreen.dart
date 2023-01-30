@@ -9,6 +9,7 @@ import '../../util/mycss.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../../util/audioTools.dart';
+import '../common/myToast.dart';
 
 class PlayListScreen extends StatefulWidget {
   const PlayListScreen({Key? key}) : super(key: key);
@@ -36,6 +37,27 @@ class _PlayListScreenState extends State<PlayListScreen> {
         _playlistnum = _playlistsList.length;
       });
     }
+  }
+
+  _delPlaylist(BuildContext context, double _x, double _y, String _playlistId) {
+    showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(_x, _y, _x, _y),
+        items: [
+          PopupMenuItem(
+            child: Text(S.of(context).delete + S.of(context).playlist),
+            value: _playlistId.toString(),
+          ),
+        ]).then((value) async {
+      if (value != null) {
+        await deletePlaylist(_playlistId);
+
+        MyToast.show(
+            context: context,
+            message: S.of(context).delete + S.of(context).success);
+        _getPlaylist();
+      }
+    });
   }
 
   @override
@@ -68,17 +90,65 @@ class _PlayListScreenState extends State<PlayListScreen> {
                     _tem.owner,
                     timeISOtoString(_tem.changed)
                   ];
-                  return ListTile(
-                      title: InkWell(
-                          onTap: () async {
-                            activeID.value = _tem.id;
-                            indexValue.value = 12;
-                          },
-                          child: ValueListenableBuilder<Map>(
-                              valueListenable: activeSong,
-                              builder: ((context, value, child) {
-                                return myRowList(_title, nomalText);
-                              }))));
+                  return Dismissible(
+                      // Key
+                      key: Key(_tem.id),
+                      confirmDismiss: (direction) {
+                        bool _result = false;
+                        if (direction == DismissDirection.endToStart) {
+                          // 从右向左  也就是删除
+                          _result = true;
+                        } else if (direction == DismissDirection.startToEnd) {
+                          //从左向右
+                          _result = false;
+                        }
+                        return Future<bool>.value(_result);
+                      },
+                      onDismissed: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          await deletePlaylist(_tem.id);
+                          _getPlaylist();
+                          MyToast.show(
+                              context: context,
+                              message:
+                                  S.of(context).delete + S.of(context).success);
+                        } else if (direction == DismissDirection.startToEnd) {
+                          //从左向右
+                        }
+                      },
+                      background: Container(
+                        color: rightColor,
+                        child: ListTile(
+                            // leading: Icon(
+                            //   Icons.delete,
+                            //   color: textGray,
+                            // ),
+                            ),
+                      ),
+                      secondaryBackground: Container(
+                        color: badgeRed,
+                        child: ListTile(
+                          trailing: Icon(
+                            Icons.delete,
+                            color: textGray,
+                          ),
+                        ),
+                      ),
+                      child: ListTile(
+                          title: GestureDetector(
+                              onTap: () async {
+                                activeID.value = _tem.id;
+                                indexValue.value = 12;
+                              },
+                              onSecondaryTapDown: (details) {
+                                _delPlaylist(context, details.globalPosition.dx,
+                                    details.globalPosition.dy, _tem.id);
+                              },
+                              child: ValueListenableBuilder<Map>(
+                                  valueListenable: activeSong,
+                                  builder: ((context, value, child) {
+                                    return myRowList(_title, nomalText);
+                                  })))));
                 }))
         : Container();
   }

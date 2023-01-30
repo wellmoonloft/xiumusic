@@ -17,10 +17,9 @@ class AddPlaylistDialog extends StatefulWidget {
 }
 
 class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
-  String _selectedSort = '';
+  String? _selectedSort;
   List<DropdownMenuItem<String>> _sortItems = [];
-  bool isInit = false;
-  List<Playlist> _playlists1 = [];
+  List<Playlist> _playlist = [];
 
   _getPlaylist() async {
     final _playlists = await getPlaylists();
@@ -29,22 +28,20 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
         var element = _playlists[i];
         String _url = getCoverArt(element['id']);
         element["imageUrl"] = _url;
-        Playlist _playlist = Playlist.fromJson(element);
-        //Playlist _playlist = _playlists[i];
-        _playlists1.add(_playlist);
+        Playlist _playlisttem = Playlist.fromJson(element);
+        _playlist.add(_playlisttem);
         _sortItems.add(DropdownMenuItem(
-            value: _playlist.id,
+            value: _playlisttem.id,
             child: Text(
-              _playlist.name,
+              _playlisttem.name,
               style: nomalText,
             )));
         if (i == 0) {
-          _selectedSort = _playlist.id;
+          setState(() {
+            _selectedSort = _playlisttem.id;
+          });
         }
       }
-      setState(() {
-        isInit = true;
-      });
     }
   }
 
@@ -78,14 +75,14 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                     style: nomalText,
                   ),
                 ),
-                Container(
-                  decoration: circularBorder,
-                  padding:
-                      EdgeInsets.only(left: 10, top: 5, right: 10, bottom: 5),
-                  width: 200,
-                  height: 35,
-                  child: isInit
-                      ? Theme(
+                if (_selectedSort != null)
+                  Container(
+                      decoration: circularBorder,
+                      padding: EdgeInsets.only(
+                          left: 10, top: 5, right: 10, bottom: 5),
+                      width: 200,
+                      height: 35,
+                      child: Theme(
                           data: Theme.of(context).copyWith(
                             canvasColor: badgeDark,
                           ),
@@ -101,9 +98,7 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                                 _selectedSort = value.toString();
                               });
                             },
-                          ))
-                      : Container(),
-                ),
+                          ))),
                 Container(
                   padding: allPadding,
                   child: Row(
@@ -118,10 +113,10 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                       MyTextButton(
                         press: () async {
                           if (activeSong.value.isNotEmpty) {
-                            for (Playlist _playlists in _playlists1) {
+                            for (Playlist _playlists in _playlist) {
                               if (_playlists.id == _selectedSort) {
                                 await updatePlaylist(
-                                    _selectedSort, activeSong.value["value"]);
+                                    _selectedSort!, activeSong.value["value"]);
                               }
                             }
 

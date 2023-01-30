@@ -32,13 +32,9 @@ class _SettingsState extends State<Settings>
   final taskTimecontroller = new TextEditingController();
   late TabController tabController;
   late ServerInfo _myServerInfo;
+  late List<Tab> myTabs;
   String _selectedSort = 'en';
   List<DropdownMenuItem<String>> _sortItems = [];
-
-  List<Tab> myTabs = <Tab>[
-    Tab(text: ""),
-    Tab(text: ''),
-  ];
 
   _saveServer() async {
     if (servercontroller.text != "" &&

@@ -6,6 +6,25 @@ import '../models/myModel.dart';
 import '../models/notifierValue.dart';
 import 'util.dart';
 
+//底部高度
+const double bottomHeight = 80;
+//appbar高度
+const double appBarHeight = 40;
+//侧拉栏宽度
+const double drawerWidth = 160;
+//底部图片大小
+const double bottomImageWidthAndHeight = 50;
+//正常页面图片大小
+const double screenImageWidthAndHeight = 180;
+//正在播放图片大小
+const double playingImageWidthAndHeight = 180;
+//图片刷新动画延迟
+const int imageMilli = 500;
+//logo asset地址
+const String mylogoAsset = "assets/images/logo.jpg";
+//是不是移动端
+late final bool isMobile;
+
 const qing = Color.fromARGB(255, 194, 197, 196);
 const hong = Color.fromARGB(255, 185, 64, 65);
 const huang = Color.fromARGB(255, 237, 207, 106);
@@ -219,22 +238,3 @@ Widget albumBuildWidget(List<Albums> _albums, BuildContext _context) {
                   }))
           : Container());
 }
-
-//底部高度
-const double bottomHeight = 80;
-//appbar高度
-const double appBarHeight = 40;
-//侧拉栏宽度
-const double drawerWidth = 160;
-//底部图片大小
-const double bottomImageWidthAndHeight = 50;
-//正常页面图片大小
-const double screenImageWidthAndHeight = 180;
-//正在播放图片大小
-const double playingImageWidthAndHeight = 180;
-//图片刷新动画延迟
-const int imageMilli = 500;
-//logo asset地址
-const String mylogoAsset = "assets/images/logo.jpg";
-//是不是移动端
-late final bool isMobile;

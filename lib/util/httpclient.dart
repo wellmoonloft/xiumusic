@@ -34,7 +34,7 @@ checkResponse(Response<dynamic> _response) {
 
 getCoverArt(String _id) {
   String _sql = getServerInfo("getCoverArt");
-  return _sql + '&id=' + _id;
+  return _sql + '&size=350' + '&id=' + _id;
 }
 
 getServerInfo(String _api) {
@@ -322,12 +322,12 @@ addStarred(Favorite _starred) async {
 }
 
 getStarred() async {
-  String _sql = await getServerInfo("getStarred");
+  String _sql = await getServerInfo("getStarred2");
   try {
     var _response = await Dio().get(_sql);
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    Map _starred = _subsonic['starred'];
+    Map _starred = _subsonic['starred2'];
     return _starred;
   } catch (e) {
     print(e);

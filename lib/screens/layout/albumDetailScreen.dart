@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
@@ -29,7 +28,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   String _albumsname = "";
   String _artistID = "";
   String _genre = "";
-  String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
+  String? _arturl;
   String _artist = "";
   List<String> _genres = [];
   int _year = 0;
@@ -115,19 +114,22 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             Container(
                 height: screenImageWidthAndHeight,
                 width: screenImageWidthAndHeight,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: _arturl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) {
-                      return AnimatedSwitcher(
-                        child: Image.asset(mylogoAsset),
-                        duration: const Duration(milliseconds: imageMilli),
-                      );
-                    },
-                  ),
-                )),
+                child: (_arturl != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: _arturl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) {
+                            return AnimatedSwitcher(
+                              child: Image.asset(mylogoAsset),
+                              duration:
+                                  const Duration(milliseconds: imageMilli),
+                            );
+                          },
+                        ),
+                      )
+                    : Container()),
             SizedBox(
               width: 15,
             ),
@@ -137,16 +139,18 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      width: isMobile
-                          ? windowsWidth.value -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15
-                          : windowsWidth.value -
-                              drawerWidth -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15,
+                      constraints: BoxConstraints(
+                        maxWidth: isMobile
+                            ? windowsWidth.value -
+                                screenImageWidthAndHeight -
+                                30 -
+                                15
+                            : windowsWidth.value -
+                                drawerWidth -
+                                screenImageWidthAndHeight -
+                                30 -
+                                15,
+                      ),
                       child: Text(_albumsname,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -166,16 +170,18 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                           width: 10,
                         ),
                         Container(
-                            width: isMobile
-                                ? windowsWidth.value -
-                                    screenImageWidthAndHeight -
-                                    30 -
-                                    60
-                                : windowsWidth.value -
-                                    drawerWidth -
-                                    screenImageWidthAndHeight -
-                                    30 -
-                                    60,
+                            constraints: BoxConstraints(
+                              maxWidth: isMobile
+                                  ? windowsWidth.value -
+                                      screenImageWidthAndHeight -
+                                      30 -
+                                      60
+                                  : windowsWidth.value -
+                                      drawerWidth -
+                                      screenImageWidthAndHeight -
+                                      30 -
+                                      60,
+                            ),
                             child: MyTextButton(
                                 press: () {
                                   activeID.value = _artistID;

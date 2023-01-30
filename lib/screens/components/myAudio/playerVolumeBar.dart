@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../../generated/l10n.dart';
 import '../../../models/myModel.dart';
 import '../../../models/notifierValue.dart';
 import '../../../util/mycss.dart';
@@ -210,18 +211,30 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                                   );
                                   switch (_value) {
                                     case 0:
-                                      showMyAlertDialog(context, "成功", "新建成功");
+                                      showMyAlertDialog(
+                                          context,
+                                          S.current.success,
+                                          S.current.create + S.current.success);
                                       break;
                                     case 1:
-                                      showMyAlertDialog(context, "失败", "歌曲已存在");
+                                      showMyAlertDialog(
+                                          context,
+                                          S.current.failure,
+                                          S.current.have + S.current.song);
                                       break;
                                     case 2:
-                                      showMyAlertDialog(context, "失败", "没有歌曲");
+                                      showMyAlertDialog(
+                                          context,
+                                          S.current.failure,
+                                          S.current.no + S.current.song);
                                       break;
                                     case 3:
                                       break;
                                     default:
-                                      showMyAlertDialog(context, "成功", "新建成功");
+                                      showMyAlertDialog(
+                                          context,
+                                          S.current.success,
+                                          S.current.create + S.current.success);
                                   }
                                 },
                         );

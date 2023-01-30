@@ -29,9 +29,9 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   int _duration = 0;
   String _albumsname = "";
   String _palylistId = "";
-  String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
+  String? _arturl;
   String _artist = "";
-  String _changed = "2023-01-18T16:37:18Z";
+  String? _changed;
 
   _getSongs(String _playlistId) async {
     final _playlisttem = await getPlaylistbyId(_playlistId);
@@ -101,19 +101,22 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
             Container(
                 height: screenImageWidthAndHeight,
                 width: screenImageWidthAndHeight,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: _arturl,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) {
-                      return AnimatedSwitcher(
-                        child: Image.asset(mylogoAsset),
-                        duration: const Duration(milliseconds: imageMilli),
-                      );
-                    },
-                  ),
-                )),
+                child: (_arturl != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: _arturl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) {
+                            return AnimatedSwitcher(
+                              child: Image.asset(mylogoAsset),
+                              duration:
+                                  const Duration(milliseconds: imageMilli),
+                            );
+                          },
+                        ),
+                      )
+                    : Container()),
             SizedBox(
               width: 15,
             ),
@@ -187,12 +190,13 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                   Container(
                     child: Row(
                       children: [
-                        Text(
-                          S.of(context).udpateDate +
-                              ": " +
-                              timeISOtoString(_changed),
-                          style: nomalText,
-                        ),
+                        if (_changed != null)
+                          Text(
+                            S.of(context).udpateDate +
+                                ": " +
+                                timeISOtoString(_changed!),
+                            style: nomalText,
+                          ),
                       ],
                     ),
                   ),
@@ -279,32 +283,40 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                   ];
 
                   return Dismissible(
-                      // Key
                       key: Key(_song.id),
-                      onDismissed: (direction) async {
+                      confirmDismiss: (direction) {
+                        bool _result = false;
                         if (direction == DismissDirection.endToStart) {
                           // 从右向左  也就是删除
+                          _result = true;
+                        } else if (direction == DismissDirection.startToEnd) {
+                          //从左向右
+                          _result = false;
+                        }
+                        return Future<bool>.value(_result);
+                      },
+                      onDismissed: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          await delSongfromPlaylist(
+                              activeID.value, index.toString());
+
+                          _getSongs(activeID.value);
+                          MyToast.show(
+                              context: context,
+                              message:
+                                  S.of(context).delete + S.of(context).success);
                         } else if (direction == DismissDirection.startToEnd) {
                           //从左向右
                         }
-
-                        await delSongfromPlaylist(
-                            activeID.value, index.toString());
-
-                        _getSongs(activeID.value);
-                        MyToast.show(
-                            context: context,
-                            message:
-                                S.of(context).delete + S.of(context).success);
                       },
                       background: Container(
-                        color: badgeRed,
+                        color: rightColor,
                         child: ListTile(
-                          leading: Icon(
-                            Icons.delete,
-                            color: textGray,
-                          ),
-                        ),
+                            // leading: Icon(
+                            //   Icons.delete,
+                            //   color: textGray,
+                            // ),
+                            ),
                       ),
                       secondaryBackground: Container(
                         color: badgeRed,
@@ -315,8 +327,6 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                           ),
                         ),
                       ),
-
-                      // Child
                       child: ListTile(
                           title: GestureDetector(
                               onTap: () async {

@@ -19,7 +19,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen>
     with SingleTickerProviderStateMixin {
   final searchController = new TextEditingController();
-  List<Tab> myTabs = <Tab>[Tab(text: ''), Tab(text: ''), Tab(text: '')];
+  late List<Tab> myTabs;
   late TabController tabController;
   List<Songs> _songs = [];
   List<Albums> _albums = [];

@@ -67,7 +67,6 @@ void audioActiveSongListener(AudioPlayer _player) {
       isShuffleModeEnabledNotifier.value = false;
       playerLoopModeNotifier.value = LoopMode.all;
       setAudioSource(_player);
-      //isChangeList = true;
     }
   });
 }

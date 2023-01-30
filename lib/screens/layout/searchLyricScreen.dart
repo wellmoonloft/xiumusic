@@ -24,11 +24,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
   final songController = new TextEditingController();
   final artistController = new TextEditingController();
   late TabController tabController;
-  List<Tab> myTabs = <Tab>[
-    Tab(text: '我的歌曲'),
-    Tab(text: '云端歌曲'),
-    Tab(text: '歌词'),
-  ];
+  late List<Tab> myTabs;
   List? _songs;
   List? _netsongs;
   String _lyric = "";

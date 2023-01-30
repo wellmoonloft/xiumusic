@@ -21,8 +21,7 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
   List<Albums> _albums = [];
   String _artilstname = "";
   int _albumsnum = 0;
-  String _arturl = "https://s2.loli.net/2023/01/08/8hBKyu15UDqa9Z2.jpg";
-  //增加歌曲数，专辑数还有总时长
+  String? _arturl;
   int _songs = 0;
   int _playCount = 0;
   int _duration = 0;
@@ -78,25 +77,30 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
             Container(
                 height: screenImageWidthAndHeight,
                 width: screenImageWidthAndHeight,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.network(
-                    _arturl,
-                    height: screenImageWidthAndHeight,
-                    width: screenImageWidthAndHeight,
-                    fit: BoxFit.cover,
-                    frameBuilder:
-                        (context, child, frame, wasSynchronouslyLoaded) {
-                      if (wasSynchronouslyLoaded) {
-                        return child;
-                      }
-                      return AnimatedSwitcher(
-                        child: frame != null ? child : Image.asset(mylogoAsset),
-                        duration: const Duration(milliseconds: imageMilli),
-                      );
-                    },
-                  ),
-                )),
+                child: (_arturl != null)
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.network(
+                          _arturl!,
+                          height: screenImageWidthAndHeight,
+                          width: screenImageWidthAndHeight,
+                          fit: BoxFit.cover,
+                          frameBuilder:
+                              (context, child, frame, wasSynchronouslyLoaded) {
+                            if (wasSynchronouslyLoaded) {
+                              return child;
+                            }
+                            return AnimatedSwitcher(
+                              child: frame != null
+                                  ? child
+                                  : Image.asset(mylogoAsset),
+                              duration:
+                                  const Duration(milliseconds: imageMilli),
+                            );
+                          },
+                        ),
+                      )
+                    : Container()),
             SizedBox(
               width: 15,
             ),

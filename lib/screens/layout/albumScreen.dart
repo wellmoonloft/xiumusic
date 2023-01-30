@@ -18,6 +18,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
   List<Albums> _albums = [];
   int _albumsnum = 0;
   String _selectOrder = '';
+  int _offset = 0;
+  int _size = 500;
   List<DropdownMenuItem<String>> _sortOrder = [
     DropdownMenuItem(
         value: "random",
@@ -55,10 +57,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
         _selectOrder == "newest" ||
         _selectOrder == "recent" ||
         _selectOrder == "frequent") {
-      _albumsList = await getAlbumList(_selectOrder, "", 0, 500);
+      _albumsList = await getAlbumList(_selectOrder, "", _offset, _size);
     } else {
       _albumsList = await getAlbumList(
-          "byGenre", _selectOrder.replaceAll("&", "%26"), 0, 500);
+          "byGenre", _selectOrder.replaceAll("&", "%26"), _offset, _size);
     }
 
     List<Albums> _list = [];
@@ -71,12 +73,22 @@ class _AlbumScreenState extends State<AlbumScreen> {
         _list.add(_album);
         _albumsnum++;
       }
-
-      if (mounted) {
-        setState(() {
-          _albums = _list;
-          isInit = true;
-        });
+      if (_list.length / _size == 1) {
+        if (mounted) {
+          setState(() {
+            _albums.addAll(_list);
+            isInit = true;
+            _offset += _size;
+          });
+        }
+        _getAllAlbums();
+      } else {
+        if (mounted) {
+          setState(() {
+            _albums.addAll(_list);
+            isInit = true;
+          });
+        }
       }
     }
   }
