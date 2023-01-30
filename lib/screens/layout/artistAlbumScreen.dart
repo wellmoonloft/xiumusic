@@ -277,7 +277,12 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
                           ),
                           Container(
                               child: Text(
-                            _tem.title + "(" + _tem.year.toString() + ")",
+                            _tem.year == 0
+                                ? _tem.title
+                                : (_tem.title +
+                                    "(" +
+                                    _tem.year.toString() +
+                                    ")"),
                             style: nomalText,
                             textAlign: TextAlign.center,
                           )),

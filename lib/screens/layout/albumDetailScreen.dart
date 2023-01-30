@@ -191,17 +191,19 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        S.of(context).year + ": " + _year.toString(),
-                        style: nomalText,
-                      ),
-                    ],
-                  ),
+                  if (_year != 0)
+                    SizedBox(
+                      height: 5,
+                    ),
+                  if (_year != 0)
+                    Row(
+                      children: [
+                        Text(
+                          S.of(context).year + ": " + _year.toString(),
+                          style: nomalText,
+                        ),
+                      ],
+                    ),
                   if (_genres.length > 0)
                     SizedBox(
                       height: 5,

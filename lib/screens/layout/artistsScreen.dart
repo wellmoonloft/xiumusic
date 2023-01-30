@@ -15,7 +15,6 @@ class ArtistsScreen extends StatefulWidget {
 class _ArtistsScreenState extends State<ArtistsScreen> {
   List? _artists;
   int artistsnum = 0;
-  int albumsnum = 0;
 
   _getArtists() async {
     if (_artists == null) {
@@ -28,7 +27,6 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
             String _url = getCoverArt(element["id"]);
             element["artistImageUrl"] = _url;
             Artists _artist = Artists.fromJson(element);
-            albumsnum += _artist.albumCount;
             _list.add(_artist);
           }
         }
@@ -54,20 +52,11 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(child: Text(S.of(context).artist, style: titleText1)),
-        Row(
-          children: [
-            Text(
-              S.of(context).artist + ": " + artistsnum.toString(),
-              style: nomalText,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              S.of(context).album + ": " + albumsnum.toString(),
-              style: nomalText,
-            ),
-          ],
+        Container(
+          child: Text(
+            S.of(context).artist + ": " + artistsnum.toString(),
+            style: nomalText,
+          ),
         ),
       ],
     );
