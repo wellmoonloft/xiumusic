@@ -4,6 +4,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
+import '../util/httpClient.dart';
 import '../util/mycss.dart';
 import 'components/myAudio/playerControBar.dart';
 import 'components/myAudio/playerSeekBar.dart';
@@ -59,6 +60,21 @@ class _BottomScreenState extends State<BottomScreen>
                     stream: _positionDataStream,
                     builder: (context, snapshot) {
                       final positionData = snapshot.data;
+                      if (positionData != null &&
+                          activeSong.value.isNotEmpty &&
+                          positionData.duration.inSeconds -
+                                  positionData.position.inSeconds ==
+                              20) {
+                        if (positionData.duration.inMilliseconds -
+                                    positionData.position.inMilliseconds <
+                                20000 &&
+                            positionData.duration.inMilliseconds -
+                                    positionData.position.inMilliseconds >
+                                19800) {
+                          scrobble(activeSong.value["value"], true);
+                        }
+                      }
+
                       return PlayerSeekBar(
                         trackWidth: windowsWidth.value,
                         duration: positionData?.duration ?? Duration.zero,
@@ -138,9 +154,10 @@ class _BottomScreenState extends State<BottomScreen>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        width: (isMobile)
-                                            ? windowsWidth.value - 180
-                                            : windowsWidth.value / 4 - 70,
+                                        constraints: BoxConstraints(
+                                            maxWidth: (isMobile)
+                                                ? windowsWidth.value - 180
+                                                : windowsWidth.value / 4 - 70),
                                         child: Text(
                                             _song.isEmpty ? "" : _song["title"],
                                             maxLines: 1,
@@ -148,9 +165,10 @@ class _BottomScreenState extends State<BottomScreen>
                                             style: nomalText),
                                       ),
                                       Container(
-                                        width: (isMobile)
-                                            ? windowsWidth.value - 180
-                                            : windowsWidth.value / 4 - 70,
+                                        constraints: BoxConstraints(
+                                            maxWidth: (isMobile)
+                                                ? windowsWidth.value - 180
+                                                : windowsWidth.value / 4 - 70),
                                         child: Text(
                                             _song.isEmpty
                                                 ? ""
@@ -160,9 +178,10 @@ class _BottomScreenState extends State<BottomScreen>
                                             style: subText),
                                       ),
                                       Container(
-                                        width: (isMobile)
-                                            ? windowsWidth.value - 180
-                                            : windowsWidth.value / 4 - 70,
+                                        constraints: BoxConstraints(
+                                            maxWidth: (isMobile)
+                                                ? windowsWidth.value - 180
+                                                : windowsWidth.value / 4 - 70),
                                         child: Text(
                                             _song.isEmpty ? "" : _song["album"],
                                             maxLines: 1,

@@ -80,10 +80,10 @@ class S {
     );
   }
 
-  /// `Cancel`
+  /// `Cancel `
   String get cancel {
     return Intl.message(
-      'Cancel',
+      'Cancel ',
       name: 'cancel',
       desc: '',
       args: [],

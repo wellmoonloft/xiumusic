@@ -29,7 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "artist": MessageLookupByLibrary.simpleMessage("Artist"),
         "binding": MessageLookupByLibrary.simpleMessage("Binding "),
         "bitRange": MessageLookupByLibrary.simpleMessage("Bit Range"),
-        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel "),
         "chinese": MessageLookupByLibrary.simpleMessage("Chinese"),
         "confrim": MessageLookupByLibrary.simpleMessage("Confrim"),
         "create": MessageLookupByLibrary.simpleMessage("Create "),

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import '../../generated/l10n.dart';
@@ -118,15 +119,74 @@ class _SearchScreenState extends State<SearchScreen>
     super.dispose();
   }
 
+  Widget _songHeader() {
+    List<String> _title = [
+      S.current.song,
+      S.current.album,
+      S.current.artist,
+      S.current.dration
+    ];
+    return Container(
+        height: 30,
+        padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        color: bkColor,
+        child: myRowList(_title, subText));
+  }
+
+  Widget _songsBody() {
+    return _songs.length > 0
+        ? MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _songs.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Songs _song = _songs[index];
+                  List<String> _title = [
+                    _song.title,
+                    _song.album,
+                    _song.artist,
+                    if (!isMobile) formatDuration(_song.duration)
+                  ];
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () async {
+                            if (listEquals(activeList.value, _songs)) {
+                              widget.player.seek(Duration.zero, index: index);
+                            } else {
+                              //当前歌曲队列
+                              activeIndex.value = index;
+                              activeSongValue.value = _song.id;
+                              //歌曲所在专辑歌曲List
+                              activeList.value = _songs;
+                            }
+                          },
+                          child: ValueListenableBuilder<Map>(
+                              valueListenable: activeSong,
+                              builder: ((context, value, child) {
+                                return myRowList(
+                                    _title,
+                                    (value.isNotEmpty &&
+                                            value["value"] == _song.id)
+                                        ? activeText
+                                        : nomalText);
+                              }))));
+                }))
+        : Container();
+  }
+
   Widget _songsWidget() {
     return Column(
       children: [
-        buildSongHeaderWidget(),
+        _songHeader(),
         Container(
             height: (isMobile)
                 ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
                 : windowsHeight.value - (106 + bottomHeight + 50 + 30),
-            child: songsBuildWidget(_songs, context, widget.player))
+            child: _songsBody())
       ],
     );
   }
@@ -142,7 +202,7 @@ class _SearchScreenState extends State<SearchScreen>
 
   Widget _itemAlbumsWidget() {
     return Column(
-      children: [buildAlbumHeaderWidget(), albumBuildWidget(_albums, context)],
+      children: [albumHeader(), albumBuildWidget(_albums, context)],
     );
   }
 

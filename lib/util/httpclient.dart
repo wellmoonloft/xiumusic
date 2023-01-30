@@ -359,6 +359,20 @@ delStarred(Favorite _starred) async {
   }
 }
 
+scrobble(String _songId, bool _submission) async {
+  String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+  String _sql =
+      await getServerInfo("scrobble") + '&time=$_timestamp' + '&id=' + _songId;
+  try {
+    var _response = await Dio().get(_sql);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    return _subsonic;
+  } catch (e) {
+    print(e);
+  }
+}
+
 searchNeteasAPI(String _name, String _type) async {
   String _neteaseapi = isServersInfo.value.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();

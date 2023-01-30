@@ -98,13 +98,13 @@ Widget buildArtistsHeaderWidget() {
       child: myRowList(_title, subText));
 }
 
-Widget buildAlbumHeaderWidget() {
+Widget albumHeader() {
   List<String> _title = [
     S.current.album,
-    S.current.year,
+    S.current.artist,
     S.current.song,
-    S.current.dration,
-    S.current.playCount
+    if (!isMobile) S.current.dration,
+    if (!isMobile) S.current.playCount
   ];
   return Container(
       height: 30,
@@ -225,8 +225,8 @@ Widget albumBuildWidget(List<Albums> _albums, BuildContext _context) {
                       _tem.title,
                       _tem.artist.toString(),
                       _tem.songCount.toString(),
-                      formatDuration(_tem.duration),
-                      _tem.playCount.toString(),
+                      if (!isMobile) formatDuration(_tem.duration),
+                      if (!isMobile) _tem.playCount.toString(),
                     ];
                     return ListTile(
                         title: InkWell(

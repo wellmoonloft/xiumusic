@@ -24,7 +24,8 @@
 
 **注意！！！**歌词是保存在APP文档的sqlite里的，目前没有做导出功能
 
-**请使用最新版本自行打包。 appstore上的版本逻辑有问题，但想改进一下再上架**
+MacOS的版本已经在[Appstore](https://apps.apple.com/cn/app/xiu-music/id1667473545)上架了，可以直接下载
+
 
 **锁屏播放**
 

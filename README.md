@@ -28,7 +28,7 @@ This is developed and debugged on the server environment of [Navidrome](https://
 
 **Notice! ! !** The lyrics are saved in the sqlite at document. Currently, there is no export function. 
 
-**Please use the latest version to pack it yourself. The version on the appstore has logic problems, but I want to improve it a bit before putting it on appstore**
+The MacOS version is already on the [Appstore](https://apps.apple.com/cn/app/xiu-music/id1667473545), you can download it directly
 
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
 

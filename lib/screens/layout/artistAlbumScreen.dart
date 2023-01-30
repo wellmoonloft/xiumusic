@@ -303,10 +303,13 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 180,
+        top: 190,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
+            SizedBox(
+              height: 10,
+            )
           ],
         ),
         contentWidget: _itemBuildWidget());

@@ -26,6 +26,7 @@ void audioCurrentIndexStream(AudioPlayer _player) {
       isLastSongNotifier.value = playlist.last == currentItem;
 
       MediaItem _tag = currentItem.tag;
+      scrobble(_tag.id, false);
       var _songtem = await getSong(_tag.id);
       String _stream = getServerInfo("stream");
       String _url = getCoverArt(_songtem["id"]);

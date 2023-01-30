@@ -239,7 +239,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 130,
+        top: 120,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

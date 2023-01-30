@@ -35,7 +35,7 @@ class MySliverControlList extends StatelessWidget {
           Albums _tem = albums[index];
 
           return Container(
-            padding: leftrightPadding,
+            padding: EdgeInsets.only(right: 20),
             child: InkWell(
                 onTap: () {
                   activeID.value = _tem.id;

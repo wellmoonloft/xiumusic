@@ -14,8 +14,6 @@ class GenresScreen extends StatefulWidget {
 
 class _GenresScreenState extends State<GenresScreen> {
   List<Genres> _genres = [];
-  int albumsnum = 0;
-  int songsnum = 0;
   int genresnum = 0;
 
   _getGenres() async {
@@ -25,8 +23,6 @@ class _GenresScreenState extends State<GenresScreen> {
       for (var element in _genresList) {
         Genres _genres = Genres.fromJson(element);
         _genreslist.add(_genres);
-        songsnum += _genres.songCount;
-        albumsnum += _genres.albumCount;
         genresnum++;
       }
       if (mounted) {
@@ -49,31 +45,12 @@ class _GenresScreenState extends State<GenresScreen> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Container(child: Text(S.of(context).genres, style: titleText1)),
-        if (!isMobile)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                S.of(context).genres + ": " + genresnum.toString(),
-                style: nomalText,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                S.of(context).album + ": " + albumsnum.toString(),
-                style: nomalText,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                S.of(context).song + ": " + songsnum.toString(),
-                style: nomalText,
-              ),
-            ],
+        Container(
+          child: Text(
+            S.of(context).genres + ": " + genresnum.toString(),
+            style: nomalText,
           ),
+        ),
       ],
     );
   }
@@ -123,30 +100,6 @@ class _GenresScreenState extends State<GenresScreen> {
         headerWidget: Column(
           children: [
             _buildTopWidget(),
-            if (isMobile)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    S.of(context).genres + ": " + genresnum.toString(),
-                    style: nomalText,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    S.of(context).album + ": " + albumsnum.toString(),
-                    style: nomalText,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    S.of(context).song + ": " + songsnum.toString(),
-                    style: nomalText,
-                  ),
-                ],
-              ),
             SizedBox(height: 25),
             _buildHeaderWidget()
           ],
