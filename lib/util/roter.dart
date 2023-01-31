@@ -42,7 +42,6 @@ class Roter extends StatelessWidget {
             return GenresScreen();
           case 7: //搜索歌词
             return SearchLyricScreen();
-          //不通过点击进入
           case 8: //专辑详情
             return AlbumDetailScreen(player: player);
           case 9: //艺人详情
@@ -53,7 +52,7 @@ class Roter extends StatelessWidget {
             return Settings();
           case 12: //播放列表详细
             return PlaylistDetailScreen(player: player);
-          case 13: //艺人换季
+          case 13: //艺人专辑
             return ArtistAlbumScreen();
 
           default:

@@ -195,11 +195,23 @@ class _AlbumScreenState extends State<AlbumScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(child: Text(S.of(context).album, style: titleText1)),
-        Text(
-          S.of(context).album + ": " + _albumsnum.toString(),
-          style: nomalText,
-        )
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(child: Text(S.current.album, style: titleText1)),
+            Container(
+                margin: EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 5, right: 5, top: 2, bottom: 3),
+                decoration: BoxDecoration(
+                    color: badgeDark,
+                    borderRadius: const BorderRadius.all(Radius.circular(6))),
+                child: Text(
+                  _albumsnum.toString(),
+                  style: nomalText,
+                ))
+          ],
+        ),
+        _buildChoiceWidget()
       ],
     );
   }
@@ -211,8 +223,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
       children: [
         if (_selectOrder != null && _sortOrder.length > 0)
           Container(
-              width: 200,
-              height: 40,
+              constraints: BoxConstraints(
+                maxWidth: 200,
+              ),
+              height: 30,
               child: Theme(
                   data: Theme.of(context).copyWith(
                     canvasColor: badgeDark,
@@ -240,12 +254,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 120,
+        top: 65,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
-            SizedBox(height: 20),
-            _buildChoiceWidget()
           ],
         ),
         contentWidget: _itemBuildWidget());

@@ -18,7 +18,7 @@ class MainScreen extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    switch (isServersInfo.value.languageCode) {
+    switch (serversInfo.value.languageCode) {
       case "en":
         S.load(Locale('en', ''));
         break;
@@ -32,10 +32,11 @@ class MainScreen extends StatelessWidget {
         S.load(Locale('zh', 'Hant'));
         break;
       default:
+        S.load(Locale('en', ''));
         break;
     }
     final GlobalKey<ScaffoldState> myLeftStateKey = GlobalKey<ScaffoldState>();
-    //S.load(Locale('zh', 'CN'));
+
     _drawer() {
       myLeftStateKey.currentState?.openDrawer();
     }
@@ -81,7 +82,7 @@ class MainScreen extends StatelessWidget {
                           : windowsWidth.value - drawerWidth,
                       color: bkColor,
                       child: ValueListenableBuilder<ServerInfo>(
-                          valueListenable: isServersInfo,
+                          valueListenable: serversInfo,
                           builder: ((context, _value, child) {
                             return Container(
                               child: _value.baseurl.isNotEmpty

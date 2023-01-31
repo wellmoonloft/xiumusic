@@ -19,7 +19,7 @@ class FavoriteScreen extends StatefulWidget {
 
 class _FavoriteScreenState extends State<FavoriteScreen>
     with SingleTickerProviderStateMixin {
-  late TabController tabController;
+  late TabController _tabController;
   List<Tab> myTabs = <Tab>[Tab(text: ''), Tab(text: ''), Tab(text: '')];
   List<Songs> _songs = [];
   List<Albums> _albums = [];
@@ -79,14 +79,21 @@ class _FavoriteScreenState extends State<FavoriteScreen>
           _artists1.add(Artists.fromJson(_artist));
         }
       }
-      setState(() {
-        _songs = _songs1;
-        _albums = _albums1;
-        _artists = _artists1;
-        _starsongs = _starsongs1;
-        _staralbums = _staralbums1;
-        _starartists = _starartists1;
-      });
+      if (mounted) {
+        setState(() {
+          _songs = _songs1;
+          _albums = _albums1;
+          _artists = _artists1;
+          _starsongs = _starsongs1;
+          _staralbums = _staralbums1;
+          _starartists = _starartists1;
+          myTabs = <Tab>[
+            Tab(text: S.current.song + "(" + _songs.length.toString() + ")"),
+            Tab(text: S.current.album + "(" + _albums.length.toString() + ")"),
+            Tab(text: S.current.artist + "(" + _artists.length.toString() + ")")
+          ];
+        });
+      }
     }
   }
 
@@ -94,17 +101,17 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   initState() {
     super.initState();
     myTabs = <Tab>[
-      Tab(text: S.current.song),
-      Tab(text: S.current.album),
-      Tab(text: S.current.artist)
+      Tab(text: S.current.song + "(0)"),
+      Tab(text: S.current.album + "(0)"),
+      Tab(text: S.current.artist + "(0)")
     ];
-    tabController = TabController(length: myTabs.length, vsync: this);
+    _tabController = TabController(length: myTabs.length, vsync: this);
     _getFavorite();
   }
 
   @override
   void dispose() {
-    tabController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -114,7 +121,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       S.current.album,
       S.current.artist,
       if (!isMobile) S.current.dration,
-      S.of(context).favorite
+      S.current.favorite
     ];
     return Container(
         height: 30,
@@ -378,7 +385,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
     List<String> _title = [
       S.current.artist,
       S.current.album,
-      S.of(context).favorite
+      S.current.favorite
     ];
     return Container(
         height: 30,
@@ -471,35 +478,9 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   }
 
   Widget _buildTopWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Container(child: Text(S.of(context).favorite, style: titleText1)),
-        Row(
-          children: [
-            Text(
-              S.of(context).song + ": " + _songs.length.toString(),
-              style: nomalText,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              S.of(context).album + ": " + _albums.length.toString(),
-              style: nomalText,
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              S.of(context).artist + ": " + _artists.length.toString(),
-              style: nomalText,
-            ),
-          ],
-        ),
-      ],
-    );
+    return Container(
+        alignment: Alignment.centerLeft,
+        child: Text(S.current.favorite, style: titleText1));
   }
 
   @override
@@ -512,7 +493,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
             Container(
                 alignment: Alignment.topLeft,
                 child: TabBar(
-                    controller: tabController,
+                    controller: _tabController,
                     labelColor: textGray,
                     unselectedLabelColor: borderColor,
                     tabs: myTabs,
@@ -520,7 +501,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                     indicatorColor: badgeRed)),
           ],
         ),
-        contentWidget: TabBarView(controller: tabController, children: [
+        contentWidget: TabBarView(controller: _tabController, children: [
           _itemSongsWidget(),
           _itemAlbumsWidget(),
           _itemArtistsWidget()

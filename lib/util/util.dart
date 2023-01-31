@@ -47,11 +47,15 @@ String timestampToDateStr(int timestamp, {onlyNeedDate = false}) {
 }
 
 String timeISOtoString(String time) {
-  DateTime y2k = DateTime.parse(time);
-  int year = y2k.year;
-  int month = y2k.month;
-  int day = y2k.day;
-  return "$year-$month-$day";
+  if (time != "") {
+    DateTime y2k = DateTime.parse(time);
+    int year = y2k.year;
+    int month = y2k.month;
+    int day = y2k.day;
+    return "$year-$month-$day";
+  } else {
+    return "";
+  }
 }
 
 String generateRandomString() {
@@ -126,4 +130,4 @@ converToTraditional(String simplified) {
   return traditional;
 }
 
-final String version = "v0.5.1";
+final String version = "v0.5.3";

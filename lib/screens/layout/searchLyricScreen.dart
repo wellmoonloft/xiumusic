@@ -95,19 +95,15 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
         builder: (BuildContext context) {
           return SimpleDialog(
             backgroundColor: rightColor,
-            title: Text(
-                S.of(context).confrim +
-                    S.of(context).search +
-                    S.of(context).info,
+            title: Text(S.current.confrim + S.current.search + S.current.info,
                 style: nomalText),
             contentPadding: EdgeInsets.only(left: 20, bottom: 20),
             children: <Widget>[
               MyTextInput(
                 control: songController,
-                label: S.of(context).song + S.of(context).name,
-                hintLabel: S.of(context).pleaseInput +
-                    S.of(context).song +
-                    S.of(context).name,
+                label: S.current.song + S.current.name,
+                hintLabel:
+                    S.current.pleaseInput + S.current.song + S.current.name,
                 hideText: false,
                 icon: Icons.search,
                 press: () {},
@@ -117,10 +113,9 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
               ),
               MyTextInput(
                 control: artistController,
-                label: S.of(context).artist + S.of(context).name,
-                hintLabel: S.of(context).pleaseInput +
-                    S.of(context).artist +
-                    S.of(context).name,
+                label: S.current.artist + S.current.name,
+                hintLabel:
+                    S.current.pleaseInput + S.current.artist + S.current.name,
                 hideText: false,
                 icon: Icons.search,
                 press: () {},
@@ -132,16 +127,15 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MyTextButton(
-                    title: S.of(context).cancel,
+                    title: S.current.cancel,
                     press: () {
                       Navigator.of(context).pop();
                     },
                   ),
                   MyTextButton(
-                    title: S.of(context).search,
+                    title: S.current.search,
                     press: () async {
-                      showMyLoadingDialog(
-                          context, S.of(context).search + "...");
+                      showMyLoadingDialog(context, S.current.search + "...");
                       var _result = await searchNeteasAPI(
                           songController.text + " " + artistController.text,
                           "1");
@@ -181,7 +175,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                       title: InkWell(
                           onTap: () async {
                             showMyLoadingDialog(
-                                context, S.of(context).search + "...");
+                                context, S.current.search + "...");
                             var _lyritem =
                                 await getLyric(_tem["id"].toString());
                             Navigator.pop(context);
@@ -190,8 +184,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                                 _lyric = _lyritem;
                               });
                               tabController.animateTo(0);
-                              showMyAlertDialog(context, S.of(context).success,
-                                  S.of(context).lyricDownloadSuccess);
+                              showMyAlertDialog(context, S.current.success,
+                                  S.current.lyricDownloadSuccess);
                             }
                           },
                           child: Row(
@@ -296,10 +290,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
       children: [
         MyTextInput(
           control: searchController,
-          label: S.of(context).search + S.of(context).lyric,
-          hintLabel: S.of(context).pleaseInput +
-              S.of(context).song +
-              S.of(context).name,
+          label: S.current.search + S.current.lyric,
+          hintLabel: S.current.pleaseInput + S.current.song + S.current.name,
           hideText: false,
           icon: Icons.search,
           press: () {
@@ -315,16 +307,15 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
           children: [
             Container(
                 child: (_songs != null && _songs!.length > 0)
-                    ? Text(
-                        S.of(context).result + ":" + _songs!.length.toString(),
+                    ? Text(S.current.result + ":" + _songs!.length.toString(),
                         style: nomalText)
-                    : Text(S.of(context).result + ": 0", style: nomalText)),
+                    : Text(S.current.result + ": 0", style: nomalText)),
             MyTextButton(
-              title: S.of(context).binding + S.of(context).lyric,
+              title: S.current.binding + S.current.lyric,
               press: () async {
                 if (_lyric == "") {
-                  showMyAlertDialog(context, S.of(context).notive,
-                      S.of(context).no + S.of(context).lyric);
+                  showMyAlertDialog(context, S.current.notive,
+                      S.current.no + S.current.lyric);
                 } else {
                   for (var i = 0; i < _isChecked.length; i++) {
                     if (_isChecked[i]) {
@@ -338,8 +329,8 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                       }
                     }
                   }
-                  showMyAlertDialog(context, S.of(context).success,
-                      S.of(context).binding + S.of(context).success);
+                  showMyAlertDialog(context, S.current.success,
+                      S.current.binding + S.current.success);
                 }
               },
             )

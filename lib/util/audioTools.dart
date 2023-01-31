@@ -173,7 +173,7 @@ Future<int> newPlaylistDialog(
                     Container(
                       padding: allPadding,
                       child: Text(
-                        S.of(context).create + S.of(context).playlist,
+                        S.current.create + S.current.playlist,
                         style: nomalText,
                       ),
                     ),
@@ -187,9 +187,9 @@ Future<int> newPlaylistDialog(
                           cursorColor: textGray,
                           onSubmitted: (value) {},
                           decoration: InputDecoration(
-                              hintText: S.of(context).pleaseInput +
-                                  S.of(context).playlist +
-                                  S.of(context).name,
+                              hintText: S.current.pleaseInput +
+                                  S.current.playlist +
+                                  S.current.name,
                               labelStyle: nomalText,
                               border: InputBorder.none,
                               hintStyle: nomalText,
@@ -222,7 +222,7 @@ Future<int> newPlaylistDialog(
                             press: () async {
                               Navigator.of(context).pop(3);
                             },
-                            title: S.of(context).cancel,
+                            title: S.current.cancel,
                           ),
                           MyTextButton(
                             press: () async {
@@ -239,7 +239,7 @@ Future<int> newPlaylistDialog(
                                 Navigator.of(context).pop(2);
                               }
                             },
-                            title: S.of(context).create,
+                            title: S.current.create,
                           )
                         ],
                       ),

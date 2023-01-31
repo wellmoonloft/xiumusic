@@ -57,13 +57,17 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
 
   Widget _buildTopWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(child: Text(S.of(context).artist, style: titleText1)),
+        Container(child: Text(S.current.artist, style: titleText1)),
         Container(
+          margin: EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(left: 5, right: 5, top: 2, bottom: 3),
+          decoration: BoxDecoration(
+              color: badgeDark,
+              borderRadius: const BorderRadius.all(Radius.circular(6))),
           child: Text(
-            S.of(context).artist + ": " + artistsnum.toString(),
+            artistsnum.toString(),
             style: nomalText,
           ),
         ),
@@ -71,33 +75,78 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
     );
   }
 
-  Widget _buildHeaderWidget() {
+  Widget _artistHeader() {
     List<String> _title = [
-      S.of(context).artist,
-      S.of(context).album,
-      S.of(context).favorite
+      S.current.artist,
+      S.current.album,
+      S.current.favorite
     ];
     return myRowList(_title, subText);
   }
 
-  List<Widget> mylistView(List<String> _title, TextStyle _style) {
+  List<Widget> _artistBody(List<String> _title, int _index) {
     List<Widget> _list = [];
     for (var i = 0; i < _title.length; i++) {
-      _list.add(Expanded(
-        flex: (i == 0) ? 2 : 1,
-        child: Text(
-          _title[i],
-          textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: _style,
-        ),
-      ));
+      if (i == _title.length - 1) {
+        _list.add(Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: (_star[_index])
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.favorite,
+                        color: badgeRed,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _title[i], type: 'artist');
+                        await delStarred(_favorite);
+                        MyToast.show(
+                            context: context,
+                            message: S.current.cancel + S.current.favorite);
+                        setState(() {
+                          _star[_index] = false;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.favorite_border,
+                        color: textGray,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _title[i], type: 'artist');
+                        await addStarred(_favorite);
+                        MyToast.show(
+                            context: context,
+                            message: S.current.add + S.current.favorite);
+                        setState(() {
+                          _star[_index] = true;
+                        });
+                      },
+                    ),
+            )));
+      } else {
+        _list.add(Expanded(
+          flex: (i == 0) ? 2 : 1,
+          child: Text(
+            _title[i],
+            textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: nomalText,
+          ),
+        ));
+      }
     }
     return _list;
   }
 
-  Widget _itemBuildWidget() {
+  Widget _artistWidget() {
     return _artists != null && _artists!.length > 0
         ? MediaQuery.removePadding(
             context: context,
@@ -109,7 +158,11 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Artists _tem = _artists![index];
-
+                  List<String> _title = [
+                    _tem.name,
+                    _tem.albumCount.toString(),
+                    _tem.id
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () {
@@ -119,74 +172,7 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    _tem.name,
-                                    textDirection: TextDirection.ltr,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: nomalText,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    _tem.albumCount.toString(),
-                                    textDirection: TextDirection.rtl,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: nomalText,
-                                  ),
-                                ),
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: (_star[index])
-                                          ? IconButton(
-                                              icon: Icon(
-                                                Icons.favorite,
-                                                color: badgeRed,
-                                                size: 16,
-                                              ),
-                                              onPressed: () async {
-                                                Favorite _favorite = Favorite(
-                                                    id: _tem.id,
-                                                    type: 'artist');
-                                                await delStarred(_favorite);
-                                                MyToast.show(
-                                                    context: context,
-                                                    message: S.current.cancel +
-                                                        S.current.favorite);
-                                                setState(() {
-                                                  _star[index] = false;
-                                                });
-                                              },
-                                            )
-                                          : IconButton(
-                                              icon: Icon(
-                                                Icons.favorite_border,
-                                                color: textGray,
-                                                size: 16,
-                                              ),
-                                              onPressed: () async {
-                                                Favorite _favorite = Favorite(
-                                                    id: _tem.id,
-                                                    type: 'artist');
-                                                await addStarred(_favorite);
-                                                MyToast.show(
-                                                    context: context,
-                                                    message: S.current.add +
-                                                        S.current.favorite);
-                                                setState(() {
-                                                  _star[index] = true;
-                                                });
-                                              },
-                                            ),
-                                    )),
-                              ])));
+                              children: _artistBody(_title, index))));
                 }))
         : Container();
   }
@@ -194,14 +180,10 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 100,
+        top: 90,
         headerWidget: Column(
-          children: [
-            _buildTopWidget(),
-            SizedBox(height: 25),
-            _buildHeaderWidget()
-          ],
+          children: [_buildTopWidget(), SizedBox(height: 15), _artistHeader()],
         ),
-        contentWidget: _itemBuildWidget());
+        contentWidget: _artistWidget());
   }
 }

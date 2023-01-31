@@ -95,9 +95,7 @@ class _PlayScreenState extends State<PlayScreen> {
                       height: 50,
                       width: !isMobile ? _width / 2 : _width,
                       child: Text(
-                          (value.isEmpty)
-                              ? S.of(context).unknown
-                              : value["title"],
+                          (value.isEmpty) ? S.current.unknown : value["title"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -107,8 +105,8 @@ class _PlayScreenState extends State<PlayScreen> {
                         width: !isMobile ? _width / 2 : _width,
                         child: Text(
                           (value.isEmpty)
-                              ? S.of(context).unknown
-                              : S.of(context).artist + ": " + value["artist"],
+                              ? S.current.unknown
+                              : S.current.artist + ": " + value["artist"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: nomalText,
@@ -121,8 +119,8 @@ class _PlayScreenState extends State<PlayScreen> {
                         width: !isMobile ? _width / 2 : _width,
                         child: Text(
                           (value.isEmpty)
-                              ? S.of(context).unknown
-                              : S.of(context).album + ": " + value["album"],
+                              ? S.current.unknown
+                              : S.current.album + ": " + value["album"],
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: nomalText,
@@ -163,7 +161,7 @@ class _PlayScreenState extends State<PlayScreen> {
                       : Size(windowsWidth.value, windowsHeight.value - 385),
                   emptyBuilder: () => Center(
                     child: Text(
-                      S.of(context).no + S.of(context).lyric,
+                      S.current.no + S.current.lyric,
                       style: lyricUI.getOtherMainTextStyle(),
                     ),
                   ),

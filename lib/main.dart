@@ -20,7 +20,6 @@ void main() async {
     WindowOptions windowOptions = WindowOptions(
       size: Size(1280, 800),
       minimumSize: Size(800, 600),
-      //maximumSize: Size(1024, 768),
       center: true,
       backgroundColor: Colors.black,
       skipTaskbar: false,
@@ -33,7 +32,6 @@ void main() async {
     isMobile = false;
   } else {
     isMobile = true;
-    //移动端开启后台播放
     //Enable background playback on the mobile terminal
     await JustAudioBackground.init(
       androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
@@ -42,19 +40,17 @@ void main() async {
     );
   }
 
-  final _infoList = await DbProvider.instance.getServerInfo();
-  if (_infoList != null) {
-    isServersInfo.value = _infoList;
+  final _serverInfo = await DbProvider.instance.getServerInfo();
+  if (_serverInfo != null) {
+    serversInfo.value = _serverInfo;
   }
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-  //注册唯一播放器
   //Register Unique Player
   final AudioPlayer _player = AudioPlayer();
   //监听器
   //register listener
   audioCurrentIndexStream(_player);
   audioActiveSongListener(_player);
-
   runApp(MyApp(player: _player));
 }
 
@@ -78,7 +74,6 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(fontFamily: 'NotoSansSC', brightness: Brightness.dark),
-
       home: MainScreen(player: player),
     );
   }

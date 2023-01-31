@@ -10,7 +10,7 @@ ValueNotifier<int> indexValue = ValueNotifier<int>(0);
 //监听当前歌曲
 ValueNotifier<String> activeSongValue = ValueNotifier<String>("1");
 
-ValueNotifier<ServerInfo> isServersInfo = ValueNotifier<ServerInfo>(ServerInfo(
+ValueNotifier<ServerInfo> serversInfo = ValueNotifier<ServerInfo>(ServerInfo(
     baseurl: '',
     hash: '',
     neteaseapi: '',

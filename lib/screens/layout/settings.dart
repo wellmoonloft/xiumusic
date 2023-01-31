@@ -61,13 +61,12 @@ class _SettingsState extends State<Settings>
             neteaseapi: "",
             languageCode: '');
         await DbProvider.instance.addServerInfo(_serverInfo);
-        isServersInfo.value = _serverInfo;
+        serversInfo.value = _serverInfo;
       } else {
-        showMyAlertDialog(
-            context, S.of(context).notive, S.of(context).serverErr);
+        showMyAlertDialog(context, S.current.notive, S.current.serverErr);
       }
     } else {
-      showMyAlertDialog(context, S.of(context).notive, S.of(context).noContent);
+      showMyAlertDialog(context, S.current.notive, S.current.noContent);
     }
   }
 
@@ -88,11 +87,11 @@ class _SettingsState extends State<Settings>
           neteaseapi: _myServerInfo.neteaseapi,
           salt: _myServerInfo.salt,
           username: _myServerInfo.username);
-      isServersInfo.value = newServerInfo;
-      showMyAlertDialog(context, S.of(context).success,
-          S.of(context).save + S.of(context).success);
+      serversInfo.value = newServerInfo;
+      showMyAlertDialog(
+          context, S.current.success, S.current.save + S.current.success);
     } else {
-      showMyAlertDialog(context, S.of(context).notive, S.of(context).noContent);
+      showMyAlertDialog(context, S.current.notive, S.current.noContent);
     }
   }
 
@@ -105,7 +104,7 @@ class _SettingsState extends State<Settings>
           _selectedSort = _myServerInfo.languageCode.isNotEmpty
               ? _myServerInfo.languageCode
               : "en";
-          isServersInfo.value = _infoList;
+          serversInfo.value = _infoList;
           servercontroller.text = _myServerInfo.baseurl;
           usernamecontroller.text = _myServerInfo.username;
           passwordcontroller.text = "******";
@@ -119,7 +118,7 @@ class _SettingsState extends State<Settings>
     await DbProvider.instance.deleteServerInfo();
     if (mounted) {
       setState(() {
-        isServersInfo.value = ServerInfo(
+        serversInfo.value = ServerInfo(
             baseurl: '',
             hash: '',
             neteaseapi: '',
@@ -132,8 +131,8 @@ class _SettingsState extends State<Settings>
         neteasecontroller.text = "";
       });
     }
-    showMyAlertDialog(context, S.of(context).success,
-        S.of(context).server + S.of(context).delete);
+    showMyAlertDialog(
+        context, S.current.success, S.current.server + S.current.delete);
   }
 
   @override
@@ -179,12 +178,12 @@ class _SettingsState extends State<Settings>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(S.of(context).settings, style: titleText1),
+            Text(S.current.settings, style: titleText1),
             MyTextButton(
                 press: () {
-                  showMyAlertDialog(context, S.of(context).version, version);
+                  showMyAlertDialog(context, S.current.version, version);
                 },
-                title: S.of(context).version + version)
+                title: S.current.version)
           ],
         ),
         Container(
@@ -212,11 +211,11 @@ class _SettingsState extends State<Settings>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          S.of(context).song + S.of(context).server,
+                          S.current.song + S.current.server,
                           style: titleText2,
                         ),
                         ValueListenableBuilder<ServerInfo>(
-                            valueListenable: isServersInfo,
+                            valueListenable: serversInfo,
                             builder: ((context, _value, child) {
                               return MyTextButton(
                                   press: () {
@@ -225,14 +224,14 @@ class _SettingsState extends State<Settings>
                                         : _saveServer();
                                   },
                                   title: _value.baseurl.isNotEmpty
-                                      ? S.of(context).disConnect
-                                      : S.of(context).save);
+                                      ? S.current.disConnect
+                                      : S.current.save);
                             }))
                       ],
                     ),
                     Container(
                       child: Text(
-                        S.of(context).serverSaveNotive,
+                        S.current.serverSaveNotive,
                         style: subText,
                       ),
                     ),
@@ -241,9 +240,8 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextInput(
                       control: servercontroller,
-                      label: S.of(context).serverURL,
-                      hintLabel:
-                          S.of(context).pleaseInput + S.of(context).serverURL,
+                      label: S.current.serverURL,
+                      hintLabel: S.current.pleaseInput + S.current.serverURL,
                       hideText: false,
                       icon: Icons.dns,
                       titleStyle: nomalText,
@@ -255,9 +253,8 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextInput(
                       control: usernamecontroller,
-                      label: S.of(context).username,
-                      hintLabel:
-                          S.of(context).pleaseInput + S.of(context).username,
+                      label: S.current.username,
+                      hintLabel: S.current.pleaseInput + S.current.username,
                       hideText: false,
                       icon: Icons.person,
                       press: () {
@@ -269,9 +266,8 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextInput(
                       control: passwordcontroller,
-                      label: S.of(context).password,
-                      hintLabel:
-                          S.of(context).pleaseInput + S.of(context).password,
+                      label: S.current.password,
+                      hintLabel: S.current.pleaseInput + S.current.password,
                       hideText: true,
                       icon: Icons.password,
                       press: () {
@@ -295,11 +291,11 @@ class _SettingsState extends State<Settings>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          S.of(context).lyric + S.of(context).server,
+                          S.current.lyric + S.current.server,
                           style: titleText2,
                         ),
                         ValueListenableBuilder<ServerInfo>(
-                            valueListenable: isServersInfo,
+                            valueListenable: serversInfo,
                             builder: ((context, _value, child) {
                               return _value.neteaseapi.isNotEmpty
                                   ? Container()
@@ -310,19 +306,19 @@ class _SettingsState extends State<Settings>
                                         } else {
                                           showMyAlertDialog(
                                               context,
-                                              S.of(context).notive,
-                                              S.of(context).serverSaveFirst);
+                                              S.current.notive,
+                                              S.current.serverSaveFirst);
                                         }
                                       },
-                                      title: S.of(context).save +
-                                          S.of(context).lyric +
-                                          S.of(context).server);
+                                      title: S.current.save +
+                                          S.current.lyric +
+                                          S.current.server);
                             }))
                       ],
                     ),
                     Container(
                       child: Text(
-                        S.of(context).serverSaveSub,
+                        S.current.serverSaveSub,
                         style: subText,
                       ),
                     ),
@@ -331,9 +327,8 @@ class _SettingsState extends State<Settings>
                     ),
                     MyTextInput(
                       control: neteasecontroller,
-                      label: S.of(context).lyric + S.of(context).server,
-                      hintLabel:
-                          S.of(context).pleaseInput + S.of(context).serverURL,
+                      label: S.current.lyric + S.current.server,
+                      hintLabel: S.current.pleaseInput + S.current.serverURL,
                       hideText: false,
                       icon: Icons.dns,
                       titleStyle: nomalText,
@@ -356,7 +351,7 @@ class _SettingsState extends State<Settings>
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      S.of(context).appearance + S.of(context).settings,
+                      S.current.appearance + S.current.settings,
                       style: titleText2,
                     ),
                   ],
@@ -368,7 +363,7 @@ class _SettingsState extends State<Settings>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      S.of(context).language,
+                      S.current.language,
                       style: nomalText,
                     ),
                     Container(
@@ -416,7 +411,7 @@ class _SettingsState extends State<Settings>
                                 ];
                               });
 
-                              if (isServersInfo.value.baseurl.isNotEmpty) {
+                              if (serversInfo.value.baseurl.isNotEmpty) {
                                 _myServerInfo.languageCode = value.toString();
                                 await DbProvider.instance
                                     .updateServerInfo(_myServerInfo);
@@ -428,7 +423,7 @@ class _SettingsState extends State<Settings>
                                     neteaseapi: _myServerInfo.neteaseapi,
                                     salt: _myServerInfo.salt,
                                     username: _myServerInfo.username);
-                                isServersInfo.value = newServerInfo;
+                                serversInfo.value = newServerInfo;
                               }
                             },
                           )),

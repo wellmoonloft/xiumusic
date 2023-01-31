@@ -10,6 +10,7 @@ import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
+import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
@@ -27,9 +28,11 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   String _artilstname = "";
   int _albumsnum = 0;
   String? _arturl;
+  String _biography = "";
+  bool _isbiography = true;
   int _songs = 0;
-  int _playCount = 0;
   int _duration = 0;
+  int _playCount = 0;
   bool _star = false;
   bool _isMoreSongs = false;
   List _similarArtist = [];
@@ -60,7 +63,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   _getArtistInfo2(String _artistId) async {
     final _artist = await getArtistInfo2(_artistId);
     if (_artist != null) {
-      //_artist["biography"];
+      if (_artist["biography"] != null) {
+        String _tem = _artist["biography"];
+        if (_tem.contains("<a")) {
+          _biography = _tem.substring(0, _tem.indexOf("<a"));
+        } else {
+          _biography = _tem;
+        }
+      }
 
       if (_artist["similarArtist"] != null &&
           _artist["similarArtist"].length > 0) {
@@ -130,105 +140,53 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   Widget _buildTopWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-                height: screenImageWidthAndHeight,
-                width: screenImageWidthAndHeight,
-                child: (_arturl != null)
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          _arturl!,
-                          height: screenImageWidthAndHeight,
-                          width: screenImageWidthAndHeight,
-                          fit: BoxFit.cover,
-                          frameBuilder:
-                              (context, child, frame, wasSynchronouslyLoaded) {
-                            if (wasSynchronouslyLoaded) {
-                              return child;
-                            }
-                            return AnimatedSwitcher(
-                              child: frame != null
-                                  ? child
-                                  : Image.asset(mylogoAsset),
-                              duration:
-                                  const Duration(milliseconds: imageMilli),
-                            );
-                          },
-                        ),
-                      )
-                    : Container()),
-            SizedBox(
-              width: 15,
-            ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: isMobile
-                          ? windowsWidth.value -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15
-                          : windowsWidth.value -
-                              drawerWidth -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15,
-                      child: Text(_artilstname,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: titleText2)),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        MyTextButton(
-                            press: () {
-                              indexValue.value = 5;
-                            },
-                            title: S.of(context).artist),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          S.of(context).album + ": " + _albumsnum.toString(),
-                          style: nomalText,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Text(
-                      S.of(context).song + ": " + _songs.toString(),
-                      style: nomalText,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Text(
-                      S.of(context).dration + ": " + formatDuration(_duration),
-                      style: nomalText,
-                    ),
-                  ),
-                  Container(
-                      child: Row(children: [
-                    Text(
-                      S.of(context).playCount + ": " + _playCount.toString(),
-                      style: nomalText,
-                    ),
+        Container(
+            height: screenImageWidthAndHeight,
+            width: screenImageWidthAndHeight,
+            child: (_arturl != null)
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      imageUrl: _arturl!,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) {
+                        return AnimatedSwitcher(
+                          child: Image.asset(mylogoAsset),
+                          duration: const Duration(milliseconds: imageMilli),
+                        );
+                      },
+                    ))
+                : Container()),
+        SizedBox(
+          width: 15,
+        ),
+        Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  width: isMobile
+                      ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+                      : windowsWidth.value -
+                          drawerWidth -
+                          screenImageWidthAndHeight -
+                          30 -
+                          15,
+                  child: Text(_artilstname,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: titleText2)),
+              Container(
+                child: Row(
+                  children: [
+                    MyTextButton(
+                        press: () {
+                          indexValue.value = 5;
+                        },
+                        title: S.current.artist),
                     Container(
                       height: 30,
                       width: 30,
@@ -266,11 +224,38 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                               },
                             ),
                     )
-                  ]))
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                width: isMobile
+                    ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+                    : windowsWidth.value -
+                        drawerWidth -
+                        screenImageWidthAndHeight -
+                        30 -
+                        15,
+                child: Text(
+                  S.current.album +
+                      ": " +
+                      _albumsnum.toString() +
+                      "  " +
+                      S.current.song +
+                      ": " +
+                      _songs.toString() +
+                      "  " +
+                      S.current.dration +
+                      ": " +
+                      formatDuration(_duration) +
+                      "  " +
+                      S.current.playCount +
+                      ": " +
+                      _playCount.toString(),
+                  style: nomalText,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -278,10 +263,10 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
 
   Widget _buildHeaderWidget() {
     List<String> _title = [
-      S.of(context).song,
-      S.of(context).album,
-      S.of(context).dration,
-      if (!isMobile) S.of(context).playCount,
+      S.current.song,
+      S.current.album,
+      S.current.dration,
+      if (!isMobile) S.current.playCount,
     ];
     return myRowList(_title, subText);
   }
@@ -292,9 +277,43 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       SliverToBoxAdapter(
         child: Column(
           children: [
-            _buildTopWidget(),
+            Container(
+              padding: leftrightPadding,
+              child: _buildTopWidget(),
+            )
           ],
         ),
+      ),
+      SliverToBoxAdapter(
+        child: InkWell(
+            onTap: () {
+              if (_isbiography) {
+                setState(() {
+                  _isbiography = false;
+                });
+              } else {
+                setState(() {
+                  _isbiography = true;
+                });
+              }
+            },
+            child: Container(
+              padding: allPadding,
+              width: isMobile
+                  ? windowsWidth.value
+                  : windowsWidth.value - drawerWidth,
+              child: _isbiography
+                  ? Text(
+                      _biography,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: nomalText,
+                    )
+                  : Text(
+                      _biography,
+                      style: nomalText,
+                    ),
+            )),
       ),
       if (_songList.length > 0)
         SliverToBoxAdapter(
@@ -303,7 +322,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
           child: Row(
             children: [
               Text(
-                S.of(context).top + S.of(context).song,
+                S.current.top + S.current.song,
                 style: titleText3,
               ),
               if (_songList.length > 5)
@@ -377,7 +396,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       if (_albums.length > 0)
         SliverToBoxAdapter(
             child: MySliverControlBar(
-          title: S.of(context).album,
+          title: S.current.album,
           controller: _albumscontroller,
           press: (_albums.length > 10)
               ? () {
@@ -393,7 +412,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       if (_similarArtist.length > 0)
         SliverToBoxAdapter(
             child: MySliverControlBar(
-          title: S.of(context).similar + S.of(context).artist,
+          title: S.current.similar + S.current.artist,
           controller: _similarArtistcontroller,
         )),
       if (_similarArtist.length > 0)

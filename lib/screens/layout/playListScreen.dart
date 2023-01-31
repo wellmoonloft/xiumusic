@@ -19,7 +19,6 @@ class PlayListScreen extends StatefulWidget {
 
 class _PlayListScreenState extends State<PlayListScreen> {
   final inputController = new TextEditingController();
-
   List<Playlist> _playlistsList = [];
   int _playlistnum = 0;
 
@@ -33,9 +32,11 @@ class _PlayListScreenState extends State<PlayListScreen> {
         Playlist _playlist = Playlist.fromJson(element);
         _playlistsList.add(_playlist);
       }
-      setState(() {
-        _playlistnum = _playlistsList.length;
-      });
+      if (mounted) {
+        setState(() {
+          _playlistnum = _playlistsList.length;
+        });
+      }
     }
   }
 
@@ -45,7 +46,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
         position: RelativeRect.fromLTRB(_x, _y, _x, _y),
         items: [
           PopupMenuItem(
-            child: Text(S.of(context).delete + S.of(context).playlist),
+            child: Text(S.current.delete + S.current.playlist),
             value: _playlistId.toString(),
           ),
         ]).then((value) async {
@@ -53,8 +54,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
         await deletePlaylist(_playlistId);
 
         MyToast.show(
-            context: context,
-            message: S.of(context).delete + S.of(context).success);
+            context: context, message: S.current.delete + S.current.success);
         _getPlaylist();
       }
     });
@@ -72,7 +72,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
     super.dispose();
   }
 
-  Widget _playlistBuildWidget() {
+  Widget _playlistBody() {
     return _playlistsList.length > 0
         ? MediaQuery.removePadding(
             context: context,
@@ -110,8 +110,7 @@ class _PlayListScreenState extends State<PlayListScreen> {
                           _getPlaylist();
                           MyToast.show(
                               context: context,
-                              message:
-                                  S.of(context).delete + S.of(context).success);
+                              message: S.current.delete + S.current.success);
                         } else if (direction == DismissDirection.startToEnd) {
                           //从左向右
                         }
@@ -153,12 +152,12 @@ class _PlayListScreenState extends State<PlayListScreen> {
         : Container();
   }
 
-  Widget _buildHeaderWidget() {
+  Widget _playlistHeader() {
     List<String> _title = [
-      S.of(context).name,
-      S.of(context).song,
-      S.of(context).createuser,
-      S.of(context).udpateDate
+      S.current.name,
+      S.current.song,
+      S.current.createuser,
+      S.current.udpateDate
     ];
     return myRowList(_title, subText);
   }
@@ -166,63 +165,65 @@ class _PlayListScreenState extends State<PlayListScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 100,
+        top: 90,
         headerWidget: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  child: Text(S.of(context).playlist, style: titleText1),
+                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  Container(
+                    child: Text(S.current.playlist, style: titleText1),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    padding:
+                        EdgeInsets.only(left: 5, right: 5, top: 2, bottom: 3),
+                    decoration: BoxDecoration(
+                        color: badgeDark,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(6))),
+                    child: Text(
+                      _playlistnum.toString(),
+                      style: nomalText,
+                    ),
+                  )
+                ]),
+                MyTextButton(
+                  press: () async {
+                    await newPlaylistDialog(context, inputController)
+                        .then((value) {
+                      _getPlaylist();
+                      switch (value) {
+                        case 1:
+                          showMyAlertDialog(context, S.current.notive,
+                              S.current.create + S.current.failure);
+                          break;
+                        case 2:
+                          showMyAlertDialog(
+                              context,
+                              S.current.notive,
+                              S.current.pleaseInput +
+                                  S.current.playlist +
+                                  S.current.name);
+                          break;
+                        case 3:
+                          break;
+                        default:
+                      }
+                    });
+                  },
+                  title: S.current.create,
                 ),
-                Row(
-                  children: [
-                    MyTextButton(
-                      press: () async {
-                        await newPlaylistDialog(context, inputController)
-                            .then((value) {
-                          _getPlaylist();
-                          switch (value) {
-                            case 1:
-                              showMyAlertDialog(context, S.of(context).notive,
-                                  S.of(context).create + S.of(context).failure);
-                              break;
-                            case 2:
-                              showMyAlertDialog(
-                                  context,
-                                  S.of(context).notive,
-                                  S.of(context).pleaseInput +
-                                      S.of(context).playlist +
-                                      S.of(context).name);
-                              break;
-                            case 3:
-                              break;
-                            default:
-                          }
-                        });
-                      },
-                      title: S.of(context).create,
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Container(
-                      child: Text(
-                        S.of(context).playlist + ": " + _playlistnum.toString(),
-                        style: nomalText,
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
             SizedBox(
-              height: 20,
+              height: 15,
             ),
-            _buildHeaderWidget(),
+            _playlistHeader(),
           ],
         ),
-        contentWidget: _playlistBuildWidget());
+        contentWidget: _playlistBody());
   }
 }

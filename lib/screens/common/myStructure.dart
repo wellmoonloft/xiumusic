@@ -38,3 +38,27 @@ class MyStructure extends StatelessWidget {
     ));
   }
 }
+
+List<Widget> mylistView(List<String> _title, TextStyle _style) {
+  List<Widget> _list = [];
+  for (var i = 0; i < _title.length; i++) {
+    _list.add(Expanded(
+      flex: (i == 0) ? 2 : 1,
+      child: Text(
+        _title[i],
+        textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: _style,
+      ),
+    ));
+  }
+  return _list;
+}
+
+Widget myRowList(List<String> _title, TextStyle _style) {
+  return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: mylistView(_title, _style));
+}

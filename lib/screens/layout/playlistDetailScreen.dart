@@ -70,7 +70,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         position: RelativeRect.fromLTRB(_x, _y, _x, _y),
         items: [
           PopupMenuItem(
-            child: Text(S.of(context).delete + S.of(context).song),
+            child: Text(S.current.delete + S.current.song),
             value: _index.toString(),
           ),
         ]).then((value) async {
@@ -78,8 +78,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
         await delSongfromPlaylist(activeID.value, value);
 
         MyToast.show(
-            context: context,
-            message: S.of(context).delete + S.of(context).success);
+            context: context, message: S.current.delete + S.current.success);
         _getSongs(activeID.value);
       }
     });
@@ -150,13 +149,13 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                           press: () {
                             indexValue.value = 2;
                           },
-                          title: S.of(context).playlist,
+                          title: S.current.playlist,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          S.of(context).createuser + ": " + _artist,
+                          S.current.createuser + ": " + _artist,
                           style: nomalText,
                         ),
                       ],
@@ -169,16 +168,14 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                     child: Row(
                       children: [
                         Text(
-                          S.of(context).song + ": " + _songsnum.toString(),
+                          S.current.song + ": " + _songsnum.toString(),
                           style: nomalText,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
-                          S.of(context).dration +
-                              ": " +
-                              formatDuration(_duration),
+                          S.current.dration + ": " + formatDuration(_duration),
                           style: nomalText,
                         ),
                       ],
@@ -192,7 +189,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                       children: [
                         if (_changed != null)
                           Text(
-                            S.of(context).udpateDate +
+                            S.current.udpateDate +
                                 ": " +
                                 timeISOtoString(_changed!),
                             style: nomalText,
@@ -206,7 +203,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                   Container(
                       child: Row(children: [
                     Text(
-                      S.of(context).playCount + ": " + _playCount.toString(),
+                      S.current.playCount + ": " + _playCount.toString(),
                       style: nomalText,
                     ),
                     SizedBox(
@@ -225,10 +222,10 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                                 contentTextStyle: nomalText,
                                 backgroundColor: badgeDark,
                                 title: Text(
-                                  S.of(context).delete,
+                                  S.current.delete,
                                 ),
                                 content: Text(
-                                  S.of(context).delete + _albumsname + "?",
+                                  S.current.delete + _albumsname + "?",
                                 ),
                                 actions: <Widget>[
                                   MyTextButton(
@@ -251,7 +248,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                             },
                           );
                         },
-                        title: S.of(context).delete)
+                        title: S.current.delete)
                   ]))
                 ],
               ),
@@ -262,7 +259,17 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
     );
   }
 
-  Widget _itemBuildWidget() {
+  Widget _songsHeader() {
+    List<String> _title = [
+      S.current.song,
+      S.current.dration,
+      if (!isMobile) S.current.bitRange,
+      S.current.playCount
+    ];
+    return myRowList(_title, subText);
+  }
+
+  Widget _songsBody() {
     return _songslist.length > 0
         ? MediaQuery.removePadding(
             context: context,
@@ -303,8 +310,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                           _getSongs(activeID.value);
                           MyToast.show(
                               context: context,
-                              message:
-                                  S.of(context).delete + S.of(context).success);
+                              message: S.current.delete + S.current.success);
                         } else if (direction == DismissDirection.startToEnd) {
                           //从左向右
                         }
@@ -362,16 +368,16 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 222,
+        top: 215,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
             SizedBox(
-              height: 20,
+              height: 15,
             ),
-            songsHeaderWidget()
+            _songsHeader()
           ],
         ),
-        contentWidget: _itemBuildWidget());
+        contentWidget: _songsBody());
   }
 }

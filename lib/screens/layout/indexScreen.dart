@@ -24,8 +24,8 @@ class _IndexScreenState extends State<IndexScreen> {
   List<Albums>? _mostalbums;
   List<Albums>? _recentalbums;
 
-  _getRandomAlbums() async {
-    final _albumsList = await getAlbumList("random", "", 0, 10);
+  _getAlbuoms(String _api) async {
+    final _albumsList = await getAlbumList(_api, "", 0, 10);
     List<Albums> _list = [];
     if (_albumsList != null && _albumsList.length > 0) {
       for (var _element in _albumsList) {
@@ -36,61 +36,21 @@ class _IndexScreenState extends State<IndexScreen> {
       }
       if (mounted) {
         setState(() {
-          _randomalbums = _list;
-        });
-      }
-    }
-  }
-
-  _getMostAlbums() async {
-    final _albumsList = await getAlbumList("frequent", "", 0, 10);
-    List<Albums> _list = [];
-    if (_albumsList != null && _albumsList.length > 0) {
-      for (var _element in _albumsList) {
-        String _url = getCoverArt(_element["id"]);
-        _element["coverUrl"] = _url;
-        Albums _album = Albums.fromJson(_element);
-        _list.add(_album);
-      }
-      if (mounted) {
-        setState(() {
-          _mostalbums = _list;
-        });
-      }
-    }
-  }
-
-  _getLastAlbums() async {
-    final _albumsList = await getAlbumList("newest", "", 0, 10);
-    List<Albums> _list = [];
-    if (_albumsList != null && _albumsList.length > 0) {
-      for (var _element in _albumsList) {
-        String _url = getCoverArt(_element["id"]);
-        _element["coverUrl"] = _url;
-        Albums _album = Albums.fromJson(_element);
-        _list.add(_album);
-      }
-      if (mounted) {
-        setState(() {
-          _lastalbums = _list;
-        });
-      }
-    }
-  }
-
-  _getrecentAlbums() async {
-    final _albumsList = await getAlbumList("recent", "", 0, 10);
-    List<Albums> _list = [];
-    if (_albumsList != null && _albumsList.length > 0) {
-      for (var _element in _albumsList) {
-        String _url = getCoverArt(_element["id"]);
-        _element["coverUrl"] = _url;
-        Albums _album = Albums.fromJson(_element);
-        _list.add(_album);
-      }
-      if (mounted) {
-        setState(() {
-          _recentalbums = _list;
+          switch (_api) {
+            case "random":
+              _randomalbums = _list;
+              break;
+            case "frequent":
+              _mostalbums = _list;
+              break;
+            case "newest":
+              _lastalbums = _list;
+              break;
+            case "recent":
+              _recentalbums = _list;
+              break;
+            default:
+          }
         });
       }
     }
@@ -99,10 +59,10 @@ class _IndexScreenState extends State<IndexScreen> {
   @override
   initState() {
     super.initState();
-    _getRandomAlbums();
-    _getMostAlbums();
-    _getrecentAlbums();
-    _getLastAlbums();
+    _getAlbuoms("random");
+    _getAlbuoms("frequent");
+    _getAlbuoms("newest");
+    _getAlbuoms("recent");
   }
 
   @override
@@ -121,12 +81,12 @@ class _IndexScreenState extends State<IndexScreen> {
         SliverToBoxAdapter(
           child: Container(
               padding: leftrightPadding,
-              child: Text(S.of(context).index, style: titleText1)),
+              child: Text(S.current.index, style: titleText1)),
         ),
         if (_randomalbums != null && _randomalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: S.of(context).random,
+            title: S.current.random,
             controller: _randomAlbumcontroller,
           )),
         if (_randomalbums != null && _randomalbums!.length > 0)
@@ -136,7 +96,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_mostalbums != null && _mostalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: S.of(context).play + S.of(context).most,
+            title: S.current.play + S.current.most,
             controller: _mostAlbumscontroller,
           )),
         if (_mostalbums != null && _mostalbums!.length > 0)
@@ -146,7 +106,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_recentalbums != null && _recentalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: S.of(context).last + S.of(context).play,
+            title: S.current.last + S.current.play,
             controller: _recentAlbumscontroller,
           )),
         if (_recentalbums != null && _recentalbums!.length > 0)
@@ -156,7 +116,7 @@ class _IndexScreenState extends State<IndexScreen> {
         if (_lastalbums != null && _lastalbums!.length > 0)
           SliverToBoxAdapter(
               child: MySliverControlBar(
-            title: S.of(context).last + S.of(context).add,
+            title: S.current.last + S.current.add,
             controller: _lastAlbumcontroller,
           )),
         if (_lastalbums != null && _lastalbums!.length > 0)

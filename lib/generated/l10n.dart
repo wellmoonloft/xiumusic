@@ -390,10 +390,10 @@ class S {
     );
   }
 
-  /// `ADD `
+  /// `Add `
   String get add {
     return Intl.message(
-      'ADD ',
+      'Add ',
       name: 'add',
       desc: '',
       args: [],

@@ -105,9 +105,9 @@ class _SearchScreenState extends State<SearchScreen>
   initState() {
     super.initState();
     myTabs = <Tab>[
-      Tab(text: S.current.song + "(" + _songs.length.toString() + ")"),
-      Tab(text: S.current.album + "(" + _albums.length.toString() + ")"),
-      Tab(text: S.current.artist + "(" + _artists.length.toString() + ")")
+      Tab(text: S.current.song + "(0)"),
+      Tab(text: S.current.album + "(0)"),
+      Tab(text: S.current.artist + "(0)")
     ];
     tabController = TabController(length: myTabs.length, vsync: this);
   }
@@ -117,6 +117,19 @@ class _SearchScreenState extends State<SearchScreen>
     searchController.dispose();
     tabController.dispose();
     super.dispose();
+  }
+
+  Widget _songsWidget() {
+    return Column(
+      children: [
+        _songHeader(),
+        Container(
+            height: (isMobile)
+                ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
+                : windowsHeight.value - (106 + bottomHeight + 50 + 30),
+            child: _songsBody())
+      ],
+    );
   }
 
   Widget _songHeader() {
@@ -178,32 +191,105 @@ class _SearchScreenState extends State<SearchScreen>
         : Container();
   }
 
-  Widget _songsWidget() {
+  Widget _artistWidget() {
     return Column(
-      children: [
-        _songHeader(),
-        Container(
-            height: (isMobile)
-                ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
-                : windowsHeight.value - (106 + bottomHeight + 50 + 30),
-            child: _songsBody())
-      ],
+      children: [_artistsHeader(), _artistBody(_artists, context)],
     );
   }
 
-  Widget _artistWidget() {
-    return Column(
-      children: [
-        buildArtistsHeaderWidget(),
-        artistBuildWidget(_artists, context)
-      ],
-    );
+  Widget _artistsHeader() {
+    List<String> _title = [S.current.artist, S.current.album];
+    return Container(
+        height: 30,
+        padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        color: bkColor,
+        child: myRowList(_title, subText));
+  }
+
+  Widget _artistBody(List<Artists> _artists, BuildContext _context) {
+    return Container(
+        height: (isMobile)
+            ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
+            : windowsHeight.value - (106 + bottomHeight + 50 + 30),
+        child: _artists.length > 0
+            ? MediaQuery.removePadding(
+                context: _context,
+                removeTop: true,
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _artists.length,
+                    itemExtent: 50.0, //强制高度为50.0
+                    itemBuilder: (BuildContext context, int index) {
+                      Artists _tem = _artists[index];
+                      List<String> _title = [
+                        _tem.name,
+                        _tem.albumCount.toString()
+                      ];
+                      return ListTile(
+                          title: InkWell(
+                              onTap: () {
+                                activeID.value = _tem.id;
+                                indexValue.value = 9;
+                              },
+                              child: myRowList(_title, nomalText)));
+                    }))
+            : Container());
   }
 
   Widget _itemAlbumsWidget() {
     return Column(
-      children: [albumHeader(), albumBuildWidget(_albums, context)],
+      children: [_albumHeader(), _albumBody(_albums, context)],
     );
+  }
+
+  Widget _albumHeader() {
+    List<String> _title = [
+      S.current.album,
+      S.current.artist,
+      S.current.song,
+      if (!isMobile) S.current.dration,
+      if (!isMobile) S.current.playCount
+    ];
+    return Container(
+        height: 30,
+        padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        color: bkColor,
+        child: myRowList(_title, subText));
+  }
+
+  Widget _albumBody(List<Albums> _albums, BuildContext _context) {
+    return Container(
+        height: (isMobile)
+            ? windowsHeight.value - (106 + bottomHeight + 50 + 25 + 40 + 30)
+            : windowsHeight.value - (106 + bottomHeight + 50 + 30),
+        child: _albums.length > 0
+            ? MediaQuery.removePadding(
+                context: _context,
+                removeTop: true,
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: _albums.length,
+                    itemExtent: 50.0, //强制高度为50.0
+                    itemBuilder: (BuildContext context, int index) {
+                      Albums _tem = _albums[index];
+                      List<String> _title = [
+                        _tem.title,
+                        _tem.artist.toString(),
+                        _tem.songCount.toString(),
+                        if (!isMobile) formatDuration(_tem.duration),
+                        if (!isMobile) _tem.playCount.toString(),
+                      ];
+                      return ListTile(
+                          title: InkWell(
+                              onTap: () {
+                                activeID.value = _tem.id;
+                                indexValue.value = 8;
+                              },
+                              child: myRowList(_title, nomalText)));
+                    }))
+            : Container());
   }
 
   Widget _buildTopWidget() {
@@ -213,10 +299,8 @@ class _SearchScreenState extends State<SearchScreen>
       children: [
         MyTextInput(
           control: searchController,
-          label: S.of(context).search,
-          hintLabel: S.of(context).pleaseInput +
-              S.of(context).song +
-              S.of(context).name,
+          label: S.current.search,
+          hintLabel: S.current.pleaseInput + S.current.song + S.current.name,
           hideText: false,
           icon: Icons.search,
           press: () {

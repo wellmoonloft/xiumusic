@@ -29,7 +29,7 @@ class _MyAppBarState extends State<MyAppBar> {
       children: [
         Container(
             child: ValueListenableBuilder<ServerInfo>(
-                valueListenable: isServersInfo,
+                valueListenable: serversInfo,
                 builder: ((context, _value, child) {
                   return IconButton(
                     icon: Icon(

@@ -69,114 +69,40 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
 
   Widget _buildTopWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-                height: screenImageWidthAndHeight,
-                width: screenImageWidthAndHeight,
-                child: (_arturl != null)
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          _arturl!,
-                          height: screenImageWidthAndHeight,
-                          width: screenImageWidthAndHeight,
-                          fit: BoxFit.cover,
-                          frameBuilder:
-                              (context, child, frame, wasSynchronouslyLoaded) {
-                            if (wasSynchronouslyLoaded) {
-                              return child;
-                            }
-                            return AnimatedSwitcher(
-                              child: frame != null
-                                  ? child
-                                  : Image.asset(mylogoAsset),
-                              duration:
-                                  const Duration(milliseconds: imageMilli),
-                            );
-                          },
-                        ),
-                      )
-                    : Container()),
-            SizedBox(
-              width: 15,
-            ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      width: isMobile
-                          ? windowsWidth.value -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15
-                          : windowsWidth.value -
-                              drawerWidth -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15,
-                      child: Text(_artilstname,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: titleText2)),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        MyTextButton(
-                            press: () {
-                              indexValue.value = 5;
-                            },
-                            title: S.of(context).artist),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        MyTextButton(
-                            press: () {
-                              indexValue.value = 9;
-                            },
-                            title: _artilstname),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          S.of(context).album + ": " + _albumsnum.toString(),
-                          style: nomalText,
-                        ),
-                      ],
+        Container(
+          width: isMobile
+              ? windowsWidth.value - 30
+              : windowsWidth.value - drawerWidth - 30,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  child: Text(_artilstname,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: titleText2)),
+              SizedBox(
+                height: 5,
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    MyTextButton(
+                        press: () {
+                          indexValue.value = 5;
+                        },
+                        title: S.current.artist),
+                    SizedBox(
+                      width: 5,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Text(
-                      S.of(context).song + ": " + _songs.toString(),
-                      style: nomalText,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Text(
-                      S.of(context).dration + ": " + formatDuration(_duration),
-                      style: nomalText,
-                    ),
-                  ),
-                  Container(
-                      child: Row(children: [
-                    Text(
-                      S.of(context).playCount + ": " + _playCount.toString(),
-                      style: nomalText,
-                    ),
+                    MyTextButton(
+                        press: () {
+                          indexValue.value = 9;
+                        },
+                        title: _artilstname),
                     Container(
                       height: 30,
                       width: 30,
@@ -214,11 +140,36 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
                               },
                             ),
                     )
-                  ]))
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                width: isMobile
+                    ? windowsWidth.value - 30
+                    : windowsWidth.value - drawerWidth - 30,
+                child: Text(
+                  S.current.album +
+                      ": " +
+                      _albumsnum.toString() +
+                      "  " +
+                      S.current.song +
+                      ": " +
+                      _songs.toString() +
+                      "  " +
+                      S.current.dration +
+                      ": " +
+                      formatDuration(_duration) +
+                      "  " +
+                      S.current.playCount +
+                      ": " +
+                      _playCount.toString(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: nomalText,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -303,13 +254,10 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 190,
+        top: 120,
         headerWidget: Column(
           children: [
             _buildTopWidget(),
-            SizedBox(
-              height: 10,
-            )
           ],
         ),
         contentWidget: _itemBuildWidget());

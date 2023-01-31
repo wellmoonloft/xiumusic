@@ -17,7 +17,7 @@ class MySliverControlBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: allPadding,
-      height: 30,
+      height: 25,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,

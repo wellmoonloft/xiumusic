@@ -24,7 +24,7 @@ class LeftScreenState extends State<LeftScreen> {
         color: isMobile ? rightColor : bkColor,
         padding: leftrightPadding,
         child: ValueListenableBuilder<ServerInfo>(
-            valueListenable: isServersInfo,
+            valueListenable: serversInfo,
             builder: (context, _value, child) {
               return Column(
                 children: [
@@ -41,14 +41,14 @@ class LeftScreenState extends State<LeftScreen> {
                         indexValue.value = 2;
                         if (isMobile) Navigator.pop(context);
                       },
-                      title: S.of(context).playlist,
+                      title: S.current.playlist,
                       icon: Icons.queue_music),
                   MyTextIconButton(
                       press: () {
                         indexValue.value = 3;
                         if (isMobile) Navigator.pop(context);
                       },
-                      title: S.of(context).favorite,
+                      title: S.current.favorite,
                       icon: Icons.favorite),
                   MyTextIconButton(
                       press: () {
@@ -56,21 +56,21 @@ class LeftScreenState extends State<LeftScreen> {
                         indexValue.value = 4;
                         if (isMobile) Navigator.pop(context);
                       },
-                      title: S.of(context).album,
+                      title: S.current.album,
                       icon: Icons.album),
                   MyTextIconButton(
                       press: () {
                         indexValue.value = 5;
                         if (isMobile) Navigator.pop(context);
                       },
-                      title: S.of(context).artist,
+                      title: S.current.artist,
                       icon: Icons.people_alt),
                   MyTextIconButton(
                       press: () {
                         indexValue.value = 6;
                         if (isMobile) Navigator.pop(context);
                       },
-                      title: S.of(context).genres,
+                      title: S.current.genres,
                       icon: Icons.public),
                   if (_value.neteaseapi.isNotEmpty)
                     MyTextIconButton(
@@ -78,7 +78,7 @@ class LeftScreenState extends State<LeftScreen> {
                           indexValue.value = 7;
                           if (isMobile) Navigator.pop(context);
                         },
-                        title: S.of(context).search + S.of(context).lyric,
+                        title: S.current.search + S.current.lyric,
                         icon: Icons.public)
                 ],
               );
@@ -101,7 +101,7 @@ class MyTextIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ServerInfo>(
-        valueListenable: isServersInfo,
+        valueListenable: serversInfo,
         builder: ((context, _value, child) {
           return InkWell(
             onTap: _value.baseurl.isNotEmpty ? press : null,

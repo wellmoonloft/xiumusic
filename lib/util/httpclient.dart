@@ -38,13 +38,13 @@ getCoverArt(String _id) {
 }
 
 getServerInfo(String _api) {
-  String _request = isServersInfo.value.baseurl +
+  String _request = serversInfo.value.baseurl +
       '/rest/$_api?v=0.0.1&c=xiumusic&f=json&u=' +
-      isServersInfo.value.username +
+      serversInfo.value.username +
       '&s=' +
-      isServersInfo.value.salt +
+      serversInfo.value.salt +
       '&t=' +
-      isServersInfo.value.hash;
+      serversInfo.value.hash;
   return _request;
 }
 
@@ -74,6 +74,19 @@ getAlbumList(String _type, String _by, int _offset, int _size) async {
     Map _albumList = _subsonic['albumList2'];
     List _albums = _albumList['album'];
     return _albums;
+  } catch (e) {
+    print(e);
+  }
+}
+
+getAlbumInfo2(String _albumId) async {
+  String _sql = getServerInfo("getAlbumInfo2") + '&id=' + _albumId;
+  try {
+    var _response = await Dio().get(_sql);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    Map scanStatus = _subsonic['albumInfo'];
+    return scanStatus;
   } catch (e) {
     print(e);
   }
@@ -374,7 +387,7 @@ scrobble(String _songId, bool _submission) async {
 }
 
 searchNeteasAPI(String _name, String _type) async {
-  String _neteaseapi = isServersInfo.value.neteaseapi;
+  String _neteaseapi = serversInfo.value.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request = _neteaseapi +
       "/search?limit=5&type=$_type&offset=0&keywords=$_name&timestamp=$_timestamp";
@@ -394,7 +407,7 @@ searchNeteasAPI(String _name, String _type) async {
 }
 
 getLyric(String _songId) async {
-  String _neteaseapi = isServersInfo.value.neteaseapi;
+  String _neteaseapi = serversInfo.value.neteaseapi;
   String _timestamp = DateTime.now().millisecondsSinceEpoch.toString();
   String _request = _neteaseapi + "/lyric?id=$_songId&timestamp=$_timestamp";
   try {

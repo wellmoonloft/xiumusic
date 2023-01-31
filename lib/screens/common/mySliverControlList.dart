@@ -70,7 +70,12 @@ class MySliverControlList extends StatelessWidget {
                           maxWidth: _rightWidth - 67,
                         ),
                         child: Text(
-                            _tem.title + "(" + _tem.year.toString() + ")",
+                            _tem.year == 0
+                                ? _tem.title
+                                : (_tem.title +
+                                    "(" +
+                                    _tem.year.toString() +
+                                    ")"),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: nomalText)),

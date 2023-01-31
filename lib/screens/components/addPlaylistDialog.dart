@@ -71,7 +71,7 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                 Container(
                   padding: allPadding,
                   child: Text(
-                    S.of(context).add + S.of(context).song,
+                    S.current.add + S.current.song,
                     style: nomalText,
                   ),
                 ),
@@ -108,7 +108,7 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                         press: () async {
                           Navigator.of(context).pop(3);
                         },
-                        title: S.of(context).cancel,
+                        title: S.current.cancel,
                       ),
                       MyTextButton(
                         press: () async {
@@ -125,7 +125,7 @@ class _AddPlaylistDialogState extends State<AddPlaylistDialog> {
                             Navigator.of(context).pop(2);
                           }
                         },
-                        title: S.of(context).add,
+                        title: S.current.add,
                       )
                     ],
                   ),

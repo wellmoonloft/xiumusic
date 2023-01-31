@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:xiumusic/models/myModel.dart';
 import '../../generated/l10n.dart';
+
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
+import '../common/myToast.dart';
 
 class AlbumDetailScreen extends StatefulWidget {
   final AudioPlayer player;
@@ -30,9 +33,12 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   String _genre = "";
   String? _arturl;
   String _artist = "";
-  List<String> _genres = [];
   int _year = 0;
-  bool _star = false;
+  String _create = "";
+  bool _staralbum = false;
+  List<bool> _starsong = [];
+  String _biography = "";
+  bool _isbiography = true;
 
   _getSongs(String albumId) async {
     final _albumtem = await getSongs(albumId);
@@ -44,23 +50,25 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       Albums _albums = Albums.fromJson(_albumtem);
 
       if (_songsList != null) {
-        List<String> _genrelist = [];
         List<Songs> _songtem = [];
+        List<bool> _startem = [];
         for (var _element in _songsList) {
           String _stream = getServerInfo("stream");
           String _url = await getCoverArt(_element["id"]);
           _element["stream"] = _stream + '&id=' + _element["id"];
           _element["coverUrl"] = _url;
+          if (_element["starred"] != null) {
+            _startem.add(true);
+          } else {
+            _startem.add(false);
+          }
           Songs _song = Songs.fromJson(_element);
           _songtem.add(_song);
-          if (_song.genre != "0" && !_genrelist.contains(_song.genre)) {
-            _genrelist.add(_song.genre);
-          }
         }
         if (_albumtem["starred"] != null) {
-          _star = true;
+          _staralbum = true;
         } else {
-          _star = false;
+          _staralbum = false;
         }
 
         if (mounted) {
@@ -75,7 +83,21 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
             _artistID = _albums.artistId;
             _genre = _albums.genre;
             _arturl = _albums.coverUrl;
-            _genres = _genrelist;
+            _create = _albums.created;
+            _starsong = _startem;
+          });
+        }
+      }
+    }
+  }
+
+  _getAlbumInfo2(String albumId) async {
+    final _albumIofo = await getAlbumInfo2(albumId);
+    if (_albumIofo != null) {
+      if (_albumIofo["notes"] != null) {
+        if (mounted) {
+          setState(() {
+            _biography = _albumIofo["notes"];
           });
         }
       }
@@ -102,242 +124,391 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   initState() {
     super.initState();
     _getSongs(activeID.value);
+    _getAlbumInfo2(activeID.value);
   }
 
   Widget _buildTopWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-                height: screenImageWidthAndHeight,
-                width: screenImageWidthAndHeight,
-                child: (_arturl != null)
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: CachedNetworkImage(
-                          imageUrl: _arturl!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) {
-                            return AnimatedSwitcher(
-                              child: Image.asset(mylogoAsset),
-                              duration:
-                                  const Duration(milliseconds: imageMilli),
-                            );
-                          },
-                        ),
-                      )
-                    : Container()),
-            SizedBox(
-              width: 15,
-            ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      constraints: BoxConstraints(
-                        maxWidth: isMobile
-                            ? windowsWidth.value -
-                                screenImageWidthAndHeight -
-                                30 -
-                                15
-                            : windowsWidth.value -
-                                drawerWidth -
-                                screenImageWidthAndHeight -
-                                30 -
-                                15,
-                      ),
-                      child: Text(_albumsname,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: titleText2)),
-                  SizedBox(
-                    height: 5,
+        Container(
+            height: screenImageWidthAndHeight,
+            width: screenImageWidthAndHeight,
+            child: (_arturl != null)
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      imageUrl: _arturl!,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) {
+                        return AnimatedSwitcher(
+                          child: Image.asset(mylogoAsset),
+                          duration: const Duration(milliseconds: imageMilli),
+                        );
+                      },
+                    ),
+                  )
+                : Container()),
+        SizedBox(
+          width: 15,
+        ),
+        Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  constraints: BoxConstraints(
+                    maxWidth: isMobile
+                        ? windowsWidth.value -
+                            screenImageWidthAndHeight -
+                            30 -
+                            15
+                        : windowsWidth.value -
+                            drawerWidth -
+                            screenImageWidthAndHeight -
+                            30 -
+                            15,
                   ),
-                  Container(
+                  child: Text(_albumsname,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: titleText2)),
+              Container(
+                child: Row(
+                  children: [
+                    MyTextButton(
+                        press: () {
+                          indexValue.value = 5;
+                        },
+                        title: S.current.artist),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                        constraints: BoxConstraints(
+                          maxWidth: isMobile
+                              ? windowsWidth.value -
+                                  screenImageWidthAndHeight -
+                                  30 -
+                                  60
+                              : windowsWidth.value -
+                                  drawerWidth -
+                                  screenImageWidthAndHeight -
+                                  30 -
+                                  60,
+                        ),
+                        child: MyTextButton(
+                            press: () {
+                              activeID.value = _artistID;
+                              indexValue.value = 9;
+                            },
+                            title: _artist)),
+                    Container(
+                      height: 30,
+                      width: 30,
+                      child: (_staralbum)
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.favorite,
+                                color: badgeRed,
+                                size: 16,
+                              ),
+                              onPressed: () async {
+                                Favorite _favorite =
+                                    Favorite(id: activeID.value, type: 'album');
+                                await delStarred(_favorite);
+
+                                setState(() {
+                                  _staralbum = false;
+                                });
+                              },
+                            )
+                          : IconButton(
+                              icon: Icon(
+                                Icons.favorite_border,
+                                color: textGray,
+                                size: 16,
+                              ),
+                              onPressed: () async {
+                                Favorite _favorite =
+                                    Favorite(id: activeID.value, type: 'album');
+                                await addStarred(_favorite);
+
+                                setState(() {
+                                  _staralbum = true;
+                                });
+                              },
+                            ),
+                    )
+                  ],
+                ),
+              ),
+              if (_genre != "")
+                Container(
+                    width: isMobile
+                        ? windowsWidth.value -
+                            screenImageWidthAndHeight -
+                            30 -
+                            60
+                        : windowsWidth.value -
+                            drawerWidth -
+                            screenImageWidthAndHeight -
+                            30 -
+                            60,
                     child: Row(
                       children: [
                         MyTextButton(
                             press: () {
-                              indexValue.value = 5;
+                              indexValue.value = 6;
                             },
-                            title: S.of(context).artist),
+                            title: S.current.genres),
                         SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
-                        Container(
-                            constraints: BoxConstraints(
-                              maxWidth: isMobile
-                                  ? windowsWidth.value -
-                                      screenImageWidthAndHeight -
-                                      30 -
-                                      60
-                                  : windowsWidth.value -
-                                      drawerWidth -
-                                      screenImageWidthAndHeight -
-                                      30 -
-                                      60,
-                            ),
-                            child: MyTextButton(
-                                press: () {
-                                  activeID.value = _artistID;
-                                  indexValue.value = 9;
-                                },
-                                title: _artist)),
+                        MyTextButton(
+                            press: () {
+                              activeID.value = _genre;
+                              indexValue.value = 4;
+                            },
+                            title: _genre),
                       ],
-                    ),
-                  ),
-                  if (_year != 0)
-                    SizedBox(
-                      height: 5,
-                    ),
-                  if (_year != 0)
-                    Row(
-                      children: [
-                        Text(
-                          S.of(context).year + ": " + _year.toString(),
-                          style: nomalText,
-                        ),
-                      ],
-                    ),
-                  if (_genres.length > 0)
-                    SizedBox(
-                      height: 5,
-                    ),
-                  if (_genres.length > 0)
-                    Container(
-                        width: isMobile
-                            ? windowsWidth.value -
-                                screenImageWidthAndHeight -
-                                30 -
-                                60
-                            : windowsWidth.value -
-                                drawerWidth -
-                                screenImageWidthAndHeight -
-                                30 -
-                                60,
-                        child: Row(
-                          children: [
-                            MyTextButton(
-                                press: () {
-                                  indexValue.value = 6;
-                                },
-                                title: S.of(context).genres),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            if (!isMobile)
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: mylistView(_genres)),
-                            if (isMobile)
-                              MyTextButton(
-                                  press: () {
-                                    activeID.value = _genre;
-                                    indexValue.value = 4;
-                                  },
-                                  title: _genre),
-                          ],
-                        )),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Text(
-                      S.of(context).song + ": " + _songsnum.toString(),
-                      style: nomalText,
-                    ),
-                  ),
-                  if (!isMobile)
-                    SizedBox(
-                      height: 5,
-                    ),
-                  if (!isMobile)
-                    Container(
-                      child: Text(
-                        S.of(context).dration +
-                            ": " +
-                            formatDuration(_duration),
-                        style: nomalText,
-                      ),
-                    ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          S.of(context).playCount +
-                              ": " +
-                              _playCount.toString(),
-                          style: nomalText,
-                        ),
-                        Container(
-                          height: 30,
-                          width: 30,
-                          child: (_star)
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.favorite,
-                                    color: badgeRed,
-                                    size: 16,
-                                  ),
-                                  onPressed: () async {
-                                    Favorite _favorite = Favorite(
-                                        id: activeID.value, type: 'album');
-                                    await delStarred(_favorite);
-
-                                    setState(() {
-                                      _star = false;
-                                    });
-                                  },
-                                )
-                              : IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    color: textGray,
-                                    size: 16,
-                                  ),
-                                  onPressed: () async {
-                                    Favorite _favorite = Favorite(
-                                        id: activeID.value, type: 'album');
-                                    await addStarred(_favorite);
-
-                                    setState(() {
-                                      _star = true;
-                                    });
-                                  },
-                                ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+                    )),
+              SizedBox(
+                height: 5,
               ),
-            )
-          ],
-        ),
+              Container(
+                width: isMobile
+                    ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+                    : windowsWidth.value -
+                        drawerWidth -
+                        screenImageWidthAndHeight -
+                        30 -
+                        15,
+                child: Text(
+                  S.current.year +
+                      ": " +
+                      _year.toString() +
+                      "  " +
+                      S.current.add +
+                      ": " +
+                      timeISOtoString(_create) +
+                      "  " +
+                      S.current.song +
+                      ": " +
+                      _songsnum.toString() +
+                      "  " +
+                      S.current.dration +
+                      ": " +
+                      formatDuration(_duration) +
+                      "  " +
+                      S.current.playCount +
+                      ": " +
+                      _playCount.toString(),
+                  style: nomalText,
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
 
+  Widget _songsHeader() {
+    List<String> _title = [
+      S.current.song,
+      S.current.dration,
+      if (!isMobile) S.current.bitRange,
+      if (!isMobile) S.current.playCount,
+      S.current.favorite
+    ];
+    return myRowList(_title, subText);
+  }
+
+  Widget _songsBody(
+      List<Songs> _songs, BuildContext _context, AudioPlayer _player) {
+    return _songs.length > 0
+        ? MediaQuery.removePadding(
+            context: _context,
+            removeTop: true,
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _songs.length,
+                itemExtent: 50.0, //强制高度为50.0
+                itemBuilder: (BuildContext context, int index) {
+                  Songs _song = _songs[index];
+
+                  return ListTile(
+                      title: InkWell(
+                          onTap: () async {
+                            if (listEquals(activeList.value, _songs)) {
+                              _player.seek(Duration.zero, index: index);
+                            } else {
+                              //当前歌曲队列
+                              activeIndex.value = index;
+                              activeSongValue.value = _song.id;
+                              //歌曲所在专辑歌曲List
+                              activeList.value = _songs;
+                            }
+                          },
+                          child: ValueListenableBuilder<Map>(
+                              valueListenable: activeSong,
+                              builder: ((context, value, child) {
+                                return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          _song.title,
+                                          textDirection: TextDirection.ltr,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: nomalText,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          formatDuration(_song.duration),
+                                          textDirection: TextDirection.rtl,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: nomalText,
+                                        ),
+                                      ),
+                                      if (!isMobile)
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(
+                                            _song.suffix +
+                                                "(" +
+                                                _song.bitRate.toString() +
+                                                ")",
+                                            textDirection: TextDirection.rtl,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: nomalText,
+                                          ),
+                                        ),
+                                      if (!isMobile)
+                                        Expanded(
+                                          flex: 1,
+                                          child: Text(
+                                            _song.playCount.toString(),
+                                            textDirection: TextDirection.rtl,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: nomalText,
+                                          ),
+                                        ),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                              alignment: Alignment.centerRight,
+                                              child: (_starsong[index])
+                                                  ? IconButton(
+                                                      icon: Icon(
+                                                        Icons.favorite,
+                                                        color: badgeRed,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Favorite _favorite =
+                                                            Favorite(
+                                                                id: _song.id,
+                                                                type: 'song');
+                                                        await delStarred(
+                                                            _favorite);
+                                                        MyToast.show(
+                                                            context: context,
+                                                            message: S.current
+                                                                    .cancel +
+                                                                S.current
+                                                                    .favorite);
+                                                      },
+                                                    )
+                                                  : IconButton(
+                                                      icon: Icon(
+                                                        Icons.favorite_border,
+                                                        color: textGray,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Favorite _favorite =
+                                                            Favorite(
+                                                                id: _song.id,
+                                                                type: 'song');
+                                                        await addStarred(
+                                                            _favorite);
+                                                        MyToast.show(
+                                                            context: context,
+                                                            message: S.current
+                                                                    .add +
+                                                                S.current
+                                                                    .favorite);
+                                                        setState(() {
+                                                          _starsong[index] =
+                                                              true;
+                                                        });
+                                                      },
+                                                    ))),
+                                    ]);
+                              }))));
+                }))
+        : Container();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MyStructure(
-        top: 228,
-        headerWidget: Column(
-          children: [
-            _buildTopWidget(),
-            SizedBox(
-              height: 20,
-            ),
-            songsHeaderWidget()
-          ],
+    return CustomScrollView(slivers: <Widget>[
+      SliverToBoxAdapter(
+          child:
+              Container(padding: leftrightPadding, child: _buildTopWidget())),
+      if (_biography != "")
+        SliverToBoxAdapter(
+          child: InkWell(
+              onTap: () {
+                if (_isbiography) {
+                  setState(() {
+                    _isbiography = false;
+                  });
+                } else {
+                  setState(() {
+                    _isbiography = true;
+                  });
+                }
+              },
+              child: Container(
+                padding: allPadding,
+                width: isMobile
+                    ? windowsWidth.value
+                    : windowsWidth.value - drawerWidth,
+                child: _isbiography
+                    ? Text(
+                        _biography,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: nomalText,
+                      )
+                    : Text(
+                        _biography,
+                        style: nomalText,
+                      ),
+              )),
         ),
-        contentWidget: songsBuildWidget(_songs, context, widget.player));
+      SliverToBoxAdapter(
+          child: Container(
+        padding: allPadding,
+        child: _songsHeader(),
+      )),
+      SliverToBoxAdapter(child: _songsBody(_songs, context, widget.player))
+    ]);
   }
 }

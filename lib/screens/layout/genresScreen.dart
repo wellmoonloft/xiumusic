@@ -41,13 +41,17 @@ class _GenresScreenState extends State<GenresScreen> {
 
   Widget _buildTopWidget() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(child: Text(S.of(context).genres, style: titleText1)),
+        Container(child: Text(S.current.genres, style: titleText1)),
         Container(
+          margin: EdgeInsets.only(left: 10),
+          padding: EdgeInsets.only(left: 5, right: 5, top: 2, bottom: 3),
+          decoration: BoxDecoration(
+              color: badgeDark,
+              borderRadius: const BorderRadius.all(Radius.circular(6))),
           child: Text(
-            S.of(context).genres + ": " + genresnum.toString(),
+            genresnum.toString(),
             style: nomalText,
           ),
         ),
@@ -55,16 +59,12 @@ class _GenresScreenState extends State<GenresScreen> {
     );
   }
 
-  Widget _buildHeaderWidget() {
-    List<String> _title = [
-      S.of(context).name,
-      S.of(context).album,
-      S.of(context).song
-    ];
+  Widget _genresHeader() {
+    List<String> _title = [S.current.name, S.current.album, S.current.song];
     return myRowList(_title, subText);
   }
 
-  Widget _itemBuildWidget() {
+  Widget _genresBody() {
     return _genres.length > 0
         ? Container(
             child: MediaQuery.removePadding(
@@ -96,14 +96,10 @@ class _GenresScreenState extends State<GenresScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: (isMobile) ? 120 : 100,
+        top: 90,
         headerWidget: Column(
-          children: [
-            _buildTopWidget(),
-            SizedBox(height: 25),
-            _buildHeaderWidget()
-          ],
+          children: [_buildTopWidget(), SizedBox(height: 15), _genresHeader()],
         ),
-        contentWidget: _itemBuildWidget());
+        contentWidget: _genresBody());
   }
 }
