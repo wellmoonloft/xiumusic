@@ -111,6 +111,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
     }
     _getGenres();
     _getAllAlbums();
+
     super.initState();
   }
 

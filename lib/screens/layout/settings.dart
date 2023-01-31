@@ -180,33 +180,11 @@ class _SettingsState extends State<Settings>
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(S.of(context).settings, style: titleText1),
-            Row(
-              children: [
-                ValueListenableBuilder<ServerInfo>(
-                    valueListenable: isServersInfo,
-                    builder: ((context, _value, child) {
-                      return _value.baseurl.isNotEmpty
-                          ? MyTextButton(
-                              press: () async {
-                                showMyAlertDialog(
-                                    context,
-                                    S.of(context).enforceRefresh,
-                                    S.of(context).refresh);
-                              },
-                              title: S.of(context).enforceRefresh)
-                          : Container();
-                    })),
-                SizedBox(
-                  width: 10,
-                ),
-                MyTextButton(
-                    press: () {
-                      showMyAlertDialog(
-                          context, S.of(context).version, version);
-                    },
-                    title: S.of(context).version + version)
-              ],
-            )
+            MyTextButton(
+                press: () {
+                  showMyAlertDialog(context, S.of(context).version, version);
+                },
+                title: S.of(context).version + version)
           ],
         ),
         Container(

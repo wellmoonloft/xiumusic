@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import '../../../generated/l10n.dart';
 import '../../../models/myModel.dart';
 import '../../../models/notifierValue.dart';
 import '../../../util/httpClient.dart';
@@ -54,7 +55,7 @@ class _PlayerControBarState extends State<PlayerControBar> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "当前播放",
+                                S.current.playqueue,
                                 style: nomalText,
                                 textAlign: TextAlign.center,
                               ),
@@ -132,24 +133,24 @@ class _PlayerControBarState extends State<PlayerControBar> {
                     valueListenable: isShuffleModeEnabledNotifier,
                     builder: (_, isShuffle, __) {
                       int _action = 0; //0全部循环；1单曲循环；2随机循环
-                      String _msg = "全部循环";
+                      String _msg = S.current.repeatall;
                       Widget _icon =
                           Icon(Icons.loop, color: textGray, size: 16);
 
                       if (playerLoopMode == LoopMode.all) {
                         if (isShuffle) {
                           _action = 0;
-                          _msg = "随机循环";
+                          _msg = S.current.shuffle;
                           _icon =
                               Icon(Icons.shuffle, color: badgeRed, size: 16);
                         } else {
                           _action = 1;
-                          _msg = "全部循环";
+                          _msg = S.current.repeatall;
                           _icon = Icon(Icons.loop, color: textGray, size: 16);
                         }
                       } else if (playerLoopMode == LoopMode.one) {
                         _action = 2;
-                        _msg = "单曲循环";
+                        _msg = S.current.repeatone;
                         _icon = Icon(Icons.loop, color: badgeRed, size: 16);
                       }
                       return Tooltip(
@@ -164,7 +165,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
                                   isShuffleModeEnabledNotifier.value = false;
                                   playerLoopModeNotifier.value = LoopMode.all;
                                   MyToast.show(
-                                      context: context, message: "全部循环");
+                                      context: context,
+                                      message: S.current.repeatall);
                                   break;
                                 case 1:
                                   widget.player.setLoopMode(LoopMode.one);
@@ -172,7 +174,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
                                   isShuffleModeEnabledNotifier.value = false;
                                   playerLoopModeNotifier.value = LoopMode.one;
                                   MyToast.show(
-                                      context: context, message: "单曲循环");
+                                      context: context,
+                                      message: S.current.repeatone);
                                   break;
                                 case 2:
                                   widget.player.setLoopMode(LoopMode.all);
@@ -180,7 +183,8 @@ class _PlayerControBarState extends State<PlayerControBar> {
                                   isShuffleModeEnabledNotifier.value = true;
                                   playerLoopModeNotifier.value = LoopMode.all;
                                   MyToast.show(
-                                      context: context, message: "随机循环");
+                                      context: context,
+                                      message: S.current.shuffle);
                                   break;
                                 default:
                               }

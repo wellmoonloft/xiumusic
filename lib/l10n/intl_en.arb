@@ -69,7 +69,11 @@
     "english":"English",
     "chinese":"Chinese",
     "simplified":"Simplified",
-    "traditional":"Traditional"
+    "traditional":"Traditional",
+    "repeatone":"Repeat One",
+    "repeatall":"Repeat All",
+    "shuffle":"Repeat Shuffle",
+    "playqueue":"Play Queue"
    
 
 }

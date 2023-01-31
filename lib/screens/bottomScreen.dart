@@ -62,17 +62,13 @@ class _BottomScreenState extends State<BottomScreen>
                       final positionData = snapshot.data;
                       if (positionData != null &&
                           activeSong.value.isNotEmpty &&
-                          positionData.duration.inSeconds -
-                                  positionData.position.inSeconds ==
-                              20) {
-                        if (positionData.duration.inMilliseconds -
-                                    positionData.position.inMilliseconds <
-                                20000 &&
-                            positionData.duration.inMilliseconds -
-                                    positionData.position.inMilliseconds >
-                                19800) {
-                          scrobble(activeSong.value["value"], true);
-                        }
+                          (positionData.duration.inMilliseconds -
+                                      positionData.position.inMilliseconds <
+                                  20000 &&
+                              positionData.duration.inMilliseconds -
+                                      positionData.position.inMilliseconds >
+                                  19800)) {
+                        scrobble(activeSong.value["value"], true);
                       }
 
                       return PlayerSeekBar(

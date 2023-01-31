@@ -69,6 +69,10 @@
     "english":"英文",
     "chinese":"中文",
     "simplified":"簡體中文",
-    "traditional":"正體中文"
+    "traditional":"繁體中文",
+    "repeatone":"單曲循環",
+    "repeatall":"順序循環",
+    "shuffle":"隨機播放",
+    "playqueue":"播放隊列"
 
 }

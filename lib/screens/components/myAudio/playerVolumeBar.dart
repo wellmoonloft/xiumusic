@@ -114,7 +114,7 @@ class _PlayerVolumeBarState extends State<PlayerVolumeBar> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                "当前播放",
+                                S.current.playqueue,
                                 style: nomalText,
                                 textAlign: TextAlign.center,
                               ),
