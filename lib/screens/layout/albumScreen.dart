@@ -118,10 +118,14 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Widget _itemBuildWidget() {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
     double _rightWidth = 0;
-    if (isMobile) {
+    if (isMobile &&
+        MediaQuery.of(context).orientation == Orientation.portrait) {
       _rightWidth =
-          (windowsHeight.value - bottomHeight - appBarHeight - 40 - 25 - 80) /
+          (windowsHeight.value - bottomHeight - appBarHeight - safeheight) /
               screenImageWidthAndHeight;
+    } else if (isMobile &&
+        MediaQuery.of(context).orientation == Orientation.landscape) {
+      _rightWidth = (windowsWidth.value) / screenImageWidthAndHeight;
     } else {
       _rightWidth =
           (windowsWidth.value - drawerWidth) / screenImageWidthAndHeight;
@@ -224,7 +228,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
         if (_selectOrder != null && _sortOrder.length > 0)
           Container(
               constraints: BoxConstraints(
-                maxWidth: 200,
+                maxWidth: 150,
               ),
               height: 30,
               child: Theme(

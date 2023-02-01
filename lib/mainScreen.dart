@@ -55,62 +55,83 @@ class MainScreen extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: drawerWidth),
         child: LeftScreen(),
       ),
-      body: Column(
-        children: [
-          if (isMobile)
-            Container(
-              height: 40,
-              color: bkColor,
-            ),
-          MyAppBar(
-            drawer: () => _drawer(),
-          ),
-          Container(
-              height: isMobile
-                  ? windowsHeight.value - bottomHeight - appBarHeight - 40 - 25
-                  : windowsHeight.value - bottomHeight - appBarHeight,
-              child: Row(
-                children: [
-                  if (!isMobile)
-                    Container(
-                      width: drawerWidth,
-                      child: LeftScreen(),
-                    ),
-                  Container(
-                      width: isMobile
-                          ? windowsWidth.value
-                          : windowsWidth.value - drawerWidth,
-                      color: bkColor,
-                      child: ValueListenableBuilder<ServerInfo>(
-                          valueListenable: serversInfo,
-                          builder: ((context, _value, child) {
-                            return Container(
-                              child: _value.baseurl.isNotEmpty
-                                  ? ValueListenableBuilder<int>(
-                                      valueListenable: indexValue,
-                                      builder: ((context, value, child) {
-                                        return Roter(
-                                            roter: value, player: player);
-                                      }))
-                                  : Settings(),
-                            );
-                          })))
-                ],
-              )),
-          Container(
-              height: bottomHeight,
-              width: windowsWidth.value,
-              child: Column(
-                children: [
-                  BottomScreen(player: player),
-                ],
-              )),
-          if (isMobile)
-            Container(
-              height: 25,
-              color: bkColor,
-            ),
-        ],
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          if (isMobile && orientation == Orientation.landscape) {
+            if (windowsWidth.value < windowsHeight.value) {
+              double _tem = windowsWidth.value;
+              windowsWidth.value = windowsHeight.value;
+              windowsHeight.value = _tem;
+            }
+          }
+          if (isMobile && orientation == Orientation.portrait) {
+            if (windowsWidth.value > windowsHeight.value) {
+              double _tem = windowsWidth.value;
+              windowsWidth.value = windowsHeight.value;
+              windowsHeight.value = _tem;
+            }
+          }
+          return Column(
+            children: [
+              if (isMobile)
+                Container(
+                  height: topSafeheight,
+                  color: bkColor,
+                ),
+              MyAppBar(
+                drawer: () => _drawer(),
+              ),
+              Container(
+                  height: (isMobile)
+                      ? windowsHeight.value -
+                          bottomHeight -
+                          appBarHeight -
+                          safeheight
+                      : windowsHeight.value - bottomHeight - appBarHeight,
+                  child: Row(
+                    children: [
+                      if (!isMobile)
+                        Container(
+                          width: drawerWidth,
+                          child: LeftScreen(),
+                        ),
+                      Container(
+                          width: isMobile
+                              ? windowsWidth.value
+                              : windowsWidth.value - drawerWidth,
+                          color: bkColor,
+                          child: ValueListenableBuilder<ServerInfo>(
+                              valueListenable: serversInfo,
+                              builder: ((context, _value, child) {
+                                return Container(
+                                  child: _value.baseurl.isNotEmpty
+                                      ? ValueListenableBuilder<int>(
+                                          valueListenable: indexValue,
+                                          builder: ((context, value, child) {
+                                            return Roter(
+                                                roter: value, player: player);
+                                          }))
+                                      : Settings(),
+                                );
+                              })))
+                    ],
+                  )),
+              Container(
+                  height: bottomHeight,
+                  width: windowsWidth.value,
+                  child: Column(
+                    children: [
+                      BottomScreen(player: player),
+                    ],
+                  )),
+              if (isMobile)
+                Container(
+                  height: bottomSafeheight,
+                  color: bkColor,
+                ),
+            ],
+          );
+        },
       ),
     );
   }

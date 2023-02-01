@@ -6,6 +6,12 @@ const double bottomHeight = 80;
 const double appBarHeight = 40;
 //侧拉栏宽度
 const double drawerWidth = 150;
+//安全高度
+const double topSafeheight = 40;
+//安全高度
+const double bottomSafeheight = 25;
+//安全高度
+const double safeheight = 65;
 //底部图片大小
 const double bottomImageWidthAndHeight = 50;
 //正常页面图片大小

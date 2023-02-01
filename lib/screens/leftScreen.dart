@@ -14,10 +14,6 @@ class LeftScreen extends StatefulWidget {
 }
 
 class LeftScreenState extends State<LeftScreen> {
-  void onfrest() {
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(

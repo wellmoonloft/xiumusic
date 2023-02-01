@@ -1,13 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import '../../generated/l10n.dart';
-
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
-import '../../util/util.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 
@@ -19,13 +16,7 @@ class ArtistAlbumScreen extends StatefulWidget {
 
 class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
   List<Albums> _albums = [];
-  String _artilstname = "";
-  int _albumsnum = 0;
-  String? _arturl;
-  int _songs = 0;
-  int _playCount = 0;
-  int _duration = 0;
-  bool _star = false;
+  String _artistname = "";
 
   _getArtist(String artistId) async {
     final _artist = await getArtist(artistId);
@@ -37,25 +28,13 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
           _element["coverUrl"] = _url;
           Albums _album = Albums.fromJson(_element);
           _list.add(_album);
-          _playCount += _album.playCount;
-          _duration += _album.duration;
-          _songs += _album.songCount;
         }
-      }
-
-      if (_artist["starred"] != null) {
-        _star = true;
-      } else {
-        _star = false;
       }
 
       if (mounted) {
         setState(() {
           _albums = _list;
-          _albumsnum = _artist["albumCount"];
-          _artilstname = _artist["name"];
-
-          _arturl = getCoverArt(_artist["id"]);
+          _artistname = _artist["name"];
         });
       }
     }
@@ -80,92 +59,14 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  child: Text(_artilstname,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: titleText2)),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
                 child: Row(
                   children: [
                     MyTextButton(
                         press: () {
-                          indexValue.value = 5;
-                        },
-                        title: S.current.artist),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    MyTextButton(
-                        press: () {
                           indexValue.value = 9;
                         },
-                        title: _artilstname),
-                    Container(
-                      height: 30,
-                      width: 30,
-                      child: (_star)
-                          ? IconButton(
-                              icon: Icon(
-                                Icons.favorite,
-                                color: badgeRed,
-                                size: 16,
-                              ),
-                              onPressed: () async {
-                                Favorite _favorite = Favorite(
-                                    id: activeID.value, type: 'artist');
-                                await delStarred(_favorite);
-
-                                setState(() {
-                                  _star = false;
-                                });
-                              },
-                            )
-                          : IconButton(
-                              icon: Icon(
-                                Icons.favorite_border,
-                                color: textGray,
-                                size: 16,
-                              ),
-                              onPressed: () async {
-                                Favorite _favorite = Favorite(
-                                    id: activeID.value, type: 'artist');
-                                await addStarred(_favorite);
-
-                                setState(() {
-                                  _star = true;
-                                });
-                              },
-                            ),
-                    )
+                        title: _artistname),
                   ],
-                ),
-              ),
-              Container(
-                width: isMobile
-                    ? windowsWidth.value - 30
-                    : windowsWidth.value - drawerWidth - 30,
-                child: Text(
-                  S.current.album +
-                      ": " +
-                      _albumsnum.toString() +
-                      "  " +
-                      S.current.song +
-                      ": " +
-                      _songs.toString() +
-                      "  " +
-                      S.current.dration +
-                      ": " +
-                      formatDuration(_duration) +
-                      "  " +
-                      S.current.playCount +
-                      ": " +
-                      _playCount.toString(),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: nomalText,
                 ),
               ),
             ],
@@ -180,7 +81,7 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
     double _rightWidth = 0;
     if (isMobile) {
       _rightWidth =
-          (windowsHeight.value - bottomHeight - appBarHeight - 40 - 25 - 80) /
+          (windowsHeight.value - bottomHeight - appBarHeight - safeheight) /
               screenImageWidthAndHeight;
     } else {
       _rightWidth =
@@ -254,7 +155,7 @@ class _ArtistAlbumScreenState extends State<ArtistAlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return MyStructure(
-        top: 120,
+        top: 20,
         headerWidget: Column(
           children: [
             _buildTopWidget(),

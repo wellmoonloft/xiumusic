@@ -15,27 +15,30 @@ class MySliverControlList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //做了个设定取出右边的宽度然后除以180，再向下取整作为多少列，这样保证图片在窗口变大变小的时候不会有太大变化
-    double _rightWidth = 0;
-    if (isMobile) {
-      _rightWidth =
+    double _rightHeight = 0;
+    if (isMobile &&
+        MediaQuery.of(context).orientation == Orientation.portrait) {
+      _rightHeight =
           (windowsHeight.value / 4 > 250) ? 250 : windowsHeight.value / 4;
+    } else if (isMobile &&
+        MediaQuery.of(context).orientation == Orientation.landscape) {
+      _rightHeight =
+          (windowsWidth.value / 4 > 250) ? 250 : windowsWidth.value / 4;
     } else {
-      _rightWidth = ((windowsWidth.value - drawerWidth) / 4 > 250)
+      _rightHeight = ((windowsWidth.value - drawerWidth) / 4 > 250)
           ? 250
           : (windowsWidth.value - drawerWidth) / 4;
     }
     return Container(
-      margin: EdgeInsets.only(top: 10),
-      height: _rightWidth,
+      height: _rightHeight,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: albums.length,
         controller: controller,
         itemBuilder: (context, index) {
           Albums _tem = albums[index];
-
           return Container(
-            padding: EdgeInsets.only(right: 20),
+            padding: index == 0 ? leftrightPadding : EdgeInsets.only(right: 15),
             child: InkWell(
                 onTap: () {
                   activeID.value = _tem.id;
@@ -45,7 +48,7 @@ class MySliverControlList extends StatelessWidget {
                   children: [
                     Container(
                       constraints: BoxConstraints(
-                        maxHeight: _rightWidth - 67,
+                        maxHeight: _rightHeight - 67,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
@@ -67,7 +70,7 @@ class MySliverControlList extends StatelessWidget {
                     ),
                     Container(
                         constraints: BoxConstraints(
-                          maxWidth: _rightWidth - 67,
+                          maxWidth: _rightHeight - 67,
                         ),
                         child: Text(
                             _tem.year == 0
@@ -84,7 +87,7 @@ class MySliverControlList extends StatelessWidget {
                     ),
                     Container(
                         constraints: BoxConstraints(
-                          maxWidth: _rightWidth - 67,
+                          maxWidth: _rightHeight - 67,
                         ),
                         child: Text(_tem.artist,
                             maxLines: 1,

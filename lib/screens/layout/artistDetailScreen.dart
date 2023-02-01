@@ -65,10 +65,18 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     if (_artist != null) {
       if (_artist["biography"] != null) {
         String _tem = _artist["biography"];
-        if (_tem.contains("<a")) {
-          _biography = _tem.substring(0, _tem.indexOf("<a"));
-        } else {
-          _biography = _tem;
+        while (_tem.contains("<a") && _tem.contains("a>")) {
+          String _sub1 = "";
+          String _sub2 = "";
+          _sub1 = _tem.substring(0, _tem.indexOf("<a"));
+          _sub2 = _tem.substring(_tem.indexOf("a>") + 2, _tem.length);
+          _tem = _sub1 + _sub2;
+        }
+
+        if (mounted) {
+          setState(() {
+            _biography = _tem;
+          });
         }
       }
 
@@ -138,6 +146,13 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   }
 
   Widget _buildTopWidget() {
+    double _toprightwidth = isMobile
+        ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+        : windowsWidth.value -
+            drawerWidth -
+            screenImageWidthAndHeight -
+            30 -
+            15;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -168,13 +183,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  width: isMobile
-                      ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
-                      : windowsWidth.value -
-                          drawerWidth -
-                          screenImageWidthAndHeight -
-                          30 -
-                          15,
+                  width: _toprightwidth,
                   child: Text(_artilstname,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -228,29 +237,30 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                 ),
               ),
               Container(
-                width: isMobile
-                    ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
-                    : windowsWidth.value -
-                        drawerWidth -
-                        screenImageWidthAndHeight -
-                        30 -
-                        15,
+                width: _toprightwidth,
                 child: Text(
-                  S.current.album +
-                      ": " +
-                      _albumsnum.toString() +
-                      "  " +
-                      S.current.song +
-                      ": " +
-                      _songs.toString() +
-                      "  " +
-                      S.current.dration +
-                      ": " +
-                      formatDuration(_duration) +
-                      "  " +
-                      S.current.playCount +
-                      ": " +
-                      _playCount.toString(),
+                  S.current.album + ": " + _albumsnum.toString(),
+                  style: nomalText,
+                ),
+              ),
+              Container(
+                width: _toprightwidth,
+                child: Text(
+                  S.current.song + ": " + _songs.toString(),
+                  style: nomalText,
+                ),
+              ),
+              Container(
+                width: _toprightwidth,
+                child: Text(
+                  S.current.dration + ": " + formatDuration(_duration),
+                  style: nomalText,
+                ),
+              ),
+              Container(
+                width: _toprightwidth,
+                child: Text(
+                  S.current.playCount + ": " + _playCount.toString(),
                   style: nomalText,
                 ),
               ),
@@ -298,14 +308,14 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
               }
             },
             child: Container(
-              padding: allPadding,
+              padding: nobottomPadding,
               width: isMobile
                   ? windowsWidth.value
                   : windowsWidth.value - drawerWidth,
               child: _isbiography
                   ? Text(
                       _biography,
-                      maxLines: 4,
+                      maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: nomalText,
                     )
@@ -398,11 +408,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
             child: MySliverControlBar(
           title: S.current.album,
           controller: _albumscontroller,
-          press: (_albums.length > 10)
-              ? () {
-                  indexValue.value = 13;
-                }
-              : null,
         )),
       if (_albums.length > 0)
         SliverToBoxAdapter(
@@ -418,7 +423,6 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       if (_similarArtist.length > 0)
         SliverToBoxAdapter(
           child: Container(
-            margin: EdgeInsets.only(top: 10),
             height: 200,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -428,7 +432,9 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                 var _tem = _similarArtist[index];
 
                 return Container(
-                  padding: leftrightPadding,
+                  padding: index == 0
+                      ? leftrightPadding
+                      : EdgeInsets.only(right: 15),
                   child: InkWell(
                       onTap: () {
                         activeID.value = _tem["id"];

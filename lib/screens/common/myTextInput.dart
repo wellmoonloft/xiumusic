@@ -38,8 +38,11 @@ class MyTextInput extends StatelessWidget {
           label,
           style: titleStyle,
         ),
+        SizedBox(
+          width: 5,
+        ),
         Container(
-          width: 220,
+          width: 200,
           height: 35,
           margin: EdgeInsets.all(5),
           child: TextField(

@@ -10,7 +10,6 @@ import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../common/myAlertDialog.dart';
 import '../common/myTextInput.dart';
-import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 import '../leftScreen.dart';
 
@@ -30,9 +29,7 @@ class _SettingsState extends State<Settings>
   final passwordcontroller = new TextEditingController();
   final neteasecontroller = new TextEditingController();
   final taskTimecontroller = new TextEditingController();
-  late TabController tabController;
   late ServerInfo _myServerInfo;
-  late List<Tab> myTabs;
   String _selectedSort = 'en';
   List<DropdownMenuItem<String>> _sortItems = [];
 
@@ -47,7 +44,7 @@ class _SettingsState extends State<Settings>
       var status = await testServer(
           _serverURL, usernamecontroller.text, passwordcontroller.text);
 
-      if (status) {
+      if (status != null && status) {
         final _randomNumber = generateRandomString();
         final _randomBytes =
             utf8.encode(passwordcontroller.text.toString() + _randomNumber);
@@ -62,6 +59,7 @@ class _SettingsState extends State<Settings>
             languageCode: '');
         await DbProvider.instance.addServerInfo(_serverInfo);
         serversInfo.value = _serverInfo;
+        indexValue.value = 0;
       } else {
         showMyAlertDialog(context, S.current.notive, S.current.serverErr);
       }
@@ -138,11 +136,6 @@ class _SettingsState extends State<Settings>
   @override
   initState() {
     super.initState();
-    myTabs = <Tab>[
-      Tab(text: S.current.server + S.current.settings),
-      Tab(text: S.current.other + S.current.settings),
-    ];
-    tabController = TabController(length: myTabs.length, vsync: this);
     _sortItems = [
       DropdownMenuItem(
           value: "en", child: Text(S.current.english, style: nomalText)),
@@ -163,7 +156,6 @@ class _SettingsState extends State<Settings>
     servercontroller.dispose();
     usernamecontroller.dispose();
     passwordcontroller.dispose();
-    tabController.dispose();
     neteasecontroller.dispose();
     taskTimecontroller.dispose();
     super.dispose();
@@ -171,175 +163,166 @@ class _SettingsState extends State<Settings>
 
   @override
   Widget build(BuildContext context) {
-    return MyStructure(
-      top: 106,
-      headerWidget: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(S.current.settings, style: titleText1),
-            MyTextButton(
-                press: () {
-                  showMyAlertDialog(context, S.current.version, version);
-                },
-                title: S.current.version)
-          ],
-        ),
-        Container(
-            alignment: Alignment.topLeft,
-            child: TabBar(
-                controller: tabController,
-                labelColor: textGray,
-                unselectedLabelColor: borderColor,
-                tabs: myTabs,
-                isScrollable: true,
-                indicatorColor: badgeRed)),
-      ]),
-      contentWidget: TabBarView(controller: tabController, children: [
-        Column(
-          children: [
-            Container(
-                padding: allPadding,
-                margin: allPadding,
-                decoration: circularBorder,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return CustomScrollView(slivers: <Widget>[
+      SliverToBoxAdapter(
+          child: Container(
+              padding: leftrightPadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(S.current.settings, style: titleText1),
+                  MyTextButton(
+                      press: () {
+                        showMyAlertDialog(context, S.current.version, version);
+                      },
+                      title: S.current.version)
+                ],
+              ))),
+      SliverToBoxAdapter(
+        child: Container(
+            padding: allPadding,
+            margin: allPadding,
+            decoration: circularBorder,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          S.current.song + S.current.server,
-                          style: titleText2,
-                        ),
-                        ValueListenableBuilder<ServerInfo>(
-                            valueListenable: serversInfo,
-                            builder: ((context, _value, child) {
-                              return MyTextButton(
-                                  press: () {
-                                    _value.baseurl.isNotEmpty
-                                        ? _deleteServer()
-                                        : _saveServer();
+                    Text(
+                      S.current.song + S.current.server,
+                      style: titleText2,
+                    ),
+                    ValueListenableBuilder<ServerInfo>(
+                        valueListenable: serversInfo,
+                        builder: ((context, _value, child) {
+                          return MyTextButton(
+                              press: () {
+                                _value.baseurl.isNotEmpty
+                                    ? _deleteServer()
+                                    : _saveServer();
+                              },
+                              title: _value.baseurl.isNotEmpty
+                                  ? S.current.disConnect
+                                  : S.current.save);
+                        }))
+                  ],
+                ),
+                Container(
+                  child: Text(
+                    S.current.serverSaveNotive,
+                    style: subText,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                MyTextInput(
+                  control: servercontroller,
+                  label: S.current.serverURL,
+                  hintLabel: S.current.serverURL,
+                  hideText: false,
+                  icon: Icons.dns,
+                  titleStyle: nomalText,
+                  mainaxis: MainAxisAlignment.spaceBetween,
+                  crossaxis: CrossAxisAlignment.center,
+                  press: () {
+                    _saveServer();
+                  },
+                ),
+                MyTextInput(
+                  control: usernamecontroller,
+                  label: S.current.username,
+                  hintLabel: S.current.username,
+                  hideText: false,
+                  icon: Icons.person,
+                  press: () {
+                    _saveServer();
+                  },
+                  titleStyle: nomalText,
+                  mainaxis: MainAxisAlignment.spaceBetween,
+                  crossaxis: CrossAxisAlignment.center,
+                ),
+                MyTextInput(
+                  control: passwordcontroller,
+                  label: S.current.password,
+                  hintLabel: S.current.password,
+                  hideText: true,
+                  icon: Icons.password,
+                  press: () {
+                    _saveServer();
+                  },
+                  titleStyle: nomalText,
+                  mainaxis: MainAxisAlignment.spaceBetween,
+                  crossaxis: CrossAxisAlignment.center,
+                ),
+              ],
+            )),
+      ),
+      SliverToBoxAdapter(
+        child: Container(
+            padding: allPadding,
+            margin: allPadding,
+            decoration: circularBorder,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      S.current.lyric + S.current.server,
+                      style: titleText2,
+                    ),
+                    ValueListenableBuilder<ServerInfo>(
+                        valueListenable: serversInfo,
+                        builder: ((context, _value, child) {
+                          return _value.neteaseapi.isNotEmpty
+                              ? Container()
+                              : MyTextButton(
+                                  press: () async {
+                                    if (_value.baseurl.isNotEmpty) {
+                                      _saveNetease();
+                                    } else {
+                                      showMyAlertDialog(
+                                          context,
+                                          S.current.notive,
+                                          S.current.serverSaveFirst);
+                                    }
                                   },
-                                  title: _value.baseurl.isNotEmpty
-                                      ? S.current.disConnect
-                                      : S.current.save);
-                            }))
-                      ],
-                    ),
-                    Container(
-                      child: Text(
-                        S.current.serverSaveNotive,
-                        style: subText,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    MyTextInput(
-                      control: servercontroller,
-                      label: S.current.serverURL,
-                      hintLabel: S.current.pleaseInput + S.current.serverURL,
-                      hideText: false,
-                      icon: Icons.dns,
-                      titleStyle: nomalText,
-                      mainaxis: MainAxisAlignment.spaceBetween,
-                      crossaxis: CrossAxisAlignment.center,
-                      press: () {
-                        _saveServer();
-                      },
-                    ),
-                    MyTextInput(
-                      control: usernamecontroller,
-                      label: S.current.username,
-                      hintLabel: S.current.pleaseInput + S.current.username,
-                      hideText: false,
-                      icon: Icons.person,
-                      press: () {
-                        _saveServer();
-                      },
-                      titleStyle: nomalText,
-                      mainaxis: MainAxisAlignment.spaceBetween,
-                      crossaxis: CrossAxisAlignment.center,
-                    ),
-                    MyTextInput(
-                      control: passwordcontroller,
-                      label: S.current.password,
-                      hintLabel: S.current.pleaseInput + S.current.password,
-                      hideText: true,
-                      icon: Icons.password,
-                      press: () {
-                        _saveServer();
-                      },
-                      titleStyle: nomalText,
-                      mainaxis: MainAxisAlignment.spaceBetween,
-                      crossaxis: CrossAxisAlignment.center,
-                    ),
+                                  title: S.current.save +
+                                      S.current.lyric +
+                                      S.current.server);
+                        }))
                   ],
-                )),
-            Container(
-                padding: allPadding,
-                margin: allPadding,
-                decoration: circularBorder,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          S.current.lyric + S.current.server,
-                          style: titleText2,
-                        ),
-                        ValueListenableBuilder<ServerInfo>(
-                            valueListenable: serversInfo,
-                            builder: ((context, _value, child) {
-                              return _value.neteaseapi.isNotEmpty
-                                  ? Container()
-                                  : MyTextButton(
-                                      press: () async {
-                                        if (_value.baseurl.isNotEmpty) {
-                                          _saveNetease();
-                                        } else {
-                                          showMyAlertDialog(
-                                              context,
-                                              S.current.notive,
-                                              S.current.serverSaveFirst);
-                                        }
-                                      },
-                                      title: S.current.save +
-                                          S.current.lyric +
-                                          S.current.server);
-                            }))
-                      ],
-                    ),
-                    Container(
-                      child: Text(
-                        S.current.serverSaveSub,
-                        style: subText,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    MyTextInput(
-                      control: neteasecontroller,
-                      label: S.current.lyric + S.current.server,
-                      hintLabel: S.current.pleaseInput + S.current.serverURL,
-                      hideText: false,
-                      icon: Icons.dns,
-                      titleStyle: nomalText,
-                      mainaxis: MainAxisAlignment.spaceBetween,
-                      crossaxis: CrossAxisAlignment.center,
-                    ),
-                  ],
-                ))
-          ],
-        ),
-        Container(
+                ),
+                Container(
+                  child: Text(
+                    S.current.serverSaveSub,
+                    style: subText,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                MyTextInput(
+                  control: neteasecontroller,
+                  label: S.current.lyric + S.current.server,
+                  hintLabel: S.current.serverURL,
+                  hideText: false,
+                  icon: Icons.dns,
+                  titleStyle: nomalText,
+                  mainaxis: MainAxisAlignment.spaceBetween,
+                  crossaxis: CrossAxisAlignment.center,
+                ),
+              ],
+            )),
+      ),
+      SliverToBoxAdapter(
+        child: Container(
             padding: allPadding,
             margin: allPadding,
             decoration: circularBorder,
@@ -401,14 +384,6 @@ class _SettingsState extends State<Settings>
 
                               setState(() {
                                 _selectedSort = value.toString();
-                                myTabs = <Tab>[
-                                  Tab(
-                                      text: S.current.server +
-                                          S.current.settings),
-                                  Tab(
-                                      text:
-                                          S.current.other + S.current.settings),
-                                ];
                               });
 
                               if (serversInfo.value.baseurl.isNotEmpty) {
@@ -431,8 +406,8 @@ class _SettingsState extends State<Settings>
                   ],
                 ),
               ],
-            ))
-      ]),
-    );
+            )),
+      ),
+    ]);
   }
 }

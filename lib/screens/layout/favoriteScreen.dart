@@ -497,6 +497,7 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                     labelColor: textGray,
                     unselectedLabelColor: borderColor,
                     tabs: myTabs,
+                    labelStyle: nomalText,
                     isScrollable: true,
                     indicatorColor: badgeRed)),
           ],

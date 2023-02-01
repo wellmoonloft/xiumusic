@@ -91,11 +91,19 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   }
 
   Widget _buildTopWidget() {
+    double _rightWidth = isMobile
+        ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+        : windowsWidth.value -
+            drawerWidth -
+            screenImageWidthAndHeight -
+            30 -
+            15;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Container(
                 height: screenImageWidthAndHeight,
@@ -125,16 +133,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      width: isMobile
-                          ? windowsWidth.value -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15
-                          : windowsWidth.value -
-                              drawerWidth -
-                              screenImageWidthAndHeight -
-                              30 -
-                              15,
+                      width: _rightWidth,
                       child: Text(_albumsname,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -152,104 +151,90 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                           title: S.current.playlist,
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 5,
                         ),
-                        Text(
-                          S.current.createuser + ": " + _artist,
-                          style: nomalText,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Text(
-                          S.current.song + ": " + _songsnum.toString(),
-                          style: nomalText,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          S.current.dration + ": " + formatDuration(_duration),
-                          style: nomalText,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        if (_changed != null)
-                          Text(
-                            S.current.udpateDate +
-                                ": " +
-                                timeISOtoString(_changed!),
-                            style: nomalText,
-                          ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Container(
-                      child: Row(children: [
-                    Text(
-                      S.current.playCount + ": " + _playCount.toString(),
-                      style: nomalText,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    MyTextButton(
-                        press: () async {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (_context) {
-                              return AlertDialog(
-                                titlePadding: EdgeInsets.all(10),
-                                contentPadding: EdgeInsets.all(10),
-                                titleTextStyle: nomalText,
-                                contentTextStyle: nomalText,
-                                backgroundColor: badgeDark,
-                                title: Text(
-                                  S.current.delete,
-                                ),
-                                content: Text(
-                                  S.current.delete + _albumsname + "?",
-                                ),
-                                actions: <Widget>[
-                                  MyTextButton(
-                                    title: S.of(_context).cancel,
-                                    press: () {
-                                      Navigator.of(_context).pop();
-                                    },
-                                  ),
-                                  MyTextButton(
-                                    title: S.of(_context).confrim,
-                                    press: () async {
-                                      await deletePlaylist(_palylistId);
+                        MyTextButton(
+                            press: () async {
+                              showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (_context) {
+                                  return AlertDialog(
+                                    titlePadding: EdgeInsets.all(10),
+                                    contentPadding: EdgeInsets.all(10),
+                                    titleTextStyle: nomalText,
+                                    contentTextStyle: nomalText,
+                                    backgroundColor: badgeDark,
+                                    title: Text(
+                                      S.current.delete,
+                                    ),
+                                    content: Text(
+                                      S.current.delete + _albumsname + "?",
+                                    ),
+                                    actions: <Widget>[
+                                      MyTextButton(
+                                        title: S.of(_context).cancel,
+                                        press: () {
+                                          Navigator.of(_context).pop();
+                                        },
+                                      ),
+                                      MyTextButton(
+                                        title: S.of(_context).confrim,
+                                        press: () async {
+                                          await deletePlaylist(_palylistId);
 
-                                      Navigator.of(_context).pop();
-                                      indexValue.value = 2;
-                                    },
-                                  )
-                                ],
+                                          Navigator.of(_context).pop();
+                                          indexValue.value = 2;
+                                        },
+                                      )
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                        title: S.current.delete)
-                  ]))
+                            title: S.current.delete)
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                      width: _rightWidth,
+                      child: Text(
+                        S.current.createuser + ": " + _artist,
+                        style: nomalText,
+                      )),
+                  if (_changed != null)
+                    Container(
+                      width: _rightWidth,
+                      child: Text(
+                        S.current.udpateDate +
+                            ": " +
+                            timeISOtoString(_changed!),
+                        style: nomalText,
+                      ),
+                    ),
+                  Container(
+                    width: _rightWidth,
+                    child: Text(
+                      S.current.song + ": " + _songsnum.toString(),
+                      style: nomalText,
+                    ),
+                  ),
+                  Container(
+                    width: _rightWidth,
+                    child: Text(
+                      S.current.dration + ": " + formatDuration(_duration),
+                      style: nomalText,
+                    ),
+                  ),
+                  Container(
+                      width: _rightWidth,
+                      child: Text(
+                        S.current.playCount + ": " + _playCount.toString(),
+                        style: nomalText,
+                      ))
                 ],
               ),
             )
@@ -269,115 +254,100 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
     return myRowList(_title, subText);
   }
 
-  Widget _songsBody() {
-    return _songslist.length > 0
-        ? MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: _songslist.length,
-                itemExtent: 50.0, //强制高度为50.0
-                itemBuilder: (BuildContext context, int index) {
-                  Songs _song = _songslist[index];
-                  List<String> _title = [
-                    _song.title,
-                    formatDuration(_song.duration),
-                    if (!isMobile)
-                      _song.suffix + "(" + _song.bitRate.toString() + ")",
-                    _song.playCount.toString(),
-                  ];
-
-                  return Dismissible(
-                      key: Key(_song.id),
-                      confirmDismiss: (direction) {
-                        bool _result = false;
-                        if (direction == DismissDirection.endToStart) {
-                          // 从右向左  也就是删除
-                          _result = true;
-                        } else if (direction == DismissDirection.startToEnd) {
-                          //从左向右
-                          _result = false;
-                        }
-                        return Future<bool>.value(_result);
-                      },
-                      onDismissed: (direction) async {
-                        if (direction == DismissDirection.endToStart) {
-                          await delSongfromPlaylist(
-                              activeID.value, index.toString());
-
-                          _getSongs(activeID.value);
-                          MyToast.show(
-                              context: context,
-                              message: S.current.delete + S.current.success);
-                        } else if (direction == DismissDirection.startToEnd) {
-                          //从左向右
-                        }
-                      },
-                      background: Container(
-                        color: rightColor,
-                        child: ListTile(
-                            // leading: Icon(
-                            //   Icons.delete,
-                            //   color: textGray,
-                            // ),
-                            ),
-                      ),
-                      secondaryBackground: Container(
-                        color: badgeRed,
-                        child: ListTile(
-                          trailing: Icon(
-                            Icons.delete,
-                            color: textGray,
-                          ),
-                        ),
-                      ),
-                      child: ListTile(
-                          title: GestureDetector(
-                              onTap: () async {
-                                if (listEquals(activeList.value, _songslist)) {
-                                  widget.player
-                                      .seek(Duration.zero, index: index);
-                                } else {
-                                  //当前歌曲队列
-                                  activeIndex.value = index;
-                                  activeSongValue.value = _song.id;
-                                  //歌曲所在专辑歌曲List
-                                  activeList.value = _songslist;
-                                }
-                              },
-                              onSecondaryTapDown: (details) {
-                                _delSong(context, details.globalPosition.dx,
-                                    details.globalPosition.dy, index);
-                              },
-                              child: ValueListenableBuilder<Map>(
-                                  valueListenable: activeSong,
-                                  builder: ((context, value, child) {
-                                    return myRowList(
-                                        _title,
-                                        (value.isNotEmpty &&
-                                                value["value"] == _song.id)
-                                            ? activeText
-                                            : nomalText);
-                                  })))));
-                }))
-        : Container();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MyStructure(
-        top: 215,
-        headerWidget: Column(
-          children: [
-            _buildTopWidget(),
-            SizedBox(
-              height: 15,
-            ),
-            _songsHeader()
-          ],
-        ),
-        contentWidget: _songsBody());
+    return CustomScrollView(slivers: <Widget>[
+      SliverToBoxAdapter(
+          child:
+              Container(padding: leftrightPadding, child: _buildTopWidget())),
+      SliverToBoxAdapter(
+        child: Container(padding: nobottomPadding, child: _songsHeader()),
+      ),
+      if (_songslist.length > 0)
+        SliverList(
+            delegate: SliverChildBuilderDelegate(
+          (content, index) {
+            Songs _song = _songslist[index];
+            List<String> _title = [
+              _song.title,
+              formatDuration(_song.duration),
+              if (!isMobile)
+                _song.suffix + "(" + _song.bitRate.toString() + ")",
+              _song.playCount.toString(),
+            ];
+            return Dismissible(
+                key: Key(_song.id),
+                confirmDismiss: (direction) {
+                  bool _result = false;
+                  if (direction == DismissDirection.endToStart) {
+                    // 从右向左  也就是删除
+                    _result = true;
+                  } else if (direction == DismissDirection.startToEnd) {
+                    //从左向右
+                    _result = false;
+                  }
+                  return Future<bool>.value(_result);
+                },
+                onDismissed: (direction) async {
+                  if (direction == DismissDirection.endToStart) {
+                    await delSongfromPlaylist(activeID.value, index.toString());
+
+                    _getSongs(activeID.value);
+                    MyToast.show(
+                        context: context,
+                        message: S.current.delete + S.current.success);
+                  } else if (direction == DismissDirection.startToEnd) {
+                    //从左向右
+                  }
+                },
+                background: Container(
+                  color: rightColor,
+                  child: ListTile(
+                      // leading: Icon(
+                      //   Icons.delete,
+                      //   color: textGray,
+                      // ),
+                      ),
+                ),
+                secondaryBackground: Container(
+                  color: badgeRed,
+                  child: ListTile(
+                    trailing: Icon(
+                      Icons.delete,
+                      color: textGray,
+                    ),
+                  ),
+                ),
+                child: ListTile(
+                    title: GestureDetector(
+                        onTap: () async {
+                          if (listEquals(activeList.value, _songslist)) {
+                            widget.player.seek(Duration.zero, index: index);
+                          } else {
+                            //当前歌曲队列
+                            activeIndex.value = index;
+                            activeSongValue.value = _song.id;
+                            //歌曲所在专辑歌曲List
+                            activeList.value = _songslist;
+                          }
+                        },
+                        onSecondaryTapDown: (details) {
+                          _delSong(context, details.globalPosition.dx,
+                              details.globalPosition.dy, index);
+                        },
+                        child: ValueListenableBuilder<Map>(
+                            valueListenable: activeSong,
+                            builder: ((context, value, child) {
+                              return myRowList(
+                                  _title,
+                                  (value.isNotEmpty &&
+                                          value["value"] == _song.id)
+                                      ? activeText
+                                      : nomalText);
+                            })))));
+          },
+          childCount: _songslist.length,
+        ))
+    ]);
   }
 }

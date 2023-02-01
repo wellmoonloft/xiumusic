@@ -355,6 +355,7 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
                     labelColor: textGray,
                     unselectedLabelColor: borderColor,
                     tabs: myTabs,
+                    labelStyle: nomalText,
                     isScrollable: true,
                     indicatorColor: badgeRed)),
           ],
