@@ -344,7 +344,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                           textDirection: TextDirection.ltr,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          style: nomalText,
+                                          style: (value.isNotEmpty &&
+                                                  value["value"] == _song.id)
+                                              ? activeText
+                                              : nomalText,
                                         ),
                                       ),
                                       Expanded(
@@ -354,7 +357,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                           textDirection: TextDirection.rtl,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          style: nomalText,
+                                          style: (value.isNotEmpty &&
+                                                  value["value"] == _song.id)
+                                              ? activeText
+                                              : nomalText,
                                         ),
                                       ),
                                       if (!isMobile)
@@ -368,7 +374,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                             textDirection: TextDirection.rtl,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style: nomalText,
+                                            style: (value.isNotEmpty &&
+                                                    value["value"] == _song.id)
+                                                ? activeText
+                                                : nomalText,
                                           ),
                                         ),
                                       if (!isMobile)
@@ -379,7 +388,10 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                             textDirection: TextDirection.rtl,
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
-                                            style: nomalText,
+                                            style: (value.isNotEmpty &&
+                                                    value["value"] == _song.id)
+                                                ? activeText
+                                                : nomalText,
                                           ),
                                         ),
                                       Expanded(

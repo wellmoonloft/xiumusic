@@ -47,6 +47,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
           _element["stream"] = _stream + '&id=' + _element["id"];
           _element["coverUrl"] = _url;
           Songs _song = Songs.fromJson(_element);
+          _playCount += _song.playCount;
           _temsong.add(_song);
         }
       }
@@ -301,7 +302,7 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                   }
                 },
                 background: Container(
-                  color: rightColor,
+                  color: bkColor,
                   child: ListTile(
                       // leading: Icon(
                       //   Icons.delete,

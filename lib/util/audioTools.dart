@@ -91,6 +91,7 @@ Future<void> setAudioSource(AudioPlayer _player) async {
               artist: _song.artist,
               genre: _song.genre,
               title: _song.title,
+              duration: Duration(milliseconds: _song.duration),
               artUri: Uri.parse(getCoverArt(_song.id))),
         ),
       );

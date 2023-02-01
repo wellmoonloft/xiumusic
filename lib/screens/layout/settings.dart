@@ -44,7 +44,7 @@ class _SettingsState extends State<Settings>
       var status = await testServer(
           _serverURL, usernamecontroller.text, passwordcontroller.text);
 
-      if (status != null && status) {
+      if (status) {
         final _randomNumber = generateRandomString();
         final _randomBytes =
             utf8.encode(passwordcontroller.text.toString() + _randomNumber);

@@ -33,7 +33,7 @@ MacOS的版本已经在[Appstore](https://apps.apple.com/cn/app/xiu-music/id1667
 
 ![](snapshot/lyric.png)
 
-![](snapshot/snapshot/ios/6.7/Simulator%20Screen%20Shot%20-%20iPhone%2014%20Pro%20Max%20-%202023-01-24%20at%2021.18.06.png)
+![](snapshot/snapshot/ios/12.9/Simulator%20Screen%20Shot%20-%20iPad%20Pro%20(12.9-inch)%20(6th%20generation)%20-%202023-02-01%20at%2017.28.00.png)
 
 ------------------------------
 
@@ -125,7 +125,7 @@ AndroidManifest.xml
 
 ## Todo List 
 
-- [x] 调试过的: macOS iOS 安卓
+- [x] 调试过的: macOS iPhone iPad 安卓
 - [ ] 还没调试的: Windows/Linux 理论上应该没问题
 - [ ] 桌面快捷键  
 - [ ] 分页?    

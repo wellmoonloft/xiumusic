@@ -44,7 +44,7 @@ class _PlayScreenState extends State<PlayScreen> {
             children: [
               if (!isMobile)
                 Container(
-                  height: windowsHeight.value - 80,
+                  height: windowsHeight.value - 95,
                   padding: EdgeInsets.all(30),
                   width: _width / 2,
                   child: Column(
@@ -85,7 +85,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 padding: EdgeInsets.all(30),
                 height: !isMobile
                     ? windowsHeight.value - 80
-                    : windowsHeight.value - 80 - 50,
+                    : windowsHeight.value - 80 - 50 - 25,
                 width: !isMobile ? _width / 2 : _width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -282,7 +282,10 @@ class _PlayScreenState extends State<PlayScreen> {
                           Container(
                               height: 60,
                               child: PlayerControBar(
-                                  isPlayScreen: true, player: widget.player))
+                                  isPlayScreen: true, player: widget.player)),
+                          SizedBox(
+                            height: 25,
+                          ),
                         ],
                       )),
                 ),

@@ -34,7 +34,7 @@ The MacOS version is already on the [Appstore](https://apps.apple.com/cn/app/xiu
 
 ![](snapshot/lyric.png)
 
-![](snapshot/snapshot/ios/6.7/Simulator%20Screen%20Shot%20-%20iPhone%2014%20Pro%20Max%20-%202023-01-24%20at%2021.18.06.png)
+![](snapshot/snapshot/ios/12.9/Simulator%20Screen%20Shot%20-%20iPad%20Pro%20(12.9-inch)%20(6th%20generation)%20-%202023-02-01%20at%2017.28.00.png)
 
 
 ------------------------------
@@ -127,7 +127,7 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 
 ## Todo List 
 
-- [x] Debugged: macOS iOS Android
-- [ ] Not yet: Windows/Linux should be fine in theory
+- [x] Debugged: macOS iPhone iPad Android
+- [ ] Not yet: Windows/Linux should be fine?
 - [ ] desktop shortcut key
 - [ ] tab?

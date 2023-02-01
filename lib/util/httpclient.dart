@@ -16,6 +16,7 @@ testServer(String _baseUrl, String _username, String _password) async {
     return true;
   } catch (e) {
     print(e);
+    return false;
   }
 }
 
@@ -76,6 +77,7 @@ getAlbumList(String _type, String _by, int _offset, int _size) async {
     return _albums;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -89,6 +91,7 @@ getAlbumInfo2(String _albumId) async {
     return scanStatus;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -102,6 +105,7 @@ search3(String _query) async {
     return scanStatus;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -116,6 +120,7 @@ getGenres() async {
     return genresList;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -134,6 +139,7 @@ createPlaylist(String _nameOrId, String _songId) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -147,6 +153,7 @@ updatePlaylist(String playlistId, String songIdToAdd) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -164,6 +171,7 @@ delSongfromPlaylist(String playlistId, String? index) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -177,6 +185,7 @@ getPlaylistbyId(String _id) async {
     return _playlist;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -191,6 +200,7 @@ getPlaylists() async {
     return _playlist;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -205,6 +215,7 @@ getPlaylist(String _id) async {
     return _songs;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -217,6 +228,7 @@ deletePlaylist(String _id) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -230,6 +242,7 @@ getArtists() async {
     return _artists;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -245,6 +258,7 @@ getArtistInfo2(String _id) async {
     return _artist;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -260,6 +274,7 @@ getArtist(String _id) async {
     return _artist;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -275,6 +290,7 @@ getSongs(String _id) async {
     return _artist;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -291,6 +307,7 @@ getTopSongs(String _name) async {
     return _topSongs;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -306,6 +323,7 @@ getSong(String _id) async {
     return _song;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -331,6 +349,7 @@ addStarred(Favorite _starred) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -344,6 +363,7 @@ getStarred() async {
     return _starred;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -369,6 +389,7 @@ delStarred(Favorite _starred) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -383,6 +404,7 @@ scrobble(String _songId, bool _submission) async {
     return _subsonic;
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -403,6 +425,7 @@ searchNeteasAPI(String _name, String _type) async {
     }
   } catch (e) {
     print(e);
+    return null;
   }
 }
 
@@ -423,5 +446,6 @@ getLyric(String _songId) async {
     }
   } catch (e) {
     print(e);
+    return null;
   }
 }
