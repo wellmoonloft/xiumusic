@@ -9,6 +9,7 @@ import '../../util/util.dart';
 import '../../util/mycss.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
+import '../common/myToast.dart';
 
 class SearchScreen extends StatefulWidget {
   final AudioPlayer player;
@@ -25,6 +26,9 @@ class _SearchScreenState extends State<SearchScreen>
   List<Songs> _songs = [];
   List<Albums> _albums = [];
   List<Artists> _artists = [];
+  List<bool> _starsong = [];
+  List<bool> _staralbums = [];
+  List<bool> _starartists = [];
 
   _getSongsbyName() async {
     String _title1 = searchController.text;
@@ -32,6 +36,9 @@ class _SearchScreenState extends State<SearchScreen>
     List<Songs> _listSong = [];
     List<Albums> _listAlbums = [];
     List<Artists> _listArtists = [];
+    List<bool> _startem = [];
+    List<bool> _staralbums1 = [];
+    List<bool> _starartists1 = [];
     _title2 = await converToTraditional(_title1);
     final _searchData = await search3(_title1);
     final _searchDat2 = await search3(_title2);
@@ -41,6 +48,11 @@ class _SearchScreenState extends State<SearchScreen>
         String _url = await getCoverArt(_element["id"]);
         _element["stream"] = _stream + '&id=' + _element["id"];
         _element["coverUrl"] = _url;
+        if (_element["starred"] != null) {
+          _startem.add(true);
+        } else {
+          _startem.add(false);
+        }
         Songs _tem = Songs.fromJson(_element);
         _listSong.add(_tem);
       }
@@ -49,6 +61,11 @@ class _SearchScreenState extends State<SearchScreen>
       for (var _element in _searchData["album"]) {
         String _url = await getCoverArt(_element["id"]);
         _element["coverUrl"] = _url;
+        if (_element["starred"] != null) {
+          _staralbums1.add(true);
+        } else {
+          _staralbums1.add(false);
+        }
         Albums _tem = Albums.fromJson(_element);
         _listAlbums.add(_tem);
       }
@@ -57,6 +74,11 @@ class _SearchScreenState extends State<SearchScreen>
       for (var _element in _searchData["artist"]) {
         String _url = await getCoverArt(_element["id"]);
         _element["artistImageUrl"] = _url;
+        if (_element["starred"] != null) {
+          _starartists1.add(true);
+        } else {
+          _starartists1.add(false);
+        }
         Artists _tem = Artists.fromJson(_element);
         _listArtists.add(_tem);
       }
@@ -67,8 +89,16 @@ class _SearchScreenState extends State<SearchScreen>
         String _url = await getCoverArt(_element["id"]);
         _element["stream"] = _stream + '&id=' + _element["id"];
         _element["coverUrl"] = _url;
+
         Songs _tem = Songs.fromJson(_element);
-        _listSong.add(_tem);
+        if (_listSong.contains(_tem)) {
+          _listSong.add(_tem);
+          if (_element["starred"] != null) {
+            _startem.add(true);
+          } else {
+            _startem.add(false);
+          }
+        }
       }
     }
     if (_searchDat2["album"] != null) {
@@ -76,7 +106,14 @@ class _SearchScreenState extends State<SearchScreen>
         String _url = await getCoverArt(_element["id"]);
         _element["coverUrl"] = _url;
         Albums _tem = Albums.fromJson(_element);
-        _listAlbums.add(_tem);
+        if (_listAlbums.contains(_tem)) {
+          _listAlbums.add(_tem);
+          if (_element["starred"] != null) {
+            _staralbums1.add(true);
+          } else {
+            _staralbums1.add(false);
+          }
+        }
       }
     }
     if (_searchDat2["artist"] != null) {
@@ -84,7 +121,14 @@ class _SearchScreenState extends State<SearchScreen>
         String _url = await getCoverArt(_element["id"]);
         _element["artistImageUrl"] = _url;
         Artists _tem = Artists.fromJson(_element);
-        _listArtists.add(_tem);
+        if (_listArtists.contains(_tem)) {
+          _listArtists.add(_tem);
+          if (_element["starred"] != null) {
+            _starartists1.add(true);
+          } else {
+            _starartists1.add(false);
+          }
+        }
       }
     }
     if (mounted) {
@@ -92,6 +136,9 @@ class _SearchScreenState extends State<SearchScreen>
         _songs = _listSong;
         _albums = _listAlbums;
         _artists = _listArtists;
+        _starsong = _startem;
+        _staralbums = _staralbums1;
+        _starartists = _starartists1;
         myTabs = <Tab>[
           Tab(text: S.current.song + "(" + _songs.length.toString() + ")"),
           Tab(text: S.current.album + "(" + _albums.length.toString() + ")"),
@@ -137,7 +184,10 @@ class _SearchScreenState extends State<SearchScreen>
       S.current.song,
       S.current.album,
       S.current.artist,
-      S.current.dration
+      S.current.dration,
+      if (!isMobile) S.current.bitRange,
+      if (!isMobile) S.current.playCount,
+      S.current.favorite
     ];
     return Container(
         height: 30,
@@ -162,7 +212,11 @@ class _SearchScreenState extends State<SearchScreen>
                     _song.title,
                     _song.album,
                     _song.artist,
-                    if (!isMobile) formatDuration(_song.duration)
+                    formatDuration(_song.duration),
+                    if (!isMobile)
+                      _song.suffix + "(" + _song.bitRate.toString() + ")",
+                    if (!isMobile) _song.playCount.toString(),
+                    _song.id
                   ];
                   return ListTile(
                       title: InkWell(
@@ -180,15 +234,83 @@ class _SearchScreenState extends State<SearchScreen>
                           child: ValueListenableBuilder<Map>(
                               valueListenable: activeSong,
                               builder: ((context, value, child) {
-                                return myRowList(
-                                    _title,
-                                    (value.isNotEmpty &&
-                                            value["value"] == _song.id)
-                                        ? activeText
-                                        : nomalText);
+                                return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: _songlistView(
+                                        _title,
+                                        (value.isNotEmpty &&
+                                                value["value"] == _song.id)
+                                            ? activeText
+                                            : nomalText,
+                                        index));
                               }))));
                 }))
         : Container();
+  }
+
+  List<Widget> _songlistView(
+      List<String> _title, TextStyle _style, int _index) {
+    List<Widget> _list = [];
+    for (var i = 0; i < _title.length; i++) {
+      if (i == _title.length - 1) {
+        _list.add(Expanded(
+            flex: 1,
+            child: Container(
+                alignment: Alignment.centerRight,
+                child: (_starsong[_index])
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                          color: badgeRed,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _title[i], type: 'song');
+                          await delStarred(_favorite);
+                          MyToast.show(
+                              context: context,
+                              message: S.current.cancel + S.current.favorite);
+                          setState(() {
+                            _starsong[_index] = false;
+                          });
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: textGray,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _title[i], type: 'song');
+                          await addStarred(_favorite);
+                          MyToast.show(
+                              context: context,
+                              message: S.current.add + S.current.favorite);
+                          setState(() {
+                            _starsong[_index] = true;
+                          });
+                        },
+                      ))));
+      } else {
+        _list.add(Expanded(
+          flex: (i == 0) ? 2 : 1,
+          child: Text(
+            _title[i],
+            textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: _style,
+          ),
+        ));
+      }
+    }
+    return _list;
   }
 
   Widget _artistWidget() {
@@ -198,7 +320,11 @@ class _SearchScreenState extends State<SearchScreen>
   }
 
   Widget _artistsHeader() {
-    List<String> _title = [S.current.artist, S.current.album];
+    List<String> _title = [
+      S.current.artist,
+      S.current.album,
+      S.current.favorite
+    ];
     return Container(
         height: 30,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
@@ -232,7 +358,87 @@ class _SearchScreenState extends State<SearchScreen>
                                 activeID.value = _tem.id;
                                 indexValue.value = 9;
                               },
-                              child: myRowList(_title, nomalText)));
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        _tem.name,
+                                        textDirection: TextDirection.ltr,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: nomalText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        _tem.albumCount.toString(),
+                                        textDirection: TextDirection.rtl,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: nomalText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: (_starartists[index])
+                                                ? IconButton(
+                                                    icon: Icon(
+                                                      Icons.favorite,
+                                                      color: badgeRed,
+                                                      size: 16,
+                                                    ),
+                                                    onPressed: () async {
+                                                      Favorite _favorite =
+                                                          Favorite(
+                                                              id: _tem.id,
+                                                              type: 'artist');
+                                                      await delStarred(
+                                                          _favorite);
+                                                      MyToast.show(
+                                                          context: context,
+                                                          message: S.current
+                                                                  .cancel +
+                                                              S.current
+                                                                  .favorite);
+                                                      setState(() {
+                                                        _starartists[index] =
+                                                            false;
+                                                      });
+                                                    },
+                                                  )
+                                                : IconButton(
+                                                    icon: Icon(
+                                                      Icons.favorite_border,
+                                                      color: textGray,
+                                                      size: 16,
+                                                    ),
+                                                    onPressed: () async {
+                                                      Favorite _favorite =
+                                                          Favorite(
+                                                              id: _tem.id,
+                                                              type: 'artist');
+                                                      await addStarred(
+                                                          _favorite);
+                                                      MyToast.show(
+                                                          context: context,
+                                                          message: S
+                                                                  .current.add +
+                                                              S.current
+                                                                  .favorite);
+                                                      setState(() {
+                                                        _starartists[index] =
+                                                            true;
+                                                      });
+                                                    },
+                                                  ))),
+                                  ])));
                     }))
             : Container());
   }
@@ -249,7 +455,8 @@ class _SearchScreenState extends State<SearchScreen>
       S.current.artist,
       S.current.song,
       if (!isMobile) S.current.dration,
-      if (!isMobile) S.current.playCount
+      if (!isMobile) S.current.playCount,
+      S.current.favorite
     ];
     return Container(
         height: 30,
@@ -274,20 +481,125 @@ class _SearchScreenState extends State<SearchScreen>
                     itemExtent: 50.0, //强制高度为50.0
                     itemBuilder: (BuildContext context, int index) {
                       Albums _tem = _albums[index];
-                      List<String> _title = [
-                        _tem.title,
-                        _tem.artist.toString(),
-                        _tem.songCount.toString(),
-                        if (!isMobile) formatDuration(_tem.duration),
-                        if (!isMobile) _tem.playCount.toString(),
-                      ];
                       return ListTile(
                           title: InkWell(
                               onTap: () {
                                 activeID.value = _tem.id;
                                 indexValue.value = 8;
                               },
-                              child: myRowList(_title, nomalText)));
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        _tem.title,
+                                        textDirection: TextDirection.ltr,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: nomalText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        _tem.artist.toString(),
+                                        textDirection: TextDirection.rtl,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: nomalText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                        _tem.songCount.toString(),
+                                        textDirection: TextDirection.rtl,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: nomalText,
+                                      ),
+                                    ),
+                                    if (!isMobile)
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          formatDuration(_tem.duration),
+                                          textDirection: TextDirection.rtl,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: nomalText,
+                                        ),
+                                      ),
+                                    if (!isMobile)
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          _tem.playCount.toString(),
+                                          textDirection: TextDirection.rtl,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: nomalText,
+                                        ),
+                                      ),
+                                    Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: (_staralbums[index])
+                                                ? IconButton(
+                                                    icon: Icon(
+                                                      Icons.favorite,
+                                                      color: badgeRed,
+                                                      size: 16,
+                                                    ),
+                                                    onPressed: () async {
+                                                      Favorite _favorite =
+                                                          Favorite(
+                                                              id: _tem.id,
+                                                              type: 'album');
+                                                      await delStarred(
+                                                          _favorite);
+                                                      MyToast.show(
+                                                          context: context,
+                                                          message: S.current
+                                                                  .cancel +
+                                                              S.current
+                                                                  .favorite);
+                                                      setState(() {
+                                                        _staralbums[index] =
+                                                            false;
+                                                      });
+                                                    },
+                                                  )
+                                                : IconButton(
+                                                    icon: Icon(
+                                                      Icons.favorite_border,
+                                                      color: textGray,
+                                                      size: 16,
+                                                    ),
+                                                    onPressed: () async {
+                                                      Favorite _favorite =
+                                                          Favorite(
+                                                              id: _tem.id,
+                                                              type: 'album');
+                                                      await addStarred(
+                                                          _favorite);
+                                                      MyToast.show(
+                                                          context: context,
+                                                          message: S
+                                                                  .current.add +
+                                                              S.current
+                                                                  .favorite);
+                                                      setState(() {
+                                                        _staralbums[index] =
+                                                            true;
+                                                      });
+                                                    },
+                                                  )))
+                                  ])));
                     }))
             : Container());
   }

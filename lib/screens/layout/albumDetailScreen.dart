@@ -314,7 +314,14 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                 itemExtent: 50.0, //强制高度为50.0
                 itemBuilder: (BuildContext context, int index) {
                   Songs _song = _songs[index];
-
+                  List<String> _title = [
+                    _song.title,
+                    formatDuration(_song.duration),
+                    if (!isMobile)
+                      _song.suffix + "(" + _song.bitRate.toString() + ")",
+                    if (!isMobile) _song.playCount.toString(),
+                    _song.id
+                  ];
                   return ListTile(
                       title: InkWell(
                           onTap: () async {
@@ -336,119 +343,78 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          _song.title,
-                                          textDirection: TextDirection.ltr,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: (value.isNotEmpty &&
-                                                  value["value"] == _song.id)
-                                              ? activeText
-                                              : nomalText,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          formatDuration(_song.duration),
-                                          textDirection: TextDirection.rtl,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: (value.isNotEmpty &&
-                                                  value["value"] == _song.id)
-                                              ? activeText
-                                              : nomalText,
-                                        ),
-                                      ),
-                                      if (!isMobile)
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            _song.suffix +
-                                                "(" +
-                                                _song.bitRate.toString() +
-                                                ")",
-                                            textDirection: TextDirection.rtl,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: (value.isNotEmpty &&
-                                                    value["value"] == _song.id)
-                                                ? activeText
-                                                : nomalText,
-                                          ),
-                                        ),
-                                      if (!isMobile)
-                                        Expanded(
-                                          flex: 1,
-                                          child: Text(
-                                            _song.playCount.toString(),
-                                            textDirection: TextDirection.rtl,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: (value.isNotEmpty &&
-                                                    value["value"] == _song.id)
-                                                ? activeText
-                                                : nomalText,
-                                          ),
-                                        ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                              alignment: Alignment.centerRight,
-                                              child: (_starsong[index])
-                                                  ? IconButton(
-                                                      icon: Icon(
-                                                        Icons.favorite,
-                                                        color: badgeRed,
-                                                        size: 16,
-                                                      ),
-                                                      onPressed: () async {
-                                                        Favorite _favorite =
-                                                            Favorite(
-                                                                id: _song.id,
-                                                                type: 'song');
-                                                        await delStarred(
-                                                            _favorite);
-                                                        MyToast.show(
-                                                            context: context,
-                                                            message: S.current
-                                                                    .cancel +
-                                                                S.current
-                                                                    .favorite);
-                                                      },
-                                                    )
-                                                  : IconButton(
-                                                      icon: Icon(
-                                                        Icons.favorite_border,
-                                                        color: textGray,
-                                                        size: 16,
-                                                      ),
-                                                      onPressed: () async {
-                                                        Favorite _favorite =
-                                                            Favorite(
-                                                                id: _song.id,
-                                                                type: 'song');
-                                                        await addStarred(
-                                                            _favorite);
-                                                        MyToast.show(
-                                                            context: context,
-                                                            message: S.current
-                                                                    .add +
-                                                                S.current
-                                                                    .favorite);
-                                                        setState(() {
-                                                          _starsong[index] =
-                                                              true;
-                                                        });
-                                                      },
-                                                    ))),
-                                    ]);
+                                    children: _songlistView(
+                                        _title,
+                                        (value.isNotEmpty &&
+                                                value["value"] == _song.id)
+                                            ? activeText
+                                            : nomalText,
+                                        index));
                               }))));
                 }))
         : Container();
+  }
+
+  List<Widget> _songlistView(
+      List<String> _title, TextStyle _style, int _index) {
+    List<Widget> _list = [];
+    for (var i = 0; i < _title.length; i++) {
+      if (i == _title.length - 1) {
+        _list.add(Expanded(
+            flex: 1,
+            child: Container(
+                alignment: Alignment.centerRight,
+                child: (_starsong[_index])
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                          color: badgeRed,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _title[i], type: 'song');
+                          await delStarred(_favorite);
+                          MyToast.show(
+                              context: context,
+                              message: S.current.cancel + S.current.favorite);
+                          setState(() {
+                            _starsong[_index] = false;
+                          });
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: textGray,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _title[i], type: 'song');
+                          await addStarred(_favorite);
+                          MyToast.show(
+                              context: context,
+                              message: S.current.add + S.current.favorite);
+                          setState(() {
+                            _starsong[_index] = true;
+                          });
+                        },
+                      ))));
+      } else {
+        _list.add(Expanded(
+          flex: (i == 0) ? 2 : 1,
+          child: Text(
+            _title[i],
+            textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: _style,
+          ),
+        ));
+      }
+    }
+    return _list;
   }
 
   @override

@@ -12,6 +12,7 @@ import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
+import '../common/myToast.dart';
 
 class ArtistDetailScreen extends StatefulWidget {
   final AudioPlayer player;
@@ -34,6 +35,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
   int _duration = 0;
   int _playCount = 0;
   bool _star = false;
+  List<bool> _starsong = [];
   bool _isMoreSongs = false;
   List _similarArtist = [];
 
@@ -42,12 +44,17 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     if (_albumtem != null && _albumtem["song"] != null) {
       final _songsList = _albumtem["song"];
       List<Songs> _songtem = [];
-
+      List<bool> _startem = [];
       for (var _element in _songsList) {
         String _stream = getServerInfo("stream");
         String _url = getCoverArt(_element["id"]);
         _element["stream"] = _stream + '&id=' + _element["id"];
         _element["coverUrl"] = _url;
+        if (_element["starred"] != null) {
+          _startem.add(true);
+        } else {
+          _startem.add(false);
+        }
         Songs _song = Songs.fromJson(_element);
         _songtem.add(_song);
       }
@@ -55,6 +62,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       if (mounted) {
         setState(() {
           _songList = _songtem;
+          _starsong = _startem;
         });
       }
     }
@@ -271,14 +279,78 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
     );
   }
 
-  Widget _buildHeaderWidget() {
+  Widget _songsHeader() {
     List<String> _title = [
       S.current.song,
       S.current.album,
       S.current.dration,
+      if (!isMobile) S.current.bitRange,
       if (!isMobile) S.current.playCount,
+      S.current.favorite
     ];
     return myRowList(_title, subText);
+  }
+
+  List<Widget> _songlistView(
+      List<String> _title, TextStyle _style, int _index) {
+    List<Widget> _list = [];
+    for (var i = 0; i < _title.length; i++) {
+      if (i == _title.length - 1) {
+        _list.add(Expanded(
+            flex: 1,
+            child: Container(
+                alignment: Alignment.centerRight,
+                child: (_starsong[_index])
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                          color: badgeRed,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _title[i], type: 'song');
+                          await delStarred(_favorite);
+                          MyToast.show(
+                              context: context,
+                              message: S.current.cancel + S.current.favorite);
+                          setState(() {
+                            _starsong[_index] = false;
+                          });
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.favorite_border,
+                          color: textGray,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          Favorite _favorite =
+                              Favorite(id: _title[i], type: 'song');
+                          await addStarred(_favorite);
+                          MyToast.show(
+                              context: context,
+                              message: S.current.add + S.current.favorite);
+                          setState(() {
+                            _starsong[_index] = true;
+                          });
+                        },
+                      ))));
+      } else {
+        _list.add(Expanded(
+          flex: (i == 0) ? 2 : 1,
+          child: Text(
+            _title[i],
+            textDirection: (i == 0) ? TextDirection.ltr : TextDirection.rtl,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: _style,
+          ),
+        ));
+      }
+    }
+    return _list;
   }
 
   @override
@@ -361,17 +433,20 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
         SliverToBoxAdapter(
             child: Container(
           padding: leftrightPadding,
-          child: _buildHeaderWidget(),
+          child: _songsHeader(),
         )),
       if (_songList.length > 0)
         SliverList(
           delegate: SliverChildBuilderDelegate((content, index) {
-            Songs _tem = _songList[index];
+            Songs _song = _songList[index];
             List<String> _title = [
-              _tem.title,
-              _tem.album,
-              formatDuration(_tem.duration),
-              if (!isMobile) _tem.playCount.toString(),
+              _song.title,
+              _song.album,
+              formatDuration(_song.duration),
+              if (!isMobile)
+                _song.suffix + "(" + _song.bitRate.toString() + ")",
+              if (!isMobile) _song.playCount.toString(),
+              _song.id
             ];
             return Container(
                 padding: leftrightPadding,
@@ -384,7 +459,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                       } else {
                         //当前歌曲队列
                         activeIndex.value = index;
-                        activeSongValue.value = _tem.id;
+                        activeSongValue.value = _song.id;
                         //歌曲所在专辑歌曲List
                         activeList.value = _songList;
                       }
@@ -392,11 +467,16 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                     child: ValueListenableBuilder<Map>(
                         valueListenable: activeSong,
                         builder: ((context, value, child) {
-                          return myRowList(
-                              _title,
-                              (value.isNotEmpty && value["value"] == _tem.id)
-                                  ? activeText
-                                  : nomalText);
+                          return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: _songlistView(
+                                  _title,
+                                  (value.isNotEmpty &&
+                                          value["value"] == _song.id)
+                                      ? activeText
+                                      : nomalText,
+                                  index));
                         }))));
           },
               childCount: (_songList.length < 5 || _isMoreSongs)

@@ -248,9 +248,11 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
   Widget _songsHeader() {
     List<String> _title = [
       S.current.song,
+      S.current.album,
+      S.current.artist,
       S.current.dration,
       if (!isMobile) S.current.bitRange,
-      S.current.playCount
+      if (!isMobile) S.current.playCount
     ];
     return myRowList(_title, subText);
   }
@@ -271,10 +273,12 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
             Songs _song = _songslist[index];
             List<String> _title = [
               _song.title,
+              _song.album,
+              _song.artist,
               formatDuration(_song.duration),
               if (!isMobile)
                 _song.suffix + "(" + _song.bitRate.toString() + ")",
-              _song.playCount.toString(),
+              if (!isMobile) _song.playCount.toString(),
             ];
             return Dismissible(
                 key: Key(_song.id),
