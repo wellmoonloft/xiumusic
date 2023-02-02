@@ -348,10 +348,6 @@ class _SearchScreenState extends State<SearchScreen>
                     itemExtent: 50.0, //强制高度为50.0
                     itemBuilder: (BuildContext context, int index) {
                       Artists _tem = _artists[index];
-                      List<String> _title = [
-                        _tem.name,
-                        _tem.albumCount.toString()
-                      ];
                       return ListTile(
                           title: InkWell(
                               onTap: () {
