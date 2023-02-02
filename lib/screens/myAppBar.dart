@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../models/myModel.dart';
-import '../../models/notifierValue.dart';
-import '../../util/mycss.dart';
+import '../generated/l10n.dart';
+import '../models/myModel.dart';
+import '../models/notifierValue.dart';
+import '../util/mycss.dart';
+import 'common/myAlertDialog.dart';
+import 'common/myTextInput.dart';
 
 class MyAppBar extends StatefulWidget {
   MyAppBar({Key? key, required this.drawer}) : super(key: key);
@@ -14,6 +17,8 @@ class MyAppBar extends StatefulWidget {
 }
 
 class _MyAppBarState extends State<MyAppBar> {
+  final _searchController = new TextEditingController();
+  bool _visible = false;
   @override
   void initState() {
     super.initState();
@@ -21,12 +26,40 @@ class _MyAppBarState extends State<MyAppBar> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     super.dispose();
   }
 
   Widget _search() {
     return Row(
       children: [
+        Visibility(
+            child: MyTextInput(
+              control: _searchController,
+              label: "",
+              hintLabel: S.current.pleaseInput + S.current.info,
+              hideText: false,
+              icon: Icons.search,
+              press: () {
+                if (_searchController.text != "") {
+                  activeID.value = _searchController.text;
+                  if (mounted) {
+                    setState(() {
+                      _visible = false;
+                    });
+                  }
+                  indexValue.value = 10;
+                } else {
+                  showMyAlertDialog(
+                      context, S.current.notive, S.current.noContent);
+                }
+                //  _getSongsbyName();
+              },
+              titleStyle: titleText1,
+              mainaxis: MainAxisAlignment.start,
+              crossaxis: CrossAxisAlignment.end,
+            ),
+            visible: _visible),
         Container(
             child: ValueListenableBuilder<ServerInfo>(
                 valueListenable: serversInfo,
@@ -39,7 +72,14 @@ class _MyAppBarState extends State<MyAppBar> {
                     ),
                     onPressed: _value.baseurl.isNotEmpty
                         ? () async {
-                            indexValue.value = 10;
+                            // indexValue.value = 10;
+                            setState(() {
+                              if (_visible) {
+                                _visible = false;
+                              } else {
+                                _visible = true;
+                              }
+                            });
                           }
                         : null,
                   );

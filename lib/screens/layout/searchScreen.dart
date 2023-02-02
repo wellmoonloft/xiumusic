@@ -20,9 +20,9 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen>
     with SingleTickerProviderStateMixin {
-  final searchController = new TextEditingController();
-  late List<Tab> myTabs;
-  late TabController tabController;
+  final _searchController = new TextEditingController();
+  late List<Tab> _myTabs;
+  late TabController _tabController;
   List<Songs> _songs = [];
   List<Albums> _albums = [];
   List<Artists> _artists = [];
@@ -31,7 +31,7 @@ class _SearchScreenState extends State<SearchScreen>
   List<bool> _starartists = [];
 
   _getSongsbyName() async {
-    String _title1 = searchController.text;
+    String _title1 = _searchController.text;
     String _title2 = "";
     List<Songs> _listSong = [];
     List<Albums> _listAlbums = [];
@@ -45,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen>
     if (_searchData["song"] != null) {
       for (var _element in _searchData["song"]) {
         String _stream = getServerInfo("stream");
-        String _url = await getCoverArt(_element["id"]);
+        String _url = getCoverArt(_element["id"]);
         _element["stream"] = _stream + '&id=' + _element["id"];
         _element["coverUrl"] = _url;
         if (_element["starred"] != null) {
@@ -59,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen>
     }
     if (_searchData["album"] != null) {
       for (var _element in _searchData["album"]) {
-        String _url = await getCoverArt(_element["id"]);
+        String _url = getCoverArt(_element["id"]);
         _element["coverUrl"] = _url;
         if (_element["starred"] != null) {
           _staralbums1.add(true);
@@ -72,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen>
     }
     if (_searchData["artist"] != null) {
       for (var _element in _searchData["artist"]) {
-        String _url = await getCoverArt(_element["id"]);
+        String _url = getCoverArt(_element["id"]);
         _element["artistImageUrl"] = _url;
         if (_element["starred"] != null) {
           _starartists1.add(true);
@@ -91,7 +91,7 @@ class _SearchScreenState extends State<SearchScreen>
         _element["coverUrl"] = _url;
 
         Songs _tem = Songs.fromJson(_element);
-        if (_listSong.contains(_tem)) {
+        if (!_listSong.contains(_tem)) {
           _listSong.add(_tem);
           if (_element["starred"] != null) {
             _startem.add(true);
@@ -106,7 +106,7 @@ class _SearchScreenState extends State<SearchScreen>
         String _url = await getCoverArt(_element["id"]);
         _element["coverUrl"] = _url;
         Albums _tem = Albums.fromJson(_element);
-        if (_listAlbums.contains(_tem)) {
+        if (!_listAlbums.contains(_tem)) {
           _listAlbums.add(_tem);
           if (_element["starred"] != null) {
             _staralbums1.add(true);
@@ -121,7 +121,7 @@ class _SearchScreenState extends State<SearchScreen>
         String _url = await getCoverArt(_element["id"]);
         _element["artistImageUrl"] = _url;
         Artists _tem = Artists.fromJson(_element);
-        if (_listArtists.contains(_tem)) {
+        if (!_listArtists.contains(_tem)) {
           _listArtists.add(_tem);
           if (_element["starred"] != null) {
             _starartists1.add(true);
@@ -131,6 +131,7 @@ class _SearchScreenState extends State<SearchScreen>
         }
       }
     }
+
     if (mounted) {
       setState(() {
         _songs = _listSong;
@@ -139,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen>
         _starsong = _startem;
         _staralbums = _staralbums1;
         _starartists = _starartists1;
-        myTabs = <Tab>[
+        _myTabs = <Tab>[
           Tab(text: S.current.song + "(" + _songs.length.toString() + ")"),
           Tab(text: S.current.album + "(" + _albums.length.toString() + ")"),
           Tab(text: S.current.artist + "(" + _artists.length.toString() + ")")
@@ -151,18 +152,23 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   initState() {
     super.initState();
-    myTabs = <Tab>[
+    _myTabs = <Tab>[
       Tab(text: S.current.song + "(0)"),
       Tab(text: S.current.album + "(0)"),
       Tab(text: S.current.artist + "(0)")
     ];
-    tabController = TabController(length: myTabs.length, vsync: this);
+    _tabController = TabController(length: _myTabs.length, vsync: this);
+
+    if (activeID.value != "1") {
+      _searchController.text = activeID.value;
+      _getSongsbyName();
+    }
   }
 
   @override
   void dispose() {
-    searchController.dispose();
-    tabController.dispose();
+    _searchController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -606,7 +612,7 @@ class _SearchScreenState extends State<SearchScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         MyTextInput(
-          control: searchController,
+          control: _searchController,
           label: S.current.search,
           hintLabel: S.current.pleaseInput + S.current.song + S.current.name,
           hideText: false,
@@ -632,15 +638,15 @@ class _SearchScreenState extends State<SearchScreen>
             Container(
                 alignment: Alignment.topLeft,
                 child: TabBar(
-                    controller: tabController,
+                    controller: _tabController,
                     labelColor: textGray,
                     unselectedLabelColor: borderColor,
-                    tabs: myTabs,
+                    tabs: _myTabs,
                     isScrollable: true,
                     indicatorColor: badgeRed)),
           ],
         ),
-        contentWidget: TabBarView(controller: tabController, children: [
+        contentWidget: TabBarView(controller: _tabController, children: [
           _songsWidget(),
           _itemAlbumsWidget(),
           _artistWidget(),

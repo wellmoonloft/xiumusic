@@ -448,7 +448,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
 				DEAD_CODE_STRIPPING = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Profile;
@@ -616,7 +616,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Manual;
 				DEAD_CODE_STRIPPING = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -626,7 +626,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

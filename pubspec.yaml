@@ -19,7 +19,7 @@ dependencies:
   just_audio_background: ^0.0.1-beta.9
   #just_audio_windows: ^0.2.0  
   #https://pub.flutter-io.cn/packages/just_audio_mpv
-  window_manager: ^0.2.8
+  window_manager: ^0.3.0
   dio: ^4.0.6
   crypto: ^3.0.2
   sqflite: ^2.2.4+1

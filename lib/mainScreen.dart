@@ -5,7 +5,7 @@ import 'models/myModel.dart';
 import 'models/notifierValue.dart';
 import 'util/mycss.dart';
 import 'screens/bottomScreen.dart';
-import 'screens/components/myAppBar.dart';
+import 'screens/myAppBar.dart';
 import 'screens/layout/settings.dart';
 import 'screens/leftScreen.dart';
 import 'util/roter.dart';
