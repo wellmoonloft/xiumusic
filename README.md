@@ -130,4 +130,3 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 - [x] Debugged: macOS iPhone iPad Android
 - [ ] Not yet: Windows/Linux should be fine?
 - [ ] desktop shortcut key
-- [ ] tab?

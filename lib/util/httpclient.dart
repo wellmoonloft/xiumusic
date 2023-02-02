@@ -81,14 +81,28 @@ getAlbumList(String _type, String _by, int _offset, int _size) async {
   }
 }
 
+getRandomSongs() async {
+  String _sql = getServerInfo("getRandomSongs");
+  try {
+    var _response = await Dio().get(_sql);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    Map _randomSongs = _subsonic['randomSongs'];
+    return _randomSongs;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
 getAlbumInfo2(String _albumId) async {
   String _sql = getServerInfo("getAlbumInfo2") + '&id=' + _albumId;
   try {
     var _response = await Dio().get(_sql);
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    Map scanStatus = _subsonic['albumInfo'];
-    return scanStatus;
+    Map _albumInfo = _subsonic['albumInfo'];
+    return _albumInfo;
   } catch (e) {
     print(e);
     return null;
@@ -101,8 +115,8 @@ search3(String _query) async {
     var _response = await Dio().get(_sql);
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    Map scanStatus = _subsonic['searchResult3'];
-    return scanStatus;
+    Map _searchResult3 = _subsonic['searchResult3'];
+    return _searchResult3;
   } catch (e) {
     print(e);
     return null;
@@ -115,9 +129,9 @@ getGenres() async {
     var _response = await Dio().get(_sql);
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    Map genres = _subsonic['genres'];
-    List genresList = genres["genre"];
-    return genresList;
+    Map _genres = _subsonic['genres'];
+    List _genre = _genres["genre"];
+    return _genre;
   } catch (e) {
     print(e);
     return null;
@@ -254,8 +268,8 @@ getArtistInfo2(String _id) async {
     );
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    Map _artist = _subsonic['artistInfo2'];
-    return _artist;
+    Map _artistInfo2 = _subsonic['artistInfo2'];
+    return _artistInfo2;
   } catch (e) {
     print(e);
     return null;
@@ -286,8 +300,8 @@ getSongs(String _id) async {
     );
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    Map _artist = _subsonic['album'];
-    return _artist;
+    Map _album = _subsonic['album'];
+    return _album;
   } catch (e) {
     print(e);
     return null;

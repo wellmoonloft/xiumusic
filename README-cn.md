@@ -127,6 +127,5 @@ AndroidManifest.xml
 
 - [x] 调试过的: macOS iPhone iPad 安卓
 - [ ] 还没调试的: Windows/Linux 理论上应该没问题
-- [ ] 桌面快捷键  
-- [ ] 分页?    
+- [ ] 桌面快捷键   
 
