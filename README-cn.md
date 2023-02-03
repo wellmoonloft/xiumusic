@@ -12,7 +12,7 @@
 
 这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持所有Subsonic api的服务器，过程中得到[Navidrome discord群](https://discord.gg/xh7j7yF)中多人的帮助，谢谢他们。
 
-**注意！！！**歌词是保存在APP文档的sqlite里的，目前没有做导出功能
+**注意**歌词是保存在APP文档的sqlite里的，目前没有做导出功能
 
 MacOS的版本已经在[Appstore](https://apps.apple.com/cn/app/xiu-music/id1667473545)上架了，可以直接下载
 
@@ -20,9 +20,15 @@ MacOS的版本已经在[Appstore](https://apps.apple.com/cn/app/xiu-music/id1667
 
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
 
+**Android锁屏后台播放**
+
+![Screenshot_1675416868](https://s2.loli.net/2023/02/03/yVCebsOctxKRfzJ.png)
+
 **歌词**
 
 ![](snapshot/lyric.png)
+
+**iPad**
 
 ![](snapshot/snapshot/ios/12.9/Simulator%20Screen%20Shot%20-%20iPad%20Pro%20(12.9-inch)%20(6th%20generation)%20-%202023-02-01%20at%2017.28.00.png)
 

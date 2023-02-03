@@ -12,13 +12,23 @@ Based on the personal NAS music player, Navidrome server development, theoretica
 
 This is developed and debugged on the server environment of [Navidrome](https://www.navidrome.org/) based on the interface of [Subsonic API](http://www.subsonic.org/pages/api.jsp) , so all Subsonic api servers are supported. In the process, I got help from many people in the [Navidrome discord group](https://discord.gg/xh7j7yF), thank them.
 
-**Notice! ! !** The lyrics are saved in the sqlite at document. Currently, there is no export function. 
+**Notice** The lyrics are saved in the sqlite at document. Currently, there is no export function. 
 
 The MacOS version is already on the [Appstore](https://apps.apple.com/cn/app/xiu-music/id1667473545), you can download it directly
 
+**iOS**
+
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
 
+**Android**
+
+![Screenshot_1675416868](https://s2.loli.net/2023/02/03/yVCebsOctxKRfzJ.png)
+
+**Lyric**
+
 ![](snapshot/lyric.png)
+
+**iPad**
 
 ![](snapshot/snapshot/ios/12.9/Simulator%20Screen%20Shot%20-%20iPad%20Pro%20(12.9-inch)%20(6th%20generation)%20-%202023-02-01%20at%2017.28.00.png)
 
