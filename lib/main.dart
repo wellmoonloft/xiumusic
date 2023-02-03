@@ -20,7 +20,6 @@ void main() async {
     WindowOptions windowOptions = WindowOptions(
       size: Size(1280, 800),
       minimumSize: Size(800, 600),
-      center: true,
       backgroundColor: Colors.black,
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,

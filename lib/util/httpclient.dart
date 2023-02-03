@@ -33,9 +33,9 @@ checkResponse(Response<dynamic> _response) {
   return null;
 }
 
-getCoverArt(String _id) {
+getCoverArt(String _id, {int size = 350}) {
   String _sql = getServerInfo("getCoverArt");
-  return _sql + '&size=350' + '&id=' + _id;
+  return _sql + '&size=$size' + '&id=' + _id;
 }
 
 getServerInfo(String _api) {

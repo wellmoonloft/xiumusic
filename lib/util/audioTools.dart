@@ -29,7 +29,7 @@ void audioCurrentIndexStream(AudioPlayer _player) {
       scrobble(_tag.id, false);
       var _songtem = await getSong(_tag.id);
       String _stream = getServerInfo("stream");
-      String _url = getCoverArt(_songtem["id"]);
+      String _url = getCoverArt(_songtem["id"], size: 800);
       _songtem["stream"] = _stream + '&id=' + _songtem["id"];
       _songtem["coverUrl"] = _url;
       Songs _song = Songs.fromJson(_songtem);
@@ -112,7 +112,7 @@ Future<void> setAudioSource(AudioPlayer _player) async {
   MediaItem _tag = currentItem?.tag;
   var _songtem = await getSong(_tag.id);
   String _stream = getServerInfo("stream");
-  String _url = getCoverArt(_songtem["id"]);
+  String _url = getCoverArt(_songtem["id"], size: 800);
   _songtem["stream"] = _stream + '&id=' + _songtem["id"];
   _songtem["coverUrl"] = _url;
   Songs _song = Songs.fromJson(_songtem);
