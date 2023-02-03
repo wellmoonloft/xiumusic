@@ -10,26 +10,17 @@
 
 **Xiu**是我近期经常看的[一个音乐主播](https://www.douyu.com/7884070)，她名字里有个Xiu字，所以就叫**XiuMusic**了。
 
-最近在NAS上搭了好多东西，其中音乐的服务器用了Navidrome，客户端选了很多，但只有[Sonixd](https://github.com/jeffvli/sonixd)感觉不错，但是没有移动端，而且有个世纪难题，不支持歌词（[issues](https://github.com/jeffvli/sonixd/issues/332)上作者说要来一个大计划飞跃到v1.0，并解决歌词的问题，而且目前的一些repo说支持了，但是我尝试好几次都不成功）
-
-因此我需要一个这样的APP：
-1. 支持歌词
-2. 支持模糊查找（简体、繁体，这是很大的问题，比如你搜周杰伦和周杰倫）
-3. 简洁
-4. 桌面端和移动端UI统一风格
-
-有了这四个需求，我决定自己撸一个APP给自己用
-
-这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持Subsonic、Navidrome和Airsonic
+这是在[Navidrome](https://www.navidrome.org/)的服务器环境上基于[Subsonic的API](http://www.subsonic.org/pages/api.jsp)的接口开发调试的，所以理论上支持所有Subsonic api的服务器，过程中得到[Navidrome discord群](https://discord.gg/xh7j7yF)中多人的帮助，谢谢他们。
 
 **注意！！！**歌词是保存在APP文档的sqlite里的，目前没有做导出功能
 
 MacOS的版本已经在[Appstore](https://apps.apple.com/cn/app/xiu-music/id1667473545)上架了，可以直接下载
 
-
-**锁屏播放**
+**iOS锁屏后台播放**
 
 ![](https://s2.loli.net/2023/01/23/pWL4ia9mZCxuynG.jpg)
+
+**歌词**
 
 ![](snapshot/lyric.png)
 

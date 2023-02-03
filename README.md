@@ -10,21 +10,7 @@ Based on the personal NAS music player, Navidrome server development, theoretica
 
 **Xiu** is [a music anchor](https://www.douyu.com/7884070) that I often watch recently. There is a word Xiu in her name, so she is called **XiuMusic**.
 
-Recently, a lot of things have been set up on the NAS. Among them, the music server uses Navidrome, and the client has chosen a lot, but only [Sonixd](https://github.com/jeffvli/sonixd) feels good, but there is no mobile terminal, and There is a problem of the century, does not support lyrics ([issues](https://github.com/jeffvli/sonixd/issues/332) the author said that there is a big plan to leap to v1.0 and solve the problem of lyrics, and Some current repos support it, but I tried several times without success)
-
-So I need an APP like this:
-
-1. Support lyrics
-
-2. Support fuzzy search (simplified and traditional, this is a big problem, for example, if you search for 周杰伦 and 周杰倫)
-
-3. Concise
-
-4. Unified style of desktop and mobile UI
-
-With these four requirements, I decided to make an APP for myself
-
-This is developed and debugged on the server environment of [Navidrome](https://www.navidrome.org/) based on the interface of [Subsonic API](http://www.subsonic.org/pages/api.jsp) , so in theory it supports Subsonic, Navidrome and Airsonic.
+This is developed and debugged on the server environment of [Navidrome](https://www.navidrome.org/) based on the interface of [Subsonic API](http://www.subsonic.org/pages/api.jsp) , so all Subsonic api servers are supported. In the process, I got help from many people in the [Navidrome discord group](https://discord.gg/xh7j7yF), thank them.
 
 **Notice! ! !** The lyrics are saved in the sqlite at document. Currently, there is no export function. 
 
