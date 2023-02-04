@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import '../models/myModel.dart';
 import '../models/notifierValue.dart';
+import 'mycss.dart';
 
 testServer(String _baseUrl, String _username, String _password) async {
   try {
     var _response = await Dio().get(
       _baseUrl +
-          '/rest/ping?v=0.0.1&c=xiumusic&f=json&u=' +
+          '/rest/ping?v=$version&c=xiumusic&f=json&u=' +
           _username +
           '&p=' +
           _password,

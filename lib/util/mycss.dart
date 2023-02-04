@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+final String version = "v0.5.3";
 //底部高度
 const double bottomHeight = 80;
 //appbar高度
