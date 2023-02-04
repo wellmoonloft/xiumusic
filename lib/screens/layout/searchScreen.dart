@@ -85,49 +85,70 @@ class _SearchScreenState extends State<SearchScreen>
     }
     if (_searchDat2["song"] != null) {
       for (var _element in _searchDat2["song"]) {
+        bool _ishave = false;
         String _stream = getServerInfo("stream");
         String _url = await getCoverArt(_element["id"]);
         _element["stream"] = _stream + '&id=' + _element["id"];
         _element["coverUrl"] = _url;
 
         Songs _tem = Songs.fromJson(_element);
-        if (!_listSong.contains(_tem)) {
+        for (var _song in _listSong) {
+          if (_song.id == _tem.id) {
+            _ishave = true;
+          }
+        }
+        if (!_ishave) {
           _listSong.add(_tem);
           if (_element["starred"] != null) {
             _startem.add(true);
           } else {
             _startem.add(false);
           }
+          _ishave = false;
         }
       }
     }
     if (_searchDat2["album"] != null) {
       for (var _element in _searchDat2["album"]) {
+        bool _ishave = false;
         String _url = await getCoverArt(_element["id"]);
         _element["coverUrl"] = _url;
         Albums _tem = Albums.fromJson(_element);
-        if (!_listAlbums.contains(_tem)) {
+        for (var _album in _listAlbums) {
+          if (_album.id == _tem.id) {
+            _ishave = true;
+          }
+        }
+        if (!_ishave) {
           _listAlbums.add(_tem);
           if (_element["starred"] != null) {
             _staralbums1.add(true);
           } else {
             _staralbums1.add(false);
           }
+          _ishave = false;
         }
       }
     }
     if (_searchDat2["artist"] != null) {
       for (var _element in _searchDat2["artist"]) {
+        bool _ishave = false;
         String _url = await getCoverArt(_element["id"]);
         _element["artistImageUrl"] = _url;
         Artists _tem = Artists.fromJson(_element);
-        if (!_listArtists.contains(_tem)) {
+        for (var _artist in _listArtists) {
+          if (_artist.id == _tem.id) {
+            _ishave = true;
+          }
+        }
+        if (!_ishave) {
           _listArtists.add(_tem);
           if (_element["starred"] != null) {
             _starartists1.add(true);
           } else {
             _starartists1.add(false);
           }
+          _ishave = false;
         }
       }
     }

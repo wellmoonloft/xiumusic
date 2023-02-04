@@ -46,26 +46,30 @@ class _SearchLyricScreenState extends State<SearchLyricScreen>
         Songs _tem = Songs.fromJson(_element);
         _list.add(_tem);
       }
-      if (mounted) {
-        setState(() {
-          _songs = _list;
-        });
-      }
     }
     if (_songsList2["song"] != null) {
       for (var _element in _songsList2["song"]) {
+        bool _ishave = false;
         String _stream = getServerInfo("stream");
         String _url = await getCoverArt(_element["id"]);
         _element["stream"] = _stream + '&id=' + _element["id"];
         _element["coverUrl"] = _url;
         Songs _tem = Songs.fromJson(_element);
-        _list.add(_tem);
+        for (var _song in _list) {
+          if (_song.id == _tem.id) {
+            _ishave = true;
+          }
+        }
+        if (!_ishave) {
+          _list.add(_tem);
+          _ishave = false;
+        }
       }
-      if (mounted) {
-        setState(() {
-          _songs = _list;
-        });
-      }
+    }
+    if (mounted) {
+      setState(() {
+        _songs = _list;
+      });
     }
   }
 

@@ -103,6 +103,9 @@ class DbProvider {
     try {
       final db = await instance.db;
       Batch batch = db.batch();
+      batch.delete(SongsAndLyricTable,
+          where: "songId = ?", whereArgs: [_artists.songId]);
+      await batch.commit(noResult: true);
       batch.insert(SongsAndLyricTable, _artists.toJson());
       var res = await batch.commit(noResult: true);
       return res;
