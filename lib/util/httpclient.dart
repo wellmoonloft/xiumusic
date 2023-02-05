@@ -389,7 +389,11 @@ createShare(String _id, {String description = ""}) async {
         await Dio().get(_sql + "&id=" + _id + "&description=" + description);
     var _subsonic = checkResponse(_response);
     if (_subsonic == null) return null;
-    return _subsonic;
+    if (_subsonic['shares'] == null) return null;
+    Map _shares = _subsonic['shares'];
+    if (_shares['share'] == null) return null;
+    List _share = _shares['share'];
+    return _share;
   } catch (e) {
     print(e);
     return null;

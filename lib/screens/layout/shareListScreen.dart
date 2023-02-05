@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:xiumusic/screens/common/myTextButton.dart';
 import '../../generated/l10n.dart';
@@ -59,23 +63,18 @@ class _ShareListScreenState extends State<ShareListScreen> {
           ),
           actions: <Widget>[
             MyTextButton(
-              title: "在浏览器中查看",
+              title: "退出",
               press: () {
-                Navigator.of(context).pop(2);
+                Navigator.of(context).pop(0);
               },
             ),
             //TODO：生成分享图片保存在相册或者下载
-            //https://pub.flutter-io.cn/packages/image_gallery_saver
-            //https://pub.flutter-io.cn/packages/permission_handler
-            //https://pub.flutter-io.cn/packages/qr_flutter
+            //差用户提醒
             MyTextButton(
-              title: "退出",
+              title: "保存二维码",
               press: () {
-                _showShareDialog1(QrImage(
-                  data: _tem.url,
-                  version: QrVersions.auto,
-                  size: 200.0,
-                ));
+                _createQRcode(_tem);
+                Navigator.of(context).pop(2);
               },
             ),
             MyTextButton(
@@ -91,33 +90,55 @@ class _ShareListScreenState extends State<ShareListScreen> {
     );
   }
 
-  _showShareDialog1(QrImage _tem) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          titlePadding: EdgeInsets.all(10),
-          contentPadding: EdgeInsets.all(10),
-          titleTextStyle: nomalText,
-          contentTextStyle: nomalText,
-          backgroundColor: badgeDark,
-          content: Container(
-            width: 400,
-            height: 400,
-            child: _tem,
-          ),
-          actions: <Widget>[
-            MyTextButton(
-              title: "退出",
-              press: () {
-                Navigator.of(context).pop(2);
-              },
-            )
-          ],
-        );
-      },
+  _createQRcode(Sharelist _tem) async {
+    final qrValidationResult = QrValidator.validate(
+      data: _tem.url,
+      version: QrVersions.auto,
+      errorCorrectionLevel: QrErrorCorrectLevel.L,
     );
+    if (qrValidationResult.status == QrValidationStatus.valid) {
+      QrCode? qrCode = qrValidationResult.qrCode;
+      if (qrCode != null) {
+        final painter = QrPainter.withQr(
+          qr: qrCode,
+          color: const Color(0xFF000000),
+          gapless: true,
+          embeddedImageStyle: null,
+          embeddedImage: null,
+        );
+        if (isMobile) {
+          Directory tempDir = await getTemporaryDirectory();
+
+          String tempPath = tempDir.path;
+          String ts = _tem.created;
+          String path = '$tempPath/$ts.png';
+          final picData = await painter.toImageData(2048);
+          if (picData != null) {
+            await writeToFile(picData, path);
+            final success = await GallerySaver.saveImage(path);
+          }
+        } else {
+          Directory? tempDir = await getDownloadsDirectory();
+          if (tempDir != null) {
+            String tempPath = tempDir.path;
+            String ts = _tem.created;
+            String path = '$tempPath/$ts.png';
+            final picData = await painter.toImageData(2048);
+            if (picData != null) {
+              await writeToFile(picData, path);
+            }
+          }
+        }
+      }
+    } else {
+      print(qrValidationResult.error);
+    }
+  }
+
+  Future<void> writeToFile(ByteData data, String path) async {
+    final buffer = data.buffer;
+    await File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
 
   _delPlaylist(BuildContext context, double _x, double _y, String _playlistId) {
