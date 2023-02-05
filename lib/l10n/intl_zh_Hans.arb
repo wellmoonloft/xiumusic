@@ -73,6 +73,7 @@
     "repeatone":"单曲循环",
     "repeatall":"顺序循环",
     "shuffle":"随机播放",
-    "playqueue":"播放队列"
+    "playqueue":"播放队列",
+    "share":"分享"
 
 }

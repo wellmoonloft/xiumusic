@@ -68,6 +68,13 @@ class LeftScreenState extends State<LeftScreen> {
                       },
                       title: S.current.genres,
                       icon: Icons.public),
+                  MyTextIconButton(
+                      press: () {
+                        indexValue.value = 15;
+                        if (isMobile) Navigator.pop(context);
+                      },
+                      title: S.current.share,
+                      icon: Icons.share),
                   if (_value.neteaseapi.isNotEmpty)
                     MyTextIconButton(
                         press: () {

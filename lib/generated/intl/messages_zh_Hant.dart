@@ -85,6 +85,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("需要先保存歌詞伺服器後才會出現搜索歌詞按鈕"),
         "serverURL": MessageLookupByLibrary.simpleMessage("伺服器地址"),
         "settings": MessageLookupByLibrary.simpleMessage("設置"),
+        "share": MessageLookupByLibrary.simpleMessage("分享"),
         "shuffle": MessageLookupByLibrary.simpleMessage("隨機播放"),
         "similar": MessageLookupByLibrary.simpleMessage("相似"),
         "simplified": MessageLookupByLibrary.simpleMessage("簡體中文"),

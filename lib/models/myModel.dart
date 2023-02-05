@@ -112,6 +112,52 @@ class Playlist {
   }
 }
 
+class Sharelist {
+  late String id;
+  late String url;
+  late String description;
+  late String username;
+  late String created;
+  late String expires;
+  late String lastVisited;
+  late int visitCount;
+
+  Sharelist(
+      {required this.id,
+      required this.url,
+      required this.description,
+      required this.username,
+      required this.created,
+      required this.expires,
+      required this.lastVisited,
+      required this.visitCount});
+
+  Sharelist.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    url = json['url'];
+    description = json['description'];
+    username = json['username'];
+    created = json['created'];
+    expires = json['expires'];
+    lastVisited = json['lastVisited'];
+    visitCount = json['visitCount'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> _data = new Map<String, dynamic>();
+    _data['id'] = this.id;
+    _data['url'] = this.url;
+    _data['description'] = this.description;
+    _data['username'] = this.username;
+    _data['created'] = this.created;
+    _data['expires'] = this.expires;
+    _data['lastVisited'] = this.lastVisited;
+    _data['visitCount'] = this.visitCount;
+
+    return _data;
+  }
+}
+
 class Genres {
   late String value;
   late int songCount;

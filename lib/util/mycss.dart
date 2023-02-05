@@ -26,7 +26,7 @@ const String mylogoAsset = "assets/images/logo.jpg";
 //是不是移动端
 late final bool isMobile;
 
-const qing = Color.fromARGB(255, 194, 197, 196);
+const qing = Color.fromARGB(255, 57, 138, 111);
 const hong = Color.fromARGB(255, 185, 64, 65);
 const huang = Color.fromARGB(255, 237, 207, 106);
 const bai = Color.fromARGB(255, 250, 250, 250);

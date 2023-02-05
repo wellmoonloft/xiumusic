@@ -382,6 +382,64 @@ getStarred() async {
   }
 }
 
+createShare(String _id, {String description = ""}) async {
+  String _sql = await getServerInfo("createShare");
+  try {
+    var _response =
+        await Dio().get(_sql + "&id=" + _id + "&description=" + description);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    return _subsonic;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+updateShare(String _id, {String description = ""}) async {
+  String _sql = await getServerInfo("updateShare");
+  try {
+    var _response =
+        await Dio().get(_sql + "&id=" + _id + "&description=" + description);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    return _subsonic;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+deleteShare(String _id) async {
+  String _sql = await getServerInfo("deleteShare");
+  try {
+    var _response = await Dio().get(_sql + "&id=" + _id);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    return _subsonic;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+getShares() async {
+  String _sql = await getServerInfo("getShares");
+  try {
+    var _response = await Dio().get(_sql);
+    var _subsonic = checkResponse(_response);
+    if (_subsonic == null) return null;
+    if (_subsonic['shares'] == null) return null;
+    Map _shares = _subsonic['shares'];
+    if (_shares['share'] == null) return null;
+    List _share = _shares['share'];
+    return _share;
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
 delStarred(Favorite _starred) async {
   String _sql = await getServerInfo("unstar");
   switch (_starred.type) {

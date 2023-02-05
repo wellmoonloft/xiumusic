@@ -73,7 +73,8 @@
     "repeatone":"Repeat One",
     "repeatall":"Repeat All",
     "shuffle":"Repeat Shuffle",
-    "playqueue":"Play Queue"
+    "playqueue":"Play Queue",
+    "share":"Share"
    
 
 }

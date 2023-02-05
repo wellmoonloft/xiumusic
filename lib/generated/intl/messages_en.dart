@@ -87,6 +87,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "The search lyrics button will only appear after saving the lyrics server"),
         "serverURL": MessageLookupByLibrary.simpleMessage("Server Address"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "share": MessageLookupByLibrary.simpleMessage("Share"),
         "shuffle": MessageLookupByLibrary.simpleMessage("Repeat Shuffle"),
         "similar": MessageLookupByLibrary.simpleMessage("Similar "),
         "simplified": MessageLookupByLibrary.simpleMessage("Simplified"),

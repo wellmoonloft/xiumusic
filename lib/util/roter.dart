@@ -13,6 +13,7 @@ import '../screens/layout/playlistDetailScreen.dart';
 import '../screens/layout/searchLyricScreen.dart';
 import '../screens/layout/searchScreen.dart';
 import '../screens/layout/settings.dart';
+import '../screens/layout/shareListScreen.dart';
 
 class Roter extends StatelessWidget {
   final int roter;
@@ -54,6 +55,8 @@ class Roter extends StatelessWidget {
             return PlaylistDetailScreen(player: player);
           case 13: //艺人专辑
             return ArtistAlbumScreen();
+          case 15: //分享列表
+            return ShareListScreen();
 
           default:
             return Settings();
