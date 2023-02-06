@@ -118,7 +118,7 @@ You need to set the api of Netease Cloud. According to the instructions of setti
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) Realize waterfall flow, easy to use.
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) implements image caching, easy to use.
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) There is only one copy on the entire pub, which is easy to use.
-
+- [share_plus: ^6.3.0](https://pub.dev/packages/share_plus) share，suport all platform, which is easy to use.
 
 
 ## Todo List 

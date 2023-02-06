@@ -117,7 +117,7 @@ AndroidManifest.xml
 - [flutter_staggered_grid_view: ^0.6.2](https://pub.dev/packages/flutter_staggered_grid_view) 实现瀑布流，使用简单。
 - [cached_network_image: ^3.2.3](https://pub.dev/packages/cached_network_image) 实现图片缓存，使用简单。
 - [flutter_lyric: ^2.0.4+6](https://pub.dev/packages/flutter_lyric) 整个pub上面独一份，使用简单。
-
+- [share_plus: ^6.3.0](https://pub.dev/packages/share_plus) 分享，支持全平台，使用简单。
 
 
 ## Todo List 
