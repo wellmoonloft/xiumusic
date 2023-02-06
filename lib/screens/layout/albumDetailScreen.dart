@@ -9,6 +9,7 @@ import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 import '../common/myToast.dart';
@@ -135,11 +136,11 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
   Widget _buildTopWidget() {
     double _toprightwidth = isMobile
-        ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+        ? windowsWidth.value - screenImageWidthAndHeight - 40 - 15
         : windowsWidth.value -
             drawerWidth -
             screenImageWidthAndHeight -
-            30 -
+            40 -
             15;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,6 +182,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                       style: titleText2)),
               Container(
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
                         constraints: BoxConstraints(
@@ -193,10 +195,11 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                             },
                             title: _artist)),
                     Container(
-                      height: 30,
-                      width: 30,
+                      height: 20,
+                      width: 25,
                       child: (_staralbum)
                           ? IconButton(
+                              padding: EdgeInsets.all(0),
                               icon: Icon(
                                 Icons.favorite,
                                 color: badgeRed,
@@ -213,6 +216,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                               },
                             )
                           : IconButton(
+                              padding: EdgeInsets.all(0),
                               icon: Icon(
                                 Icons.favorite_border,
                                 color: textGray,
@@ -228,6 +232,29 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                                 });
                               },
                             ),
+                    ),
+                    Container(
+                      height: 20,
+                      width: 20,
+                      child: IconButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.share,
+                          color: textGray,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          final _sharelists = await createShare(activeID.value);
+                          if (_sharelists != null && _sharelists.length > 0) {
+                            Sharelist _share =
+                                Sharelist.fromJson(_sharelists[0]);
+                            showShareDialog(_share, context);
+                          } else {
+                            showMyAlertDialog(
+                                context, S.current.failure, S.current.failure);
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -362,10 +389,12 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       if (i == _title.length - 1) {
         _list.add(Expanded(
             flex: 1,
-            child: Container(
-                alignment: Alignment.centerRight,
-                child: (_starsong[_index])
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                (_starsong[_index])
                     ? IconButton(
+                        padding: EdgeInsets.all(0),
                         icon: Icon(
                           Icons.favorite,
                           color: badgeRed,
@@ -384,6 +413,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         },
                       )
                     : IconButton(
+                        padding: EdgeInsets.all(0),
                         icon: Icon(
                           Icons.favorite_border,
                           color: textGray,
@@ -400,7 +430,27 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                             _starsong[_index] = true;
                           });
                         },
-                      ))));
+                      ),
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(
+                    Icons.share,
+                    color: textGray,
+                    size: 16,
+                  ),
+                  onPressed: () async {
+                    final _sharelists = await createShare(_title[i]);
+                    if (_sharelists != null && _sharelists.length > 0) {
+                      Sharelist _share = Sharelist.fromJson(_sharelists[0]);
+                      showShareDialog(_share, context);
+                    } else {
+                      showMyAlertDialog(
+                          context, S.current.failure, S.current.failure);
+                    }
+                  },
+                ),
+              ],
+            )));
       } else {
         _list.add(Expanded(
           flex: (i == 0) ? 2 : 1,

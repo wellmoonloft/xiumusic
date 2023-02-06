@@ -8,6 +8,7 @@ import '../../models/notifierValue.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../../util/util.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myTextButton.dart';
 import '../common/myToast.dart';
@@ -193,7 +194,25 @@ class _PlaylistDetailScreenState extends State<PlaylistDetailScreen> {
                                 },
                               );
                             },
-                            title: S.current.delete)
+                            title: S.current.delete),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        MyTextButton(
+                            press: () async {
+                              final _sharelists =
+                                  await createShare(activeID.value);
+                              if (_sharelists != null &&
+                                  _sharelists.length > 0) {
+                                Sharelist _share =
+                                    Sharelist.fromJson(_sharelists[0]);
+                                showShareDialog(_share, context);
+                              } else {
+                                showMyAlertDialog(context, S.current.failure,
+                                    S.current.failure);
+                              }
+                            },
+                            title: S.current.share)
                       ],
                     ),
                   ),

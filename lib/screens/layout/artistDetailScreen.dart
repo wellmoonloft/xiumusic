@@ -8,6 +8,7 @@ import '../../models/notifierValue.dart';
 import '../../util/mycss.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
+import '../common/myAlertDialog.dart';
 import '../common/mySliverControlBar.dart';
 import '../common/mySliverControlList.dart';
 import '../common/myStructure.dart';
@@ -155,11 +156,11 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
 
   Widget _buildTopWidget() {
     double _toprightwidth = isMobile
-        ? windowsWidth.value - screenImageWidthAndHeight - 30 - 15
+        ? windowsWidth.value - screenImageWidthAndHeight - 40 - 15
         : windowsWidth.value -
             drawerWidth -
             screenImageWidthAndHeight -
-            30 -
+            40 -
             15;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -198,6 +199,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                       style: titleText2)),
               Container(
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     MyTextButton(
                         press: () {
@@ -205,10 +207,11 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                         },
                         title: S.current.artist),
                     Container(
-                      height: 30,
-                      width: 30,
+                      height: 20,
+                      width: 25,
                       child: (_star)
                           ? IconButton(
+                              padding: EdgeInsets.all(0),
                               icon: Icon(
                                 Icons.favorite,
                                 color: badgeRed,
@@ -225,6 +228,7 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                               },
                             )
                           : IconButton(
+                              padding: EdgeInsets.all(0),
                               icon: Icon(
                                 Icons.favorite_border,
                                 color: textGray,
@@ -240,6 +244,29 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
                                 });
                               },
                             ),
+                    ),
+                    Container(
+                      height: 20,
+                      width: 20,
+                      child: IconButton(
+                        padding: EdgeInsets.all(0),
+                        icon: Icon(
+                          Icons.share,
+                          color: textGray,
+                          size: 16,
+                        ),
+                        onPressed: () async {
+                          final _sharelists = await createShare(activeID.value);
+                          if (_sharelists != null && _sharelists.length > 0) {
+                            Sharelist _share =
+                                Sharelist.fromJson(_sharelists[0]);
+                            showShareDialog(_share, context);
+                          } else {
+                            showMyAlertDialog(
+                                context, S.current.failure, S.current.failure);
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -298,45 +325,63 @@ class _ArtistDetailScreenState extends State<ArtistDetailScreen> {
       if (i == _title.length - 1) {
         _list.add(Expanded(
             flex: 1,
-            child: Container(
-                alignment: Alignment.centerRight,
-                child: (_starsong[_index])
-                    ? IconButton(
-                        icon: Icon(
-                          Icons.favorite,
-                          color: badgeRed,
-                          size: 16,
-                        ),
-                        onPressed: () async {
-                          Favorite _favorite =
-                              Favorite(id: _title[i], type: 'song');
-                          await delStarred(_favorite);
-                          MyToast.show(
-                              context: context,
-                              message: S.current.cancel + S.current.favorite);
-                          setState(() {
-                            _starsong[_index] = false;
-                          });
-                        },
-                      )
-                    : IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: textGray,
-                          size: 16,
-                        ),
-                        onPressed: () async {
-                          Favorite _favorite =
-                              Favorite(id: _title[i], type: 'song');
-                          await addStarred(_favorite);
-                          MyToast.show(
-                              context: context,
-                              message: S.current.add + S.current.favorite);
-                          setState(() {
-                            _starsong[_index] = true;
-                          });
-                        },
-                      ))));
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              (_starsong[_index])
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.favorite,
+                        color: badgeRed,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _title[i], type: 'song');
+                        await delStarred(_favorite);
+                        MyToast.show(
+                            context: context,
+                            message: S.current.cancel + S.current.favorite);
+                        setState(() {
+                          _starsong[_index] = false;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.favorite_border,
+                        color: textGray,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _title[i], type: 'song');
+                        await addStarred(_favorite);
+                        MyToast.show(
+                            context: context,
+                            message: S.current.add + S.current.favorite);
+                        setState(() {
+                          _starsong[_index] = true;
+                        });
+                      },
+                    ),
+              IconButton(
+                padding: EdgeInsets.all(0),
+                icon: Icon(
+                  Icons.share,
+                  color: textGray,
+                  size: 16,
+                ),
+                onPressed: () async {
+                  final _sharelists = await createShare(_title[i]);
+                  if (_sharelists != null && _sharelists.length > 0) {
+                    Sharelist _share = Sharelist.fromJson(_sharelists[0]);
+                    showShareDialog(_share, context);
+                  } else {
+                    showMyAlertDialog(
+                        context, S.current.failure, S.current.failure);
+                  }
+                },
+              ),
+            ])));
       } else {
         _list.add(Expanded(
           flex: (i == 0) ? 2 : 1,

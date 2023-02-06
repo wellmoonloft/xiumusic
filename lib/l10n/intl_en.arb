@@ -74,7 +74,16 @@
     "repeatall":"Repeat All",
     "shuffle":"Repeat Shuffle",
     "playqueue":"Play Queue",
-    "share":"Share"
+    "share":"Share",
+    "expires":"Expires",
+    "visitCount":"Visit",
+    "to":"to",
+    "clipboard":"clipboard",
+    "link":"link ",
+    "qrCode":"qrCode ",
+    "download":"download ",
+    "directory":"directory",
+    "photoLibrary":"PhotoLibrary"
    
 
 }

@@ -74,6 +74,15 @@
     "repeatall":"顺序循环",
     "shuffle":"随机播放",
     "playqueue":"播放队列",
-    "share":"分享"
+    "share":"分享",
+    "expires":"期限",
+    "visitCount":"访问",
+    "to":"到",
+    "clipboard":"剪贴板",
+    "link":"链接",
+    "qrCode":"二维码",
+    "download":"下载",
+    "directory":"文件夹",
+    "photoLibrary":"相册"
 
 }

@@ -7,6 +7,7 @@ import '../../models/notifierValue.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
 import '../../util/util.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myToast.dart';
 
@@ -194,43 +195,61 @@ class _FavoriteScreenState extends State<FavoriteScreen>
       if (i == _title.length - 1) {
         _list.add(Expanded(
             flex: 1,
-            child: Container(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.favorite,
-                    color: badgeRed,
-                    size: 16,
-                  ),
-                  onPressed: () async {
-                    Favorite _favorite = Favorite(id: _title[i], type: 'song');
-                    await delStarred(_favorite);
-                    MyToast.show(
-                        context: context,
-                        message: S.current.cancel + S.current.favorite);
-                    setState(() {
-                      _songs.removeAt(_index);
-                      _starsongs.removeAt(_index);
-                      myTabs = <Tab>[
-                        Tab(
-                            text: S.current.song +
-                                "(" +
-                                _songs.length.toString() +
-                                ")"),
-                        Tab(
-                            text: S.current.album +
-                                "(" +
-                                _albums.length.toString() +
-                                ")"),
-                        Tab(
-                            text: S.current.artist +
-                                "(" +
-                                _artists.length.toString() +
-                                ")")
-                      ];
-                    });
-                  },
-                ))));
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              IconButton(
+                icon: Icon(
+                  Icons.favorite,
+                  color: badgeRed,
+                  size: 16,
+                ),
+                onPressed: () async {
+                  Favorite _favorite = Favorite(id: _title[i], type: 'song');
+                  await delStarred(_favorite);
+                  MyToast.show(
+                      context: context,
+                      message: S.current.cancel + S.current.favorite);
+                  setState(() {
+                    _songs.removeAt(_index);
+                    _starsongs.removeAt(_index);
+                    myTabs = <Tab>[
+                      Tab(
+                          text: S.current.song +
+                              "(" +
+                              _songs.length.toString() +
+                              ")"),
+                      Tab(
+                          text: S.current.album +
+                              "(" +
+                              _albums.length.toString() +
+                              ")"),
+                      Tab(
+                          text: S.current.artist +
+                              "(" +
+                              _artists.length.toString() +
+                              ")")
+                    ];
+                  });
+                },
+              ),
+              IconButton(
+                padding: EdgeInsets.all(0),
+                icon: Icon(
+                  Icons.share,
+                  color: textGray,
+                  size: 16,
+                ),
+                onPressed: () async {
+                  final _sharelists = await createShare(_title[i]);
+                  if (_sharelists != null && _sharelists.length > 0) {
+                    Sharelist _share = Sharelist.fromJson(_sharelists[0]);
+                    showShareDialog(_share, context);
+                  } else {
+                    showMyAlertDialog(
+                        context, S.current.failure, S.current.failure);
+                  }
+                },
+              )
+            ])));
       } else {
         _list.add(Expanded(
           flex: (i == 0) ? 2 : 1,
@@ -363,28 +382,59 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                                       ),
                                     Expanded(
                                         flex: 1,
-                                        child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.favorite,
-                                                color: badgeRed,
-                                                size: 16,
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.favorite,
+                                                  color: badgeRed,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () async {
+                                                  Favorite _favorite = Favorite(
+                                                      id: _tem.id,
+                                                      type: 'album');
+                                                  await delStarred(_favorite);
+                                                  MyToast.show(
+                                                      context: context,
+                                                      message: S
+                                                              .current.cancel +
+                                                          S.current.favorite);
+                                                  setState(() {
+                                                    _albums.removeAt(index);
+                                                    _staralbums.removeAt(index);
+                                                  });
+                                                },
                                               ),
-                                              onPressed: () async {
-                                                Favorite _favorite = Favorite(
-                                                    id: _tem.id, type: 'album');
-                                                await delStarred(_favorite);
-                                                MyToast.show(
-                                                    context: context,
-                                                    message: S.current.cancel +
-                                                        S.current.favorite);
-                                                setState(() {
-                                                  _albums.removeAt(index);
-                                                  _staralbums.removeAt(index);
-                                                });
-                                              },
-                                            )))
+                                              IconButton(
+                                                padding: EdgeInsets.all(0),
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: textGray,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () async {
+                                                  final _sharelists =
+                                                      await createShare(
+                                                          _tem.id);
+                                                  if (_sharelists != null &&
+                                                      _sharelists.length > 0) {
+                                                    Sharelist _share =
+                                                        Sharelist.fromJson(
+                                                            _sharelists[0]);
+                                                    showShareDialog(
+                                                        _share, context);
+                                                  } else {
+                                                    showMyAlertDialog(
+                                                        context,
+                                                        S.current.failure,
+                                                        S.current.failure);
+                                                  }
+                                                },
+                                              )
+                                            ]))
                                   ])));
                     }))
             : Container());
@@ -452,29 +502,60 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                                     ),
                                     Expanded(
                                         flex: 1,
-                                        child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.favorite,
-                                                color: badgeRed,
-                                                size: 16,
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(
+                                                  Icons.favorite,
+                                                  color: badgeRed,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () async {
+                                                  Favorite _favorite = Favorite(
+                                                      id: _tem.id,
+                                                      type: 'artist');
+                                                  await delStarred(_favorite);
+                                                  MyToast.show(
+                                                      context: context,
+                                                      message: S
+                                                              .current.cancel +
+                                                          S.current.favorite);
+                                                  setState(() {
+                                                    _starartists
+                                                        .removeAt(index);
+                                                    _artists.removeAt(index);
+                                                  });
+                                                },
                                               ),
-                                              onPressed: () async {
-                                                Favorite _favorite = Favorite(
-                                                    id: _tem.id,
-                                                    type: 'artist');
-                                                await delStarred(_favorite);
-                                                MyToast.show(
-                                                    context: context,
-                                                    message: S.current.cancel +
-                                                        S.current.favorite);
-                                                setState(() {
-                                                  _starartists.removeAt(index);
-                                                  _artists.removeAt(index);
-                                                });
-                                              },
-                                            ))),
+                                              IconButton(
+                                                padding: EdgeInsets.all(0),
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: textGray,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () async {
+                                                  final _sharelists =
+                                                      await createShare(
+                                                          _tem.id);
+                                                  if (_sharelists != null &&
+                                                      _sharelists.length > 0) {
+                                                    Sharelist _share =
+                                                        Sharelist.fromJson(
+                                                            _sharelists[0]);
+                                                    showShareDialog(
+                                                        _share, context);
+                                                  } else {
+                                                    showMyAlertDialog(
+                                                        context,
+                                                        S.current.failure,
+                                                        S.current.failure);
+                                                  }
+                                                },
+                                              )
+                                            ])),
                                   ])));
                     }))
             : Container());

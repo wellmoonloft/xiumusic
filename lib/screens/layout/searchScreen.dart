@@ -7,6 +7,7 @@ import '../../models/myModel.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myTextInput.dart';
 import '../common/myStructure.dart';
 import '../common/myToast.dart';
@@ -285,45 +286,63 @@ class _SearchScreenState extends State<SearchScreen>
       if (i == _title.length - 1) {
         _list.add(Expanded(
             flex: 1,
-            child: Container(
-                alignment: Alignment.centerRight,
-                child: (_starsong[_index])
-                    ? IconButton(
-                        icon: Icon(
-                          Icons.favorite,
-                          color: badgeRed,
-                          size: 16,
-                        ),
-                        onPressed: () async {
-                          Favorite _favorite =
-                              Favorite(id: _title[i], type: 'song');
-                          await delStarred(_favorite);
-                          MyToast.show(
-                              context: context,
-                              message: S.current.cancel + S.current.favorite);
-                          setState(() {
-                            _starsong[_index] = false;
-                          });
-                        },
-                      )
-                    : IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: textGray,
-                          size: 16,
-                        ),
-                        onPressed: () async {
-                          Favorite _favorite =
-                              Favorite(id: _title[i], type: 'song');
-                          await addStarred(_favorite);
-                          MyToast.show(
-                              context: context,
-                              message: S.current.add + S.current.favorite);
-                          setState(() {
-                            _starsong[_index] = true;
-                          });
-                        },
-                      ))));
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              (_starsong[_index])
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.favorite,
+                        color: badgeRed,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _title[i], type: 'song');
+                        await delStarred(_favorite);
+                        MyToast.show(
+                            context: context,
+                            message: S.current.cancel + S.current.favorite);
+                        setState(() {
+                          _starsong[_index] = false;
+                        });
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(
+                        Icons.favorite_border,
+                        color: textGray,
+                        size: 16,
+                      ),
+                      onPressed: () async {
+                        Favorite _favorite =
+                            Favorite(id: _title[i], type: 'song');
+                        await addStarred(_favorite);
+                        MyToast.show(
+                            context: context,
+                            message: S.current.add + S.current.favorite);
+                        setState(() {
+                          _starsong[_index] = true;
+                        });
+                      },
+                    ),
+              IconButton(
+                padding: EdgeInsets.all(0),
+                icon: Icon(
+                  Icons.share,
+                  color: textGray,
+                  size: 16,
+                ),
+                onPressed: () async {
+                  final _sharelists = await createShare(_title[i]);
+                  if (_sharelists != null && _sharelists.length > 0) {
+                    Sharelist _share = Sharelist.fromJson(_sharelists[0]);
+                    showShareDialog(_share, context);
+                  } else {
+                    showMyAlertDialog(
+                        context, S.current.failure, S.current.failure);
+                  }
+                },
+              )
+            ])));
       } else {
         _list.add(Expanded(
           flex: (i == 0) ? 2 : 1,
@@ -408,59 +427,88 @@ class _SearchScreenState extends State<SearchScreen>
                                     ),
                                     Expanded(
                                         flex: 1,
-                                        child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: (_starartists[index])
-                                                ? IconButton(
-                                                    icon: Icon(
-                                                      Icons.favorite,
-                                                      color: badgeRed,
-                                                      size: 16,
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              (_starartists[index])
+                                                  ? IconButton(
+                                                      icon: Icon(
+                                                        Icons.favorite,
+                                                        color: badgeRed,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Favorite _favorite =
+                                                            Favorite(
+                                                                id: _tem.id,
+                                                                type: 'artist');
+                                                        await delStarred(
+                                                            _favorite);
+                                                        MyToast.show(
+                                                            context: context,
+                                                            message: S.current
+                                                                    .cancel +
+                                                                S.current
+                                                                    .favorite);
+                                                        setState(() {
+                                                          _starartists[index] =
+                                                              false;
+                                                        });
+                                                      },
+                                                    )
+                                                  : IconButton(
+                                                      icon: Icon(
+                                                        Icons.favorite_border,
+                                                        color: textGray,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Favorite _favorite =
+                                                            Favorite(
+                                                                id: _tem.id,
+                                                                type: 'artist');
+                                                        await addStarred(
+                                                            _favorite);
+                                                        MyToast.show(
+                                                            context: context,
+                                                            message: S.current
+                                                                    .add +
+                                                                S.current
+                                                                    .favorite);
+                                                        setState(() {
+                                                          _starartists[index] =
+                                                              true;
+                                                        });
+                                                      },
                                                     ),
-                                                    onPressed: () async {
-                                                      Favorite _favorite =
-                                                          Favorite(
-                                                              id: _tem.id,
-                                                              type: 'artist');
-                                                      await delStarred(
-                                                          _favorite);
-                                                      MyToast.show(
-                                                          context: context,
-                                                          message: S.current
-                                                                  .cancel +
-                                                              S.current
-                                                                  .favorite);
-                                                      setState(() {
-                                                        _starartists[index] =
-                                                            false;
-                                                      });
-                                                    },
-                                                  )
-                                                : IconButton(
-                                                    icon: Icon(
-                                                      Icons.favorite_border,
-                                                      color: textGray,
-                                                      size: 16,
-                                                    ),
-                                                    onPressed: () async {
-                                                      Favorite _favorite =
-                                                          Favorite(
-                                                              id: _tem.id,
-                                                              type: 'artist');
-                                                      await addStarred(
-                                                          _favorite);
-                                                      MyToast.show(
-                                                          context: context,
-                                                          message: S
-                                                                  .current.add +
-                                                              S.current
-                                                                  .favorite);
-                                                      setState(() {
-                                                        _starartists[index] =
-                                                            true;
-                                                      });
-                                                    },
-                                                  ))),
+                                              IconButton(
+                                                padding: EdgeInsets.all(0),
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: textGray,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () async {
+                                                  final _sharelists =
+                                                      await createShare(
+                                                          _tem.id);
+                                                  if (_sharelists != null &&
+                                                      _sharelists.length > 0) {
+                                                    Sharelist _share =
+                                                        Sharelist.fromJson(
+                                                            _sharelists[0]);
+                                                    showShareDialog(
+                                                        _share, context);
+                                                  } else {
+                                                    showMyAlertDialog(
+                                                        context,
+                                                        S.current.failure,
+                                                        S.current.failure);
+                                                  }
+                                                },
+                                              )
+                                            ])),
                                   ])));
                     }))
             : Container());
@@ -569,59 +617,88 @@ class _SearchScreenState extends State<SearchScreen>
                                       ),
                                     Expanded(
                                         flex: 1,
-                                        child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: (_staralbums[index])
-                                                ? IconButton(
-                                                    icon: Icon(
-                                                      Icons.favorite,
-                                                      color: badgeRed,
-                                                      size: 16,
+                                        child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              (_staralbums[index])
+                                                  ? IconButton(
+                                                      icon: Icon(
+                                                        Icons.favorite,
+                                                        color: badgeRed,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Favorite _favorite =
+                                                            Favorite(
+                                                                id: _tem.id,
+                                                                type: 'album');
+                                                        await delStarred(
+                                                            _favorite);
+                                                        MyToast.show(
+                                                            context: context,
+                                                            message: S.current
+                                                                    .cancel +
+                                                                S.current
+                                                                    .favorite);
+                                                        setState(() {
+                                                          _staralbums[index] =
+                                                              false;
+                                                        });
+                                                      },
+                                                    )
+                                                  : IconButton(
+                                                      icon: Icon(
+                                                        Icons.favorite_border,
+                                                        color: textGray,
+                                                        size: 16,
+                                                      ),
+                                                      onPressed: () async {
+                                                        Favorite _favorite =
+                                                            Favorite(
+                                                                id: _tem.id,
+                                                                type: 'album');
+                                                        await addStarred(
+                                                            _favorite);
+                                                        MyToast.show(
+                                                            context: context,
+                                                            message: S.current
+                                                                    .add +
+                                                                S.current
+                                                                    .favorite);
+                                                        setState(() {
+                                                          _staralbums[index] =
+                                                              true;
+                                                        });
+                                                      },
                                                     ),
-                                                    onPressed: () async {
-                                                      Favorite _favorite =
-                                                          Favorite(
-                                                              id: _tem.id,
-                                                              type: 'album');
-                                                      await delStarred(
-                                                          _favorite);
-                                                      MyToast.show(
-                                                          context: context,
-                                                          message: S.current
-                                                                  .cancel +
-                                                              S.current
-                                                                  .favorite);
-                                                      setState(() {
-                                                        _staralbums[index] =
-                                                            false;
-                                                      });
-                                                    },
-                                                  )
-                                                : IconButton(
-                                                    icon: Icon(
-                                                      Icons.favorite_border,
-                                                      color: textGray,
-                                                      size: 16,
-                                                    ),
-                                                    onPressed: () async {
-                                                      Favorite _favorite =
-                                                          Favorite(
-                                                              id: _tem.id,
-                                                              type: 'album');
-                                                      await addStarred(
-                                                          _favorite);
-                                                      MyToast.show(
-                                                          context: context,
-                                                          message: S
-                                                                  .current.add +
-                                                              S.current
-                                                                  .favorite);
-                                                      setState(() {
-                                                        _staralbums[index] =
-                                                            true;
-                                                      });
-                                                    },
-                                                  )))
+                                              IconButton(
+                                                padding: EdgeInsets.all(0),
+                                                icon: Icon(
+                                                  Icons.share,
+                                                  color: textGray,
+                                                  size: 16,
+                                                ),
+                                                onPressed: () async {
+                                                  final _sharelists =
+                                                      await createShare(
+                                                          _tem.id);
+                                                  if (_sharelists != null &&
+                                                      _sharelists.length > 0) {
+                                                    Sharelist _share =
+                                                        Sharelist.fromJson(
+                                                            _sharelists[0]);
+                                                    showShareDialog(
+                                                        _share, context);
+                                                  } else {
+                                                    showMyAlertDialog(
+                                                        context,
+                                                        S.current.failure,
+                                                        S.current.failure);
+                                                  }
+                                                },
+                                              )
+                                            ]))
                                   ])));
                     }))
             : Container());

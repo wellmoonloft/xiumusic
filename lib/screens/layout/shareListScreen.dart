@@ -1,18 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gallery_saver/gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:xiumusic/screens/common/myTextButton.dart';
 import '../../generated/l10n.dart';
 import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/httpClient.dart';
 import '../../util/util.dart';
 import '../../util/mycss.dart';
-import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myToast.dart';
 
@@ -31,8 +23,6 @@ class _ShareListScreenState extends State<ShareListScreen> {
     _sharelistsList.clear();
     if (_sharelists != null && _sharelists.length > 0) {
       for (var element in _sharelists) {
-        // String _url = getCoverArt(element['id']);
-        // element["imageUrl"] = _url;
         Sharelist _sharelist = Sharelist.fromJson(element);
         _sharelistsList.add(_sharelist);
       }
@@ -44,104 +34,74 @@ class _ShareListScreenState extends State<ShareListScreen> {
     }
   }
 
-  _showShareDialog(Sharelist _tem) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          titlePadding: EdgeInsets.all(10),
-          contentPadding: EdgeInsets.all(10),
-          titleTextStyle: nomalText,
-          contentTextStyle: nomalText,
-          backgroundColor: badgeDark,
-          title: Text(
-            _tem.description,
-          ),
-          content: Text(
-            _tem.username,
-          ),
-          actions: <Widget>[
-            MyTextButton(
-              title: "退出",
-              press: () {
-                Navigator.of(context).pop(0);
-              },
-            ),
-            //TODO：生成分享图片保存在相册或者下载
-            //差用户提醒
-            MyTextButton(
-              title: "保存二维码",
-              press: () {
-                _createQRcode(_tem);
-                Navigator.of(context).pop(2);
-              },
-            ),
-            MyTextButton(
-              title: "复制到剪贴板",
-              press: () {
-                Clipboard.setData(ClipboardData(text: _tem.url));
-                Navigator.of(context).pop(2);
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
+  //to share qrcode need three dependencies,and add permission in ios/android
+  //  qr_flutter: ^4.0.0
+  //  path_provider: ^2.0.12
+  //  gallery_saver: ^2.3.2
+  // _createQRcode(Sharelist _tem) async {
+  //   final qrValidationResult = QrValidator.validate(
+  //     data: _tem.url,
+  //     version: QrVersions.auto,
+  //     errorCorrectionLevel: QrErrorCorrectLevel.L,
+  //   );
+  //   if (qrValidationResult.status == QrValidationStatus.valid) {
+  //     QrCode? qrCode = qrValidationResult.qrCode;
+  //     if (qrCode != null) {
+  //       final painter = QrPainter.withQr(
+  //         qr: qrCode,
+  //         color: const Color(0xFF000000),
+  //         gapless: true,
+  //         embeddedImageStyle: null,
+  //         embeddedImage: null,
+  //       );
+  //       if (isMobile) {
+  //         Directory tempDir = await getTemporaryDirectory();
 
-  _createQRcode(Sharelist _tem) async {
-    final qrValidationResult = QrValidator.validate(
-      data: _tem.url,
-      version: QrVersions.auto,
-      errorCorrectionLevel: QrErrorCorrectLevel.L,
-    );
-    if (qrValidationResult.status == QrValidationStatus.valid) {
-      QrCode? qrCode = qrValidationResult.qrCode;
-      if (qrCode != null) {
-        final painter = QrPainter.withQr(
-          qr: qrCode,
-          color: const Color(0xFF000000),
-          gapless: true,
-          embeddedImageStyle: null,
-          embeddedImage: null,
-        );
-        if (isMobile) {
-          Directory tempDir = await getTemporaryDirectory();
+  //         String tempPath = tempDir.path;
+  //         String ts = _tem.description;
+  //         String path = '$tempPath/$ts.png';
+  //         final picData = await painter.toImageData(2048);
+  //         if (picData != null) {
+  //           await writeToFile(picData, path);
+  //           final success = await GallerySaver.saveImage(path);
+  //           if (success != null && success) {
+  //             MyToast.show(
+  //                 context: context,
+  //                 message:
+  //                     S.current.save + S.current.to + S.current.photoLibrary);
+  //           }
+  //         }
+  //       } else {
+  //         Directory? tempDir = await getDownloadsDirectory();
+  //         if (tempDir != null) {
+  //           String tempPath = tempDir.path;
+  //           String ts = _tem.description;
+  //           String path = '$tempPath/$ts.png';
+  //           final picData = await painter.toImageData(2048);
+  //           if (picData != null) {
+  //             await writeToFile(picData, path);
+  //             MyToast.show(
+  //                 context: context,
+  //                 message: S.current.save +
+  //                     S.current.to +
+  //                     S.current.download +
+  //                     S.current.directory);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     print(qrValidationResult.error);
+  //   }
+  // }
 
-          String tempPath = tempDir.path;
-          String ts = _tem.created;
-          String path = '$tempPath/$ts.png';
-          final picData = await painter.toImageData(2048);
-          if (picData != null) {
-            await writeToFile(picData, path);
-            final success = await GallerySaver.saveImage(path);
-          }
-        } else {
-          Directory? tempDir = await getDownloadsDirectory();
-          if (tempDir != null) {
-            String tempPath = tempDir.path;
-            String ts = _tem.created;
-            String path = '$tempPath/$ts.png';
-            final picData = await painter.toImageData(2048);
-            if (picData != null) {
-              await writeToFile(picData, path);
-            }
-          }
-        }
-      }
-    } else {
-      print(qrValidationResult.error);
-    }
-  }
+  // Future<void> writeToFile(ByteData data, String path) async {
+  //   final buffer = data.buffer;
+  //   await File(path).writeAsBytes(
+  //       buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  // }
 
-  Future<void> writeToFile(ByteData data, String path) async {
-    final buffer = data.buffer;
-    await File(path).writeAsBytes(
-        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-  }
-
-  _delPlaylist(BuildContext context, double _x, double _y, String _playlistId) {
+  _delShare(BuildContext context, double _x, double _y, String _playlistId) {
     showMenu(
         context: context,
         position: RelativeRect.fromLTRB(_x, _y, _x, _y),
@@ -188,7 +148,6 @@ class _ShareListScreenState extends State<ShareListScreen> {
                     _tem.description,
                     timeISOtoString(_tem.created),
                     timeISOtoString(_tem.expires),
-                    _tem.username,
                     _tem.visitCount.toString()
                   ];
                   return Dismissible(
@@ -201,7 +160,7 @@ class _ShareListScreenState extends State<ShareListScreen> {
                           _result = true;
                         } else if (direction == DismissDirection.startToEnd) {
                           //从左向右
-                          _result = true;
+                          _result = false;
                         }
                         return Future<bool>.value(_result);
                       },
@@ -214,17 +173,16 @@ class _ShareListScreenState extends State<ShareListScreen> {
                               message: S.current.delete + S.current.success);
                         } else if (direction == DismissDirection.startToEnd) {
                           //从左向右
-                          showMyAlertDialog(context, "分享", "哈哈哈");
                         }
                       },
                       background: Container(
-                        color: qing,
+                        color: rightColor,
                         child: ListTile(
-                          leading: Icon(
-                            Icons.share,
-                            color: textGray,
-                          ),
-                        ),
+                            // leading: Icon(
+                            //   Icons.delete,
+                            //   color: textGray,
+                            // ),
+                            ),
                       ),
                       secondaryBackground: Container(
                         color: badgeRed,
@@ -238,10 +196,10 @@ class _ShareListScreenState extends State<ShareListScreen> {
                       child: ListTile(
                           title: GestureDetector(
                               onTap: () async {
-                                _showShareDialog(_tem);
+                                showShareDialog(_tem, context);
                               },
                               onSecondaryTapDown: (details) {
-                                _delPlaylist(context, details.globalPosition.dx,
+                                _delShare(context, details.globalPosition.dx,
                                     details.globalPosition.dy, _tem.id);
                               },
                               child: ValueListenableBuilder<Map>(
@@ -257,8 +215,8 @@ class _ShareListScreenState extends State<ShareListScreen> {
     List<String> _title = [
       S.current.name,
       S.current.create,
-      S.current.createuser,
-      S.current.udpateDate
+      S.current.expires,
+      S.current.visitCount
     ];
     return myRowList(_title, subText);
   }

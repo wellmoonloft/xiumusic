@@ -4,6 +4,7 @@ import '../../models/myModel.dart';
 import '../../models/notifierValue.dart';
 import '../../util/httpClient.dart';
 import '../../util/mycss.dart';
+import '../common/myAlertDialog.dart';
 import '../common/myStructure.dart';
 import '../common/myToast.dart';
 
@@ -90,9 +91,8 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
       if (i == _title.length - 1) {
         _list.add(Expanded(
             flex: 1,
-            child: Container(
-              alignment: Alignment.centerRight,
-              child: (_star[_index])
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              (_star[_index])
                   ? IconButton(
                       icon: Icon(
                         Icons.favorite,
@@ -129,7 +129,25 @@ class _ArtistsScreenState extends State<ArtistsScreen> {
                         });
                       },
                     ),
-            )));
+              IconButton(
+                padding: EdgeInsets.all(0),
+                icon: Icon(
+                  Icons.share,
+                  color: textGray,
+                  size: 16,
+                ),
+                onPressed: () async {
+                  final _sharelists = await createShare(_title[i]);
+                  if (_sharelists != null && _sharelists.length > 0) {
+                    Sharelist _share = Sharelist.fromJson(_sharelists[0]);
+                    showShareDialog(_share, context);
+                  } else {
+                    showMyAlertDialog(
+                        context, S.current.failure, S.current.failure);
+                  }
+                },
+              )
+            ])));
       } else {
         _list.add(Expanded(
           flex: (i == 0) ? 2 : 1,

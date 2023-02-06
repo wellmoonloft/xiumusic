@@ -789,6 +789,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Expires`
+  String get expires {
+    return Intl.message(
+      'Expires',
+      name: 'expires',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Visit`
+  String get visitCount {
+    return Intl.message(
+      'Visit',
+      name: 'visitCount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `to`
+  String get to {
+    return Intl.message(
+      'to',
+      name: 'to',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `clipboard`
+  String get clipboard {
+    return Intl.message(
+      'clipboard',
+      name: 'clipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `link `
+  String get link {
+    return Intl.message(
+      'link ',
+      name: 'link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `qrCode `
+  String get qrCode {
+    return Intl.message(
+      'qrCode ',
+      name: 'qrCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `download `
+  String get download {
+    return Intl.message(
+      'download ',
+      name: 'download',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `directory`
+  String get directory {
+    return Intl.message(
+      'directory',
+      name: 'directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PhotoLibrary`
+  String get photoLibrary {
+    return Intl.message(
+      'PhotoLibrary',
+      name: 'photoLibrary',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
