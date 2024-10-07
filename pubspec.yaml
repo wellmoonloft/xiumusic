@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 0.5.2
+version: 0.5.3
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -14,20 +14,20 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  intl: ^0.17.0
-  just_audio: ^0.9.31
-  just_audio_background: ^0.0.1-beta.9
+  intl: ^0.19.0
+  just_audio: ^0.9.41
+  just_audio_background: ^0.0.1-beta.13
   #just_audio_windows: ^0.2.0  
   #https://pub.flutter-io.cn/packages/just_audio_mpv
-  window_manager: ^0.3.0
-  dio: ^4.0.6
-  crypto: ^3.0.2
-  sqflite: ^2.2.4+1
-  path: ^1.8.2
-  flutter_staggered_grid_view: ^0.6.2
-  cached_network_image: ^3.2.3
+  window_manager: ^0.4.2
+  dio: ^5.7.0
+  crypto: ^3.0.5
+  sqflite: ^2.3.3+2
+  path: ^1.9.0
+  flutter_staggered_grid_view: ^0.7.0
+  cached_network_image: ^3.4.1
   flutter_lyric: ^2.0.4+6
-  share_plus: ^6.3.0      
+  share_plus: ^10.0.2     
 
 dev_dependencies:
   flutter_test:
