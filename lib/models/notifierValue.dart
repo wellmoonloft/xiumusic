@@ -46,8 +46,10 @@ ValueNotifier<bool> isLastSongNotifier = ValueNotifier<bool>(true);
 //歌词
 ValueNotifier<String> activeLyric = ValueNotifier<String>("No Lyric");
 
-ValueNotifier<double> windowsWidth =
-    ValueNotifier<double>(window.physicalSize.width / window.devicePixelRatio);
+ValueNotifier<double> windowsWidth = ValueNotifier<double>(
+    PlatformDispatcher.instance.views.first.physicalSize.width /
+        PlatformDispatcher.instance.views.first.devicePixelRatio);
 
-ValueNotifier<double> windowsHeight =
-    ValueNotifier<double>(window.physicalSize.height / window.devicePixelRatio);
+ValueNotifier<double> windowsHeight = ValueNotifier<double>(
+    PlatformDispatcher.instance.views.first.physicalSize.height /
+        PlatformDispatcher.instance.views.first.devicePixelRatio);

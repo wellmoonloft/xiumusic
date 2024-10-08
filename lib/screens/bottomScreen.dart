@@ -103,6 +103,9 @@ class _BottomScreenState extends State<BottomScreen>
                                   onTap: () async {
                                     //正在播放的弹窗入口
                                     showBottomSheet(
+                                      constraints: BoxConstraints(
+                                        maxWidth: windowsWidth.value,
+                                      ),
                                       context: context,
                                       builder: (BuildContext context) {
                                         return PlayScreen(

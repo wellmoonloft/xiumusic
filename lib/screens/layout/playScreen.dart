@@ -40,101 +40,105 @@ class _PlayScreenState extends State<PlayScreen> {
     return ValueListenableBuilder<Map>(
         valueListenable: activeSong,
         builder: ((context, value, child) {
-          return Row(
-            children: [
-              if (!isMobile)
-                Container(
-                  height: windowsHeight.value - 70,
-                  padding: EdgeInsets.all(30),
-                  width: _width / 2,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 50,
+          return Container(
+              width: _width,
+              child: Row(
+                children: [
+                  if (!isMobile)
+                    Container(
+                      height: windowsHeight.value - 70,
+                      padding: EdgeInsets.all(30),
+                      width: _width / 2,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                              height: _width / 2.5,
+                              width: _width / 2.5,
+                              child: ClipOval(
+                                child: (value.isEmpty)
+                                    ? Image.asset(mylogoAsset)
+                                    : Image.network(
+                                        value["url"],
+                                        height: _width / 2.5,
+                                        width: _width / 2.5,
+                                        fit: BoxFit.cover,
+                                        frameBuilder: (context, child, frame,
+                                            wasSynchronouslyLoaded) {
+                                          if (wasSynchronouslyLoaded) {
+                                            return child;
+                                          }
+                                          return AnimatedSwitcher(
+                                            child: frame != null
+                                                ? child
+                                                : Image.asset(mylogoAsset),
+                                            duration: const Duration(
+                                                milliseconds: imageMilli),
+                                          );
+                                        },
+                                      ),
+                              )),
+                        ],
                       ),
-                      Container(
-                          height: _width / 2.5,
-                          width: _width / 2.5,
-                          child: ClipOval(
-                            child: (value.isEmpty)
-                                ? Image.asset(mylogoAsset)
-                                : Image.network(
-                                    value["url"],
-                                    height: _width / 2.5,
-                                    width: _width / 2.5,
-                                    fit: BoxFit.cover,
-                                    frameBuilder: (context, child, frame,
-                                        wasSynchronouslyLoaded) {
-                                      if (wasSynchronouslyLoaded) {
-                                        return child;
-                                      }
-                                      return AnimatedSwitcher(
-                                        child: frame != null
-                                            ? child
-                                            : Image.asset(mylogoAsset),
-                                        duration: const Duration(
-                                            milliseconds: imageMilli),
-                                      );
-                                    },
-                                  ),
-                          )),
-                    ],
+                    ),
+                  Container(
+                    padding: EdgeInsets.all(30),
+                    height: !isMobile
+                        ? windowsHeight.value - 80
+                        : windowsHeight.value - 80 - 50 - 25,
+                    width: !isMobile ? _width / 2 : _width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: !isMobile ? _width / 2 : _width,
+                          child: Text(
+                              (value.isEmpty)
+                                  ? S.current.unknown
+                                  : value["title"],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: titleText2),
+                        ),
+                        Container(
+                            width: !isMobile ? _width / 2 : _width,
+                            child: Text(
+                              (value.isEmpty)
+                                  ? S.current.unknown
+                                  : S.current.artist + ": " + value["artist"],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: nomalText,
+                              textAlign: TextAlign.center,
+                            )),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            width: !isMobile ? _width / 2 : _width,
+                            child: Text(
+                              (value.isEmpty)
+                                  ? S.current.unknown
+                                  : S.current.album + ": " + value["album"],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: nomalText,
+                              textAlign: TextAlign.center,
+                            )),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        _buildReaderWidget()
+                      ],
+                    ),
                   ),
-                ),
-              Container(
-                padding: EdgeInsets.all(30),
-                height: !isMobile
-                    ? windowsHeight.value - 80
-                    : windowsHeight.value - 80 - 50 - 25,
-                width: !isMobile ? _width / 2 : _width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      height: 50,
-                      width: !isMobile ? _width / 2 : _width,
-                      child: Text(
-                          (value.isEmpty) ? S.current.unknown : value["title"],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: titleText2),
-                    ),
-                    Container(
-                        width: !isMobile ? _width / 2 : _width,
-                        child: Text(
-                          (value.isEmpty)
-                              ? S.current.unknown
-                              : S.current.artist + ": " + value["artist"],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: nomalText,
-                          textAlign: TextAlign.center,
-                        )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                        width: !isMobile ? _width / 2 : _width,
-                        child: Text(
-                          (value.isEmpty)
-                              ? S.current.unknown
-                              : S.current.album + ": " + value["album"],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: nomalText,
-                          textAlign: TextAlign.center,
-                        )),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _buildReaderWidget()
-                  ],
-                ),
-              ),
-            ],
-          );
+                ],
+              ));
         }));
   }
 
