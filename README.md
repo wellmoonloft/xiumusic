@@ -1,3 +1,4 @@
+My Apple developer certificate has expired, so you need to repackage it before you can use it. Because it has been more than a year, I have just upgraded all the associated projects to ensure that it can run on IOS14+ and MAC OS13+. I have not tested other platforms (2024.10.8)
 
 # XiuMusic
 ![](https://img.shields.io/badge/Toolkit-Flutter-blue.svg)  ![](https://img.shields.io/badge/Language-Dart-orange.svg)  ![](https://img.shields.io/badge/license-MIT-green)  ![](https://img.shields.io/badge/Process-Developing-blueviolet.svg)

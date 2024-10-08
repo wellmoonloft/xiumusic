@@ -1,3 +1,4 @@
+我的苹果开发者证书过期了，所以你需要重新打包才可以使用，因为过去一年多了，我刚刚升级了所有的关联项目保证它可以在IOS14+以及MAC OS13+以上运行，其他的平台我没测试过（2024.10.8）
 
 # XiuMusic
 ![](https://img.shields.io/badge/Toolkit-Flutter-blue.svg)  ![](https://img.shields.io/badge/Language-Dart-orange.svg)  ![](https://img.shields.io/badge/license-MIT-green)  ![](https://img.shields.io/badge/Process-Developing-blueviolet.svg)
