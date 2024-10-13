@@ -1,4 +1,5 @@
 我的苹果开发者证书过期了，所以你需要重新打包才可以使用，因为过去一年多了，我刚刚升级了所有的关联项目保证它可以在IOS14+以及MAC OS13+以上运行，其他的平台我没测试过（2024.10.8）
+歌词虽然可以展示，但是获取歌词的方法依然很难用，如果你所有的音乐都是标准的那就没问题，可是我很多听的歌都是主播录制的，会导致无法自动识别需要手动去选择（2024.10.8）
 
 # XiuMusic
 ![](https://img.shields.io/badge/Toolkit-Flutter-blue.svg)  ![](https://img.shields.io/badge/Language-Dart-orange.svg)  ![](https://img.shields.io/badge/license-MIT-green)  ![](https://img.shields.io/badge/Process-Developing-blueviolet.svg)

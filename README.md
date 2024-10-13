@@ -1,4 +1,5 @@
-My Apple developer certificate has expired, so you need to repackage it before you can use it. Because it has been more than a year, I have just upgraded all the associated projects to ensure that it can run on IOS14+ and MAC OS13+. I have not tested other platforms (2024.10.8)
+My Apple developer certificate has expired, so you need to build by yourself. Because it has been more than a year, I have just upgraded all the dependencies to ensure that it can run on IOS14+ and MAC OS13+. I have not tested other platforms (2024.10.8)
+Although the lyrics can be displayed, the method of obtaining the lyrics is still difficult to use. If all your music is standard, then there is no problem, but many of the songs I listen to are recorded by streaming, which will result in the inability to automatically identify and need to be manually selected. (2024.10.8)
 
 # XiuMusic
 ![](https://img.shields.io/badge/Toolkit-Flutter-blue.svg)  ![](https://img.shields.io/badge/Language-Dart-orange.svg)  ![](https://img.shields.io/badge/license-MIT-green)  ![](https://img.shields.io/badge/Process-Developing-blueviolet.svg)
